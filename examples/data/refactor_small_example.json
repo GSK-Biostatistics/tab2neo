@@ -1,0 +1,346 @@
+{
+  "nodes": [
+    {
+      "id": "n23",
+      "position": {
+        "x": 1477.474806560655,
+        "y": -482.9236280376657
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Subject",
+        "short_label": "USUBJID"
+      },
+      "style": {
+        "node-color": "#fcdc00"
+      }
+    },
+    {
+      "id": "n24",
+      "position": {
+        "x": 1569.7754273249243,
+        "y": -630.2823892610123
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Name of Treatment",
+        "short_label": "EXTRT"
+      },
+      "style": {
+        "node-color": "#fcdc00"
+      }
+    },
+    {
+      "id": "n25",
+      "position": {
+        "x": 615.6455475371143,
+        "y": -740.2972534511398
+      },
+      "caption": "",
+      "labels": [
+        "Source Data Row"
+      ],
+      "properties": {
+        "_domain_": "EX",
+        "USUBJID": "001",
+        "EXTRT": "DRUG A"
+      },
+      "style": {
+        "border-color": "#000000",
+        "node-color": "#fa28ff"
+      }
+    },
+    {
+      "id": "n26",
+      "position": {
+        "x": 1836.8312001950267,
+        "y": -630.2823892610123
+      },
+      "caption": "",
+      "labels": [
+        "Relationship"
+      ],
+      "properties": {
+        "relationship_type": "Name of Treatment"
+      },
+      "style": {
+        "node-color": "#68bc00"
+      }
+    },
+    {
+      "id": "n27",
+      "position": {
+        "x": 1143.913606028633,
+        "y": -494.17157632240776
+      },
+      "caption": "",
+      "labels": [
+        "Source Data Column"
+      ],
+      "properties": {
+        "_columnname_": "USUBJID"
+      },
+      "style": {
+        "node-color": "#fe9200"
+      }
+    },
+    {
+      "id": "n28",
+      "position": {
+        "x": 810.3524054966111,
+        "y": -505.4195246071498
+      },
+      "caption": "",
+      "labels": [
+        "Source Data Table"
+      ],
+      "properties": {
+        "_domain_": "EX"
+      },
+      "style": {
+        "node-color": "#f44e3b"
+      }
+    },
+    {
+      "id": "n29",
+      "position": {
+        "x": 1242.33044500077,
+        "y": -630.2823892610123
+      },
+      "caption": "",
+      "labels": [
+        "Source Data Column"
+      ],
+      "properties": {
+        "_columnname_": "EXTRT"
+      },
+      "style": {
+        "node-color": "#fe9200"
+      }
+    },
+    {
+      "id": "n30",
+      "position": {
+        "x": 543.6684735548109,
+        "y": -505.4195246071498
+      },
+      "caption": "",
+      "labels": [
+        "Source Data Folder"
+      ],
+      "properties": {
+        "_folder_": "...<path>..."
+      },
+      "style": {
+        "node-color": "#999999"
+      }
+    },
+    {
+      "id": "n31",
+      "position": {
+        "x": 754.567179958776,
+        "y": -808.6853680629474
+      },
+      "caption": "",
+      "labels": [
+        "Source Data Row"
+      ],
+      "properties": {
+        "_domain_": "EX",
+        "USUBJID": "001",
+        "EXTRT": "DRUG B"
+      },
+      "style": {
+        "border-color": "#000000",
+        "node-color": "#fa28ff"
+      }
+    },
+    {
+      "id": "n32",
+      "position": {
+        "x": 924.771807417734,
+        "y": -788.2383862613597
+      },
+      "caption": "",
+      "labels": [
+        "Source Data Row"
+      ],
+      "properties": {
+        "_domain_": "EX",
+        "USUBJID": "002",
+        "EXTRT": "DRUG B"
+      },
+      "style": {
+        "border-color": "#000000",
+        "node-color": "#fa28ff"
+      }
+    },
+    {
+      "id": "n33",
+      "position": {
+        "x": 1013.3059469629725,
+        "y": -678.4229337128686
+      },
+      "caption": "",
+      "labels": [
+        "Source Data Row"
+      ],
+      "properties": {
+        "_domain_": "EX",
+        "USUBJID": "002",
+        "EXTRT": "DRUG C"
+      },
+      "style": {
+        "border-color": "#000000",
+        "node-color": "#fa28ff"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "id": "n26",
+      "fromId": "n26",
+      "toId": "n23",
+      "type": "FROM",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n27",
+      "fromId": "n26",
+      "toId": "n24",
+      "type": "TO",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n28",
+      "fromId": "n27",
+      "toId": "n23",
+      "type": "MAPS_TO_CLASS",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n29",
+      "fromId": "n28",
+      "toId": "n27",
+      "type": "HAS_COLUMN",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n30",
+      "fromId": "n28",
+      "toId": "n29",
+      "type": "HAS_COLUMN",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n31",
+      "fromId": "n30",
+      "toId": "n28",
+      "type": "HAS_TABLE",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n32",
+      "fromId": "n29",
+      "toId": "n24",
+      "type": "MAPS_TO_CLASS",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n33",
+      "fromId": "n28",
+      "toId": "n25",
+      "type": "HAS_DATA",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n34",
+      "fromId": "n28",
+      "toId": "n31",
+      "type": "HAS_DATA",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n35",
+      "fromId": "n28",
+      "toId": "n32",
+      "type": "HAS_DATA",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n36",
+      "fromId": "n28",
+      "toId": "n33",
+      "type": "HAS_DATA",
+      "properties": {},
+      "style": {}
+    }
+  ],
+  "style": {
+    "font-family": "sans-serif",
+    "background-color": "#ffffff",
+    "node-color": "#ffffff",
+    "border-width": 4,
+    "border-color": "#000000",
+    "radius": 50,
+    "node-padding": 5,
+    "node-margin": 2,
+    "outside-position": "auto",
+    "node-icon-image": "",
+    "node-background-image": "",
+    "icon-position": "inside",
+    "icon-size": 64,
+    "caption-position": "inside",
+    "caption-max-width": 200,
+    "caption-color": "#000000",
+    "caption-font-size": 50,
+    "caption-font-weight": "normal",
+    "label-position": "inside",
+    "label-display": "pill",
+    "label-color": "#000000",
+    "label-background-color": "#ffffff",
+    "label-border-color": "#000000",
+    "label-border-width": 4,
+    "label-font-size": 40,
+    "label-padding": 5,
+    "label-margin": 4,
+    "directionality": "directed",
+    "detail-position": "inline",
+    "detail-orientation": "parallel",
+    "arrow-width": 5,
+    "arrow-color": "#000000",
+    "margin-start": 5,
+    "margin-end": 5,
+    "margin-peer": 20,
+    "attachment-start": "normal",
+    "attachment-end": "normal",
+    "relationship-icon-image": "",
+    "type-color": "#000000",
+    "type-background-color": "#ffffff",
+    "type-border-color": "#000000",
+    "type-border-width": 0,
+    "type-font-size": 16,
+    "type-padding": 5,
+    "property-position": "outside",
+    "property-alignment": "colon",
+    "property-color": "#000000",
+    "property-font-size": 16,
+    "property-font-weight": "normal"
+  }
+}

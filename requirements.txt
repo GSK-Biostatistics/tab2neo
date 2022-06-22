@@ -1,0 +1,12 @@
+xlrd==2.0.1
+openpyxl==3.0.7
+pandas==1.1.5
+pyreadstat==1.0.8
+pyreadr==0.4.0
+pytest==6.2.4
+azure_storage_file_datalake==12.4.0
+azure-identity==1.6.0
+datacompy==0.7.2
+neointerface==3.1.2
+colorlog==6.6.0
+PyGithub==1.55

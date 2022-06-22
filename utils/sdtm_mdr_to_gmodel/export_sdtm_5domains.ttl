@@ -1,0 +1,2639 @@
+@prefix n4sch: <neo4j://graph.schema#> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/EX> a <neo4j://graph.schema#Source%20Data%20Table>;
+  n4sch:SortOrder "USUBJID,STUDYID,EXTRT,EXREFID,EXSTDTC,EXSEQ";
+  n4sch:_domain_ "EX" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Data%20Extraction%20Standard/MDR3_2> a <neo4j://graph.schema#Data%20Extraction%20Standard>;
+  n4sch:HAS_TABLE <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/EX>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/AE>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/DS>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/VS>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/DM>;
+  n4sch:_tag_ "MDR3_2";
+  n4sch:_filename_ "export_sdtm_5domains.ttl" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/AE> a <neo4j://graph.schema#Source%20Data%20Table>;
+  n4sch:_domain_ "AE";
+  n4sch:SortOrder "USUBJID,STUDYID,AECAT,AESCAT,AETERM,AELOC,AEREFID,AESTDTC,AESEQ";
+  n4sch:HAS_COLUMN <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESCAN>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESHOSP>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESPID>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEACN>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEMODIFY>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESOD>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEHLGTCD>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESDISAB>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/EPOCH>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AECONTRT>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEOUT>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AELLT>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AETERM>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEPRESP>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENRTPT>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEREL>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AETOXGR>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEBODSYS>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESCONG>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENTPT>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/SUBJID>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESOC>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEHLGT>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESEQ>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESDTH>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AERELNST>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESOCCD>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AELLTCD>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEBDSYCD>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEPATT>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESLIFE>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEHLT>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEDECOD>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESMIE>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEDUR>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEREFID>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/DOMAIN>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AECAT>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESEV>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEHLTCD>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESER>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESTDY>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEACNOTH>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AELOC>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEGRPID>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEPTCD>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/USUBJID>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESCAT>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENDTC>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESTDTC>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENRF>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENDY>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/STUDYID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/DS> a <neo4j://graph.schema#Source%20Data%20Table>;
+  n4sch:_domain_ "DS";
+  n4sch:SortOrder "USUBJID,STUDYID,DSCAT,DSSCAT,DSTERM,DSSTDTC,DSSEQ" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/VS> a <neo4j://graph.schema#Source%20Data%20Table>;
+  n4sch:SortOrder "USUBJID,VSTPTNUM,VSDTC,STUDYID,VSCAT,VSSCAT,VSTESTCD,VSLOC,VSLAT,VISITNUM,VSTPTREF,VSSEQ";
+  n4sch:_domain_ "VS" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/DM> a <neo4j://graph.schema#Source%20Data%20Table>;
+  n4sch:_domain_ "DM";
+  n4sch:SortOrder "STUDYID,USUBJID" .
+
+<neo4j://graph.schema#Property/Adverse%20Events/STUDYID> a n4sch:Property;
+  n4sch:label "STUDYID";
+  n4sch:Class.label "Adverse Events" .
+
+<neo4j://graph.schema#Class/Adverse%20Events> a n4sch:Class;
+  n4sch:label "Adverse Events";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Adverse%20Events/STUDYID>, <neo4j://graph.schema#Property/Adverse%20Events/--SPID>,
+    <neo4j://graph.schema#Property/Adverse%20Events/USUBJID>, <neo4j://graph.schema#Property/Adverse%20Events/--REFID>,
+    <neo4j://graph.schema#Property/Adverse%20Events/--GRPID>, <neo4j://graph.schema#Property/Adverse%20Events/--SEQ>,
+    <neo4j://graph.schema#Property/Adverse%20Events/DOMAIN>;
+  n4sch:from_domains "AE";
+  n4sch:CoreClass true;
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Subcategory>, <neo4j://graph.schema#Class/Lowest%20Level%20Term>,
+    <neo4j://graph.schema#Class/Preferred%20Term%20Code>, <neo4j://graph.schema#Class/Outcome%20of%20Event>,
+    <neo4j://graph.schema#Class/Serious%20Event>, <neo4j://graph.schema#Class/Persist%20or%20Signif%20Disability/Incapacity>,
+    <neo4j://graph.schema#Class/Modified%20Reported%20Term>, <neo4j://graph.schema#Class/Action%20Taken%20with%20Study%20Treatment>,
+    <neo4j://graph.schema#Class/Dictionary-Derived%20Term>, <neo4j://graph.schema#Class/Results%20in%20Death>,
+    <neo4j://graph.schema#Class/Occurred%20with%20Overdose>, <neo4j://graph.schema#Class/Causality>,
+    <neo4j://graph.schema#Class/End%20Date/Time%20of%20Observation>, <neo4j://graph.schema#Class/Lowest%20Level%20Term%20Code>,
+    <neo4j://graph.schema#Class/Involves%20Cancer>, <neo4j://graph.schema#Class/Pattern%20of%20Event>,
+    <neo4j://graph.schema#Class/Study%20Day%20of%20End%20of%20Observation>, <neo4j://graph.schema#Class/Study%20Day%20of%20Start%20of%20Observation>,
+    <neo4j://graph.schema#Class/End%20Relative%20to%20Reference%20Time%20Point>, <neo4j://graph.schema#Class/Concomitant%20or%20Additional%20Trtmnt%20Given>,
+    <neo4j://graph.schema#Class/High%20Level%20Group%20Term%20Code>, <neo4j://graph.schema#Class/Category>,
+    <neo4j://graph.schema#Class/Primary%20System%20Organ%20Class%20Code>, <neo4j://graph.schema#Class/End%20Reference%20Time%20Point>,
+    <neo4j://graph.schema#Class/Subject%20Identifier%20for%20the%20Study>, <neo4j://graph.schema#Class/Study>,
+    <neo4j://graph.schema#Class/Toxicity%20Grade>, <neo4j://graph.schema#Class/Location%20of%20Event>,
+    <neo4j://graph.schema#Class/Relationship%20to%20Non-Study%20Treatment>, <neo4j://graph.schema#Class/Congenital%20Anomaly%20or%20Birth%20Defect>,
+    <neo4j://graph.schema#Class/Requires%20or%20Prolongs%20Hospitalization>, <neo4j://graph.schema#Class/Body%20System%20or%20Organ%20Class>,
+    <neo4j://graph.schema#Class/High%20Level%20Group%20Term>, <neo4j://graph.schema#Class/Is%20Life%20Threatening>,
+    <neo4j://graph.schema#Class/Reported%20Term>, <neo4j://graph.schema#Class/Pre-specified>,
+    <neo4j://graph.schema#Class/Primary%20System%20Organ%20Class>, <neo4j://graph.schema#Class/Body%20System%20or%20Organ%20Class%20Code>,
+    <neo4j://graph.schema#Class/Start%20Date/Time%20of%20Observation>, <neo4j://graph.schema#Class/Severity>,
+    <neo4j://graph.schema#Class/Other%20Action%20Taken>, <neo4j://graph.schema#Class/Duration>,
+    <neo4j://graph.schema#Class/End%20Relative%20to%20Reference%20Period>, <neo4j://graph.schema#Class/High%20Level%20Term>,
+    <neo4j://graph.schema#Class/Other%20Medically%20Important%20Serious%20Event>, <neo4j://graph.schema#Class/Epoch>,
+    <neo4j://graph.schema#Class/High%20Level%20Term%20Code> .
+
+<neo4j://graph.schema#Property/Adverse%20Events/--SPID> a n4sch:Property;
+  n4sch:label "--SPID";
+  n4sch:Class.label "Adverse Events" .
+
+<neo4j://graph.schema#Property/Adverse%20Events/USUBJID> a n4sch:Property;
+  n4sch:label "USUBJID";
+  n4sch:Class.label "Adverse Events" .
+
+<neo4j://graph.schema#Property/Adverse%20Events/--REFID> a n4sch:Property;
+  n4sch:label "--REFID";
+  n4sch:Class.label "Adverse Events" .
+
+<neo4j://graph.schema#Property/Adverse%20Events/--GRPID> a n4sch:Property;
+  n4sch:Class.label "Adverse Events";
+  n4sch:label "--GRPID" .
+
+<neo4j://graph.schema#Property/Adverse%20Events/--SEQ> a n4sch:Property;
+  n4sch:Class.label "Adverse Events";
+  n4sch:label "--SEQ" .
+
+<neo4j://graph.schema#Property/Adverse%20Events/DOMAIN> a n4sch:Property;
+  n4sch:Class.label "Adverse Events";
+  n4sch:label "DOMAIN" .
+
+<neo4j://graph.schema#Class/Subject> a n4sch:Class;
+  n4sch:label "Subject";
+  n4sch:CoreClass false;
+  n4sch:from_domains "EX", "AE", "DM", "VS", "DS";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Adverse%20Events>, <neo4j://graph.schema#Class/Subject%20Identifier%20for%20the%20Study> .
+
+<neo4j://graph.schema#Class/Subcategory> a n4sch:Class;
+  n4sch:label "Subcategory";
+  n4sch:from_domains "AE", "DS", "VS";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Subcategory/--SCAT> .
+
+<neo4j://graph.schema#Class/Lowest%20Level%20Term> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "AE";
+  n4sch:label "Lowest Level Term";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Reported%20Term>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Lowest%20Level%20Term/--LLT> .
+
+<neo4j://graph.schema#Class/Preferred%20Term%20Code> a n4sch:Class;
+  n4sch:from_domains "AE";
+  n4sch:CoreClass false;
+  n4sch:label "Preferred Term Code";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Dictionary-Derived%20Term>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Preferred%20Term%20Code/--PTCD> .
+
+<neo4j://graph.schema#Class/Outcome%20of%20Event> a n4sch:Class;
+  n4sch:from_domains "AE";
+  n4sch:CoreClass false;
+  n4sch:label "Outcome of Event";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Outcome%20of%20Event/--OUT> .
+
+<neo4j://graph.schema#Class/Serious%20Event> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "AE";
+  n4sch:label "Serious Event";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Serious%20Event/--SER> .
+
+<neo4j://graph.schema#Class/Persist%20or%20Signif%20Disability/Incapacity> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "Persist or Signif Disability/Incapacity";
+  n4sch:from_domains "AE";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Persist%20or%20Signif%20Disability/Incapacity/--SDISAB> .
+
+<neo4j://graph.schema#Class/Modified%20Reported%20Term> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "AE";
+  n4sch:label "Modified Reported Term";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Reported%20Term>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Modified%20Reported%20Term/--MODIFY> .
+
+<neo4j://graph.schema#Class/Action%20Taken%20with%20Study%20Treatment> a n4sch:Class;
+  n4sch:label "Action Taken with Study Treatment";
+  n4sch:from_domains "AE";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Action%20Taken%20with%20Study%20Treatment/--ACN> .
+
+<neo4j://graph.schema#Class/Dictionary-Derived%20Term> a n4sch:Class;
+  n4sch:label "Dictionary-Derived Term";
+  n4sch:from_domains "AE", "DS";
+  n4sch:CoreClass false;
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Reported%20Term>, <neo4j://graph.schema#Class/Subcategory>,
+    <neo4j://graph.schema#Class/Category>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Dictionary-Derived%20Term/--DECOD> .
+
+<neo4j://graph.schema#Class/Results%20in%20Death> a n4sch:Class;
+  n4sch:from_domains "AE";
+  n4sch:label "Results in Death";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Results%20in%20Death/--SDTH> .
+
+<neo4j://graph.schema#Class/Occurred%20with%20Overdose> a n4sch:Class;
+  n4sch:label "Occurred with Overdose";
+  n4sch:from_domains "AE";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Occurred%20with%20Overdose/--SOD> .
+
+<neo4j://graph.schema#Class/Causality> a n4sch:Class;
+  n4sch:from_domains "AE";
+  n4sch:label "Causality";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Causality/--REL> .
+
+<neo4j://graph.schema#Class/End%20Date/Time%20of%20Observation> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "AE", "EX";
+  n4sch:label "End Date/Time of Observation" .
+
+<neo4j://graph.schema#Class/Lowest%20Level%20Term%20Code> a n4sch:Class;
+  n4sch:label "Lowest Level Term Code";
+  n4sch:from_domains "AE";
+  n4sch:CoreClass false;
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Lowest%20Level%20Term>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Lowest%20Level%20Term%20Code/--LLTCD> .
+
+<neo4j://graph.schema#Class/Involves%20Cancer> a n4sch:Class;
+  n4sch:from_domains "AE";
+  n4sch:CoreClass false;
+  n4sch:label "Involves Cancer";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Involves%20Cancer/--SCAN> .
+
+<neo4j://graph.schema#Class/Pattern%20of%20Event> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "AE";
+  n4sch:label "Pattern of Event";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Pattern%20of%20Event/--PATT> .
+
+<neo4j://graph.schema#Class/Study%20Day%20of%20End%20of%20Observation> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "AE", "EX";
+  n4sch:label "Study Day of End of Observation" .
+
+<neo4j://graph.schema#Class/Study%20Day%20of%20Start%20of%20Observation> a n4sch:Class;
+  n4sch:label "Study Day of Start of Observation";
+  n4sch:from_domains "DS", "AE", "EX";
+  n4sch:CoreClass false .
+
+<neo4j://graph.schema#Class/End%20Relative%20to%20Reference%20Time%20Point> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "End Relative to Reference Time Point";
+  n4sch:from_domains "AE" .
+
+<neo4j://graph.schema#Class/Concomitant%20or%20Additional%20Trtmnt%20Given> a n4sch:Class;
+  n4sch:from_domains "AE";
+  n4sch:label "Concomitant or Additional Trtmnt Given";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Concomitant%20or%20Additional%20Trtmnt%20Given/--CONTRT> .
+
+<neo4j://graph.schema#Class/High%20Level%20Group%20Term%20Code> a n4sch:Class;
+  n4sch:label "High Level Group Term Code";
+  n4sch:CoreClass false;
+  n4sch:from_domains "AE";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/High%20Level%20Group%20Term>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/High%20Level%20Group%20Term%20Code/--HLGTCD> .
+
+<neo4j://graph.schema#Class/Category> a n4sch:Class;
+  n4sch:from_domains "DS", "AE", "VS";
+  n4sch:CoreClass false;
+  n4sch:label "Category";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Subcategory>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Category/--CAT> .
+
+<neo4j://graph.schema#Class/Primary%20System%20Organ%20Class%20Code> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "Primary System Organ Class Code";
+  n4sch:from_domains "AE";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Primary%20System%20Organ%20Class>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Primary%20System%20Organ%20Class%20Code/--SOCCD> .
+
+<neo4j://graph.schema#Class/End%20Reference%20Time%20Point> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "End Reference Time Point";
+  n4sch:from_domains "AE" .
+
+<neo4j://graph.schema#Class/Subject%20Identifier%20for%20the%20Study> a n4sch:Class;
+  n4sch:from_domains "DS", "VS", "DM", "EX", "AE";
+  n4sch:label "Subject Identifier for the Study";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Subject%20Identifier%20for%20the%20Study/SUBJID> .
+
+<neo4j://graph.schema#Class/Study> a n4sch:Class;
+  n4sch:label "Study";
+  n4sch:from_domains "DS", "AE", "EX", "DM", "VS";
+  n4sch:CoreClass false .
+
+<neo4j://graph.schema#Class/Toxicity%20Grade> a n4sch:Class;
+  n4sch:from_domains "AE";
+  n4sch:label "Toxicity Grade";
+  n4sch:CoreClass false;
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Result%20or%20Finding%20in%20Standard%20Format>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Toxicity%20Grade/--TOXGR> .
+
+<neo4j://graph.schema#Class/Location%20of%20Event> a n4sch:Class;
+  n4sch:label "Location of Event";
+  n4sch:from_domains "AE", "VS";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Location%20of%20Event/--LOC> .
+
+<neo4j://graph.schema#Class/Relationship%20to%20Non-Study%20Treatment> a n4sch:Class;
+  n4sch:from_domains "AE";
+  n4sch:CoreClass false;
+  n4sch:label "Relationship to Non-Study Treatment";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Relationship%20to%20Non-Study%20Treatment/--RELNST> .
+
+<neo4j://graph.schema#Class/Congenital%20Anomaly%20or%20Birth%20Defect> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "AE";
+  n4sch:label "Congenital Anomaly or Birth Defect";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Congenital%20Anomaly%20or%20Birth%20Defect/--SCONG> .
+
+<neo4j://graph.schema#Class/Requires%20or%20Prolongs%20Hospitalization> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "Requires or Prolongs Hospitalization";
+  n4sch:from_domains "AE";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Requires%20or%20Prolongs%20Hospitalization/--SHOSP> .
+
+<neo4j://graph.schema#Class/Body%20System%20or%20Organ%20Class> a n4sch:Class;
+  n4sch:label "Body System or Organ Class";
+  n4sch:CoreClass false;
+  n4sch:from_domains "AE";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Dictionary-Derived%20Term>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Body%20System%20or%20Organ%20Class/--BODSYS> .
+
+<neo4j://graph.schema#Class/High%20Level%20Group%20Term> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "High Level Group Term";
+  n4sch:from_domains "AE";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Reported%20Term>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/High%20Level%20Group%20Term/--HLGT> .
+
+<neo4j://graph.schema#Class/Is%20Life%20Threatening> a n4sch:Class;
+  n4sch:from_domains "AE";
+  n4sch:CoreClass false;
+  n4sch:label "Is Life Threatening";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Is%20Life%20Threatening/--SLIFE> .
+
+<neo4j://graph.schema#Class/Reported%20Term> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "AE", "DS";
+  n4sch:label "Reported Term";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Subcategory>, <neo4j://graph.schema#Class/Category>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Reported%20Term/--TERM> .
+
+<neo4j://graph.schema#Class/Pre-specified> a n4sch:Class;
+  n4sch:from_domains "AE";
+  n4sch:CoreClass false;
+  n4sch:label "Pre-specified";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Reported%20Term>, <neo4j://graph.schema#Class/Name%20of%20Treatment>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Pre-specified/--PRESP> .
+
+<neo4j://graph.schema#Class/Primary%20System%20Organ%20Class> a n4sch:Class;
+  n4sch:label "Primary System Organ Class";
+  n4sch:from_domains "AE";
+  n4sch:CoreClass false;
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Reported%20Term>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Primary%20System%20Organ%20Class/--SOC> .
+
+<neo4j://graph.schema#Class/Body%20System%20or%20Organ%20Class%20Code> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "Body System or Organ Class Code";
+  n4sch:from_domains "AE";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Body%20System%20or%20Organ%20Class>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Body%20System%20or%20Organ%20Class%20Code/--BDSYCD> .
+
+<neo4j://graph.schema#Class/Start%20Date/Time%20of%20Observation> a n4sch:Class;
+  n4sch:from_domains "EX", "AE", "DS";
+  n4sch:label "Start Date/Time of Observation";
+  n4sch:CoreClass false .
+
+<neo4j://graph.schema#Class/Severity> a n4sch:Class;
+  n4sch:label "Severity";
+  n4sch:from_domains "AE";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Severity/--SEV> .
+
+<neo4j://graph.schema#Class/Other%20Action%20Taken> a n4sch:Class;
+  n4sch:label "Other Action Taken";
+  n4sch:from_domains "AE";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Other%20Action%20Taken/--ACNOTH> .
+
+<neo4j://graph.schema#Class/Duration> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "Duration";
+  n4sch:from_domains "AE" .
+
+<neo4j://graph.schema#Class/End%20Relative%20to%20Reference%20Period> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "End Relative to Reference Period";
+  n4sch:from_domains "AE" .
+
+<neo4j://graph.schema#Class/High%20Level%20Term> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "AE";
+  n4sch:label "High Level Term";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Reported%20Term>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/High%20Level%20Term/--HLT> .
+
+<neo4j://graph.schema#Class/Other%20Medically%20Important%20Serious%20Event> a n4sch:Class;
+  n4sch:from_domains "AE";
+  n4sch:CoreClass false;
+  n4sch:label "Other Medically Important Serious Event";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Other%20Medically%20Important%20Serious%20Event/--SMIE> .
+
+<neo4j://graph.schema#Class/Epoch> a n4sch:Class;
+  n4sch:from_domains "VS", "AE", "EX", "DS";
+  n4sch:label "Epoch";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Epoch/EPOCH> .
+
+<neo4j://graph.schema#Class/High%20Level%20Term%20Code> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "AE";
+  n4sch:label "High Level Term Code";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/High%20Level%20Term>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/High%20Level%20Term%20Code/--HLTCD> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/STUDYID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "1"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required";
+  n4sch:_columnname_ "STUDYID";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Adverse%20Events/STUDYID>, <neo4j://graph.schema#Property/Study/STUDYID>;
+  n4sch:_domain_ "AE" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESCAN> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "AESCAN";
+  n4sch:_domain_ "AE";
+  n4sch:Order "35"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Involves%20Cancer/--SCAN> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESHOSP> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "39"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "AESHOSP";
+  n4sch:_domain_ "AE";
+  n4sch:Core "Expected";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Requires%20or%20Prolongs%20Hospitalization/--SHOSP> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESPID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:_columnname_ "AESPID";
+  n4sch:Order "8"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Adverse%20Events/--SPID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEACN> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "AEACN";
+  n4sch:_domain_ "AE";
+  n4sch:Order "29"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Action%20Taken%20with%20Study%20Treatment/--ACN> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEMODIFY> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "AEMODIFY";
+  n4sch:Order "10"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "AE";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Modified%20Reported%20Term/--MODIFY> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESOD> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "AESOD";
+  n4sch:_domain_ "AE";
+  n4sch:Order "41"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Occurred%20with%20Overdose/--SOD> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEHLGTCD> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "AEHLGTCD";
+  n4sch:_domain_ "AE";
+  n4sch:Order "18"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/High%20Level%20Group%20Term%20Code/--HLGTCD> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESDISAB> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Expected";
+  n4sch:_domain_ "AE";
+  n4sch:Order "37"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "AESDISAB";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Persist%20or%20Signif%20Disability/Incapacity/--SDISAB> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/EPOCH> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "EPOCH";
+  n4sch:Order "45"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "AE";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Epoch/EPOCH> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AECONTRT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:Order "43"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "AECONTRT";
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Concomitant%20or%20Additional%20Trtmnt%20Given/--CONTRT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEOUT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:Order "34"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "AEOUT";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Outcome%20of%20Event/--OUT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AELLT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "AELLT";
+  n4sch:Order "11"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "AE";
+  n4sch:Core "Expected";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Lowest%20Level%20Term/--LLT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AETERM> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "AETERM";
+  n4sch:Order "9"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required";
+  n4sch:_domain_ "AE";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Reported%20Term/--TERM> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEPRESP> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "21"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "AEPRESP";
+  n4sch:_domain_ "AE";
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Pre-specified/--PRESP> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENRTPT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:Order "52"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "AEENRTPT";
+  n4sch:Core "Permissible" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEREL> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "AEREL";
+  n4sch:Core "Expected";
+  n4sch:Order "31"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "AE";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Causality/--REL> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AETOXGR> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "AETOXGR";
+  n4sch:Core "Permissible";
+  n4sch:_domain_ "AE";
+  n4sch:Order "44"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Toxicity%20Grade/--TOXGR> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEBODSYS> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "22"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:_domain_ "AE";
+  n4sch:_columnname_ "AEBODSYS";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Body%20System%20or%20Organ%20Class/--BODSYS> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESCONG> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Expected";
+  n4sch:_columnname_ "AESCONG";
+  n4sch:Order "36"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "AE";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Congenital%20Anomaly%20or%20Birth%20Defect/--SCONG> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENTPT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:_domain_ "AE";
+  n4sch:_columnname_ "AEENTPT";
+  n4sch:Order "53"^^<http://www.w3.org/2001/XMLSchema#long> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/SUBJID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "SUBJID";
+  n4sch:Core "Permissible";
+  n4sch:_domain_ "AE";
+  n4sch:Order "4"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Subject%20Identifier%20for%20the%20Study/SUBJID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESOC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Expected";
+  n4sch:_domain_ "AE";
+  n4sch:_columnname_ "AESOC";
+  n4sch:Order "24"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Primary%20System%20Organ%20Class/--SOC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEHLGT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "17"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "AE";
+  n4sch:_columnname_ "AEHLGT";
+  n4sch:Core "Expected";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/High%20Level%20Group%20Term/--HLGT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESEQ> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:Core "Required";
+  n4sch:Order "5"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "AESEQ";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Adverse%20Events/--SEQ> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESDTH> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "AESDTH";
+  n4sch:Order "38"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "AE";
+  n4sch:Core "Expected";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Results%20in%20Death/--SDTH> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AERELNST> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "32"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "AE";
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "AERELNST";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Relationship%20to%20Non-Study%20Treatment/--RELNST> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESOCCD> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:Order "25"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:_columnname_ "AESOCCD";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Primary%20System%20Organ%20Class%20Code/--SOCCD> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AELLTCD> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "AELLTCD";
+  n4sch:_domain_ "AE";
+  n4sch:Core "Expected";
+  n4sch:Order "12"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Lowest%20Level%20Term%20Code/--LLTCD> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEBDSYCD> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:Core "Expected";
+  n4sch:_columnname_ "AEBDSYCD";
+  n4sch:Order "23"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Body%20System%20or%20Organ%20Class%20Code/--BDSYCD> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEPATT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:_columnname_ "AEPATT";
+  n4sch:Core "Permissible";
+  n4sch:Order "33"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Pattern%20of%20Event/--PATT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESLIFE> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:Core "Expected";
+  n4sch:Order "40"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "AESLIFE";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Is%20Life%20Threatening/--SLIFE> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEHLT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:_columnname_ "AEHLT";
+  n4sch:Order "15"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/High%20Level%20Term/--HLT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEDECOD> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "13"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "AEDECOD";
+  n4sch:_domain_ "AE";
+  n4sch:Core "Required";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Dictionary-Derived%20Term/--DECOD> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESMIE> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Expected";
+  n4sch:Order "42"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "AESMIE";
+  n4sch:_domain_ "AE";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Other%20Medically%20Important%20Serious%20Event/--SMIE> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEDUR> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:Order "50"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "AEDUR" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEREFID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "AEREFID";
+  n4sch:Core "Permissible";
+  n4sch:_domain_ "AE";
+  n4sch:Order "7"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Adverse%20Events/--REFID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/DOMAIN> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "DOMAIN";
+  n4sch:Order "2"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required";
+  n4sch:_domain_ "AE";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Adverse%20Events/DOMAIN> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AECAT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:_domain_ "AE";
+  n4sch:Order "19"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "AECAT";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Category/--CAT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESEV> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:Order "27"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "AESEV";
+  n4sch:_domain_ "AE";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Severity/--SEV> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEHLTCD> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Expected";
+  n4sch:_domain_ "AE";
+  n4sch:_columnname_ "AEHLTCD";
+  n4sch:Order "16"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/High%20Level%20Term%20Code/--HLTCD> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESER> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:Order "28"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:_columnname_ "AESER";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Serious%20Event/--SER> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESTDY> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:Core "Permissible";
+  n4sch:Order "48"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "AESTDY" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEACNOTH> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:_domain_ "AE";
+  n4sch:Order "30"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "AEACNOTH";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Other%20Action%20Taken/--ACNOTH> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AELOC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:Order "26"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "AE";
+  n4sch:_columnname_ "AELOC";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Location%20of%20Event/--LOC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEGRPID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "AEGRPID";
+  n4sch:Order "6"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Adverse%20Events/--GRPID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEPTCD> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "AEPTCD";
+  n4sch:_domain_ "AE";
+  n4sch:Core "Expected";
+  n4sch:Order "14"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Preferred%20Term%20Code/--PTCD> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/USUBJID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "3"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required";
+  n4sch:_columnname_ "USUBJID";
+  n4sch:_domain_ "AE";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Adverse%20Events/USUBJID>, <neo4j://graph.schema#Property/Subject/USUBJID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESCAT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:_domain_ "AE";
+  n4sch:_columnname_ "AESCAT";
+  n4sch:Order "20"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Subcategory/--SCAT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "AEENDTC";
+  n4sch:Order "47"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:_domain_ "AE" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESTDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:Core "Expected";
+  n4sch:_columnname_ "AESTDTC";
+  n4sch:Order "46"^^<http://www.w3.org/2001/XMLSchema#long> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENRF> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "AE";
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "AEENRF";
+  n4sch:Order "51"^^<http://www.w3.org/2001/XMLSchema#long> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENDY> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:Order "49"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "AE";
+  n4sch:_columnname_ "AEENDY" .
+
+<neo4j://graph.schema#Property/Study/STUDYID> a n4sch:Property;
+  n4sch:Class.label "Study";
+  n4sch:label "STUDYID" .
+
+<neo4j://graph.schema#Property/Subject/USUBJID> a n4sch:Property;
+  n4sch:Class.label "Subject";
+  n4sch:label "USUBJID" .
+
+<neo4j://graph.schema#Class/Vital%20Signs> a n4sch:Class;
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Subject%20Identifier%20for%20the%20Study>,
+    <neo4j://graph.schema#Class/Category>, <neo4j://graph.schema#Class/Subcategory>, <neo4j://graph.schema#Class/Location%20of%20Event>,
+    <neo4j://graph.schema#Class/Epoch>;
+  n4sch:label "Vital Signs";
+  n4sch:CoreClass true;
+  n4sch:from_domains "VS" .
+
+<neo4j://graph.schema#Class/Demographics> a n4sch:Class;
+  n4sch:CoreClass true;
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Subject%20Identifier%20for%20the%20Study>;
+  n4sch:label "Demographics";
+  n4sch:from_domains "DM" .
+
+<neo4j://graph.schema#Class/Exposure> a n4sch:Class;
+  n4sch:label "Exposure";
+  n4sch:from_domains "EX";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Subject%20Identifier%20for%20the%20Study>,
+    <neo4j://graph.schema#Class/Epoch>, <neo4j://graph.schema#Class/Start%20Date/Time%20of%20Observation>;
+  n4sch:CoreClass true .
+
+<neo4j://graph.schema#Class/Disposition> a n4sch:Class;
+  n4sch:label "Disposition";
+  n4sch:CoreClass true;
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Subject%20Identifier%20for%20the%20Study>,
+    <neo4j://graph.schema#Class/Reported%20Term>, <neo4j://graph.schema#Class/Dictionary-Derived%20Term>,
+    <neo4j://graph.schema#Class/Category>, <neo4j://graph.schema#Class/Subcategory>, <neo4j://graph.schema#Class/Epoch>,
+    <neo4j://graph.schema#Class/Start%20Date/Time%20of%20Observation>;
+  n4sch:from_domains "DS" .
+
+<neo4j://graph.schema#Property/Subject%20Identifier%20for%20the%20Study/SUBJID> a
+    n4sch:Property;
+  n4sch:Class.label "Subject Identifier for the Study";
+  n4sch:label "SUBJID" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/SUBJID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "DM";
+  n4sch:_columnname_ "SUBJID";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Subject%20Identifier%20for%20the%20Study/SUBJID>;
+  n4sch:Order "4"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/SUBJID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "SUBJID";
+  n4sch:_domain_ "VS";
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Subject%20Identifier%20for%20the%20Study/SUBJID>;
+  n4sch:Order "4"^^<http://www.w3.org/2001/XMLSchema#long> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/SUBJID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Subject%20Identifier%20for%20the%20Study/SUBJID>;
+  n4sch:_columnname_ "SUBJID";
+  n4sch:Order "4"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "EX";
+  n4sch:Core "Permissible" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/SUBJID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "SUBJID";
+  n4sch:Core "Permissible";
+  n4sch:_domain_ "DS";
+  n4sch:Order "4"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Subject%20Identifier%20for%20the%20Study/SUBJID> .
+
+<neo4j://graph.schema#Property/Reported%20Term/--TERM> a n4sch:Property;
+  n4sch:Class.label "Reported Term";
+  n4sch:label "--TERM" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSTERM> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "DSTERM";
+  n4sch:_domain_ "DS";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Reported%20Term/--TERM>;
+  n4sch:Core "Required";
+  n4sch:Order "6"^^<http://www.w3.org/2001/XMLSchema#long> .
+
+<neo4j://graph.schema#Property/Modified%20Reported%20Term/--MODIFY> a n4sch:Property;
+  n4sch:label "--MODIFY";
+  n4sch:Class.label "Modified Reported Term" .
+
+<neo4j://graph.schema#Property/Lowest%20Level%20Term/--LLT> a n4sch:Property;
+  n4sch:label "--LLT";
+  n4sch:Class.label "Lowest Level Term" .
+
+<neo4j://graph.schema#Property/Lowest%20Level%20Term%20Code/--LLTCD> a n4sch:Property;
+  n4sch:Class.label "Lowest Level Term Code";
+  n4sch:label "--LLTCD" .
+
+<neo4j://graph.schema#Property/Dictionary-Derived%20Term/--DECOD> a n4sch:Property;
+  n4sch:label "--DECOD";
+  n4sch:Class.label "Dictionary-Derived Term" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSDECOD> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "DS";
+  n4sch:_columnname_ "DSDECOD";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Dictionary-Derived%20Term/--DECOD>;
+  n4sch:Order "7"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required" .
+
+<neo4j://graph.schema#Property/Preferred%20Term%20Code/--PTCD> a n4sch:Property;
+  n4sch:Class.label "Preferred Term Code";
+  n4sch:label "--PTCD" .
+
+<neo4j://graph.schema#Property/High%20Level%20Term/--HLT> a n4sch:Property;
+  n4sch:label "--HLT";
+  n4sch:Class.label "High Level Term" .
+
+<neo4j://graph.schema#Property/High%20Level%20Term%20Code/--HLTCD> a n4sch:Property;
+  n4sch:Class.label "High Level Term Code";
+  n4sch:label "--HLTCD" .
+
+<neo4j://graph.schema#Property/High%20Level%20Group%20Term/--HLGT> a n4sch:Property;
+  n4sch:Class.label "High Level Group Term";
+  n4sch:label "--HLGT" .
+
+<neo4j://graph.schema#Property/High%20Level%20Group%20Term%20Code/--HLGTCD> a n4sch:Property;
+  n4sch:Class.label "High Level Group Term Code";
+  n4sch:label "--HLGTCD" .
+
+<neo4j://graph.schema#Class/Name%20of%20Treatment> a n4sch:Class;
+  n4sch:from_domains "EX";
+  n4sch:CoreClass false;
+  n4sch:label "Name of Treatment";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Category>, <neo4j://graph.schema#Class/Subcategory> .
+
+<neo4j://graph.schema#Class/Name%20of%20Measurement,%20Test%20or%20Examination> a
+    n4sch:Class;
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Category>, <neo4j://graph.schema#Class/Subcategory>;
+  n4sch:CoreClass false;
+  n4sch:from_domains "VS";
+  n4sch:label "Name of Measurement, Test or Examination" .
+
+<neo4j://graph.schema#Property/Category/--CAT> a n4sch:Property;
+  n4sch:Class.label "Category";
+  n4sch:label "--CAT" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSCAT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Expected";
+  n4sch:_columnname_ "DSCAT";
+  n4sch:_domain_ "DS";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Category/--CAT>;
+  n4sch:Order "8"^^<http://www.w3.org/2001/XMLSchema#long> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSCAT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "VSCAT";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Category/--CAT>;
+  n4sch:Order "10"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "VS";
+  n4sch:Core "Permissible" .
+
+<neo4j://graph.schema#Property/Subcategory/--SCAT> a n4sch:Property;
+  n4sch:label "--SCAT";
+  n4sch:Class.label "Subcategory" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSSCAT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Subcategory/--SCAT>;
+  n4sch:_domain_ "VS";
+  n4sch:_columnname_ "VSSCAT";
+  n4sch:Order "11"^^<http://www.w3.org/2001/XMLSchema#long> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSSCAT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "9"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "DS";
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Subcategory/--SCAT>;
+  n4sch:_columnname_ "DSSCAT" .
+
+<neo4j://graph.schema#Property/Pre-specified/--PRESP> a n4sch:Property;
+  n4sch:Class.label "Pre-specified";
+  n4sch:label "--PRESP" .
+
+<neo4j://graph.schema#Property/Body%20System%20or%20Organ%20Class/--BODSYS> a n4sch:Property;
+  n4sch:Class.label "Body System or Organ Class";
+  n4sch:label "--BODSYS" .
+
+<neo4j://graph.schema#Property/Body%20System%20or%20Organ%20Class%20Code/--BDSYCD>
+  a n4sch:Property;
+  n4sch:label "--BDSYCD";
+  n4sch:Class.label "Body System or Organ Class Code" .
+
+<neo4j://graph.schema#Property/Primary%20System%20Organ%20Class/--SOC> a n4sch:Property;
+  n4sch:label "--SOC";
+  n4sch:Class.label "Primary System Organ Class" .
+
+<neo4j://graph.schema#Property/Primary%20System%20Organ%20Class%20Code/--SOCCD> a
+    n4sch:Property;
+  n4sch:label "--SOCCD";
+  n4sch:Class.label "Primary System Organ Class Code" .
+
+<neo4j://graph.schema#Property/Location%20of%20Event/--LOC> a n4sch:Property;
+  n4sch:label "--LOC";
+  n4sch:Class.label "Location of Event" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSLOC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "VSLOC";
+  n4sch:Order "20"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "VS";
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Location%20of%20Event/--LOC> .
+
+<neo4j://graph.schema#Property/Severity/--SEV> a n4sch:Property;
+  n4sch:label "--SEV";
+  n4sch:Class.label "Severity" .
+
+<neo4j://graph.schema#Property/Serious%20Event/--SER> a n4sch:Property;
+  n4sch:label "--SER";
+  n4sch:Class.label "Serious Event" .
+
+<neo4j://graph.schema#Property/Action%20Taken%20with%20Study%20Treatment/--ACN> a
+    n4sch:Property;
+  n4sch:Class.label "Action Taken with Study Treatment";
+  n4sch:label "--ACN" .
+
+<neo4j://graph.schema#Property/Other%20Action%20Taken/--ACNOTH> a n4sch:Property;
+  n4sch:label "--ACNOTH";
+  n4sch:Class.label "Other Action Taken" .
+
+<neo4j://graph.schema#Property/Causality/--REL> a n4sch:Property;
+  n4sch:Class.label "Causality";
+  n4sch:label "--REL" .
+
+<neo4j://graph.schema#Property/Relationship%20to%20Non-Study%20Treatment/--RELNST>
+  a n4sch:Property;
+  n4sch:label "--RELNST";
+  n4sch:Class.label "Relationship to Non-Study Treatment" .
+
+<neo4j://graph.schema#Property/Pattern%20of%20Event/--PATT> a n4sch:Property;
+  n4sch:label "--PATT";
+  n4sch:Class.label "Pattern of Event" .
+
+<neo4j://graph.schema#Property/Outcome%20of%20Event/--OUT> a n4sch:Property;
+  n4sch:label "--OUT";
+  n4sch:Class.label "Outcome of Event" .
+
+<neo4j://graph.schema#Property/Involves%20Cancer/--SCAN> a n4sch:Property;
+  n4sch:Class.label "Involves Cancer";
+  n4sch:label "--SCAN" .
+
+<neo4j://graph.schema#Property/Congenital%20Anomaly%20or%20Birth%20Defect/--SCONG>
+  a n4sch:Property;
+  n4sch:label "--SCONG";
+  n4sch:Class.label "Congenital Anomaly or Birth Defect" .
+
+<neo4j://graph.schema#Property/Persist%20or%20Signif%20Disability/Incapacity/--SDISAB>
+  a n4sch:Property;
+  n4sch:label "--SDISAB";
+  n4sch:Class.label "Persist or Signif Disability/Incapacity" .
+
+<neo4j://graph.schema#Property/Results%20in%20Death/--SDTH> a n4sch:Property;
+  n4sch:Class.label "Results in Death";
+  n4sch:label "--SDTH" .
+
+<neo4j://graph.schema#Property/Requires%20or%20Prolongs%20Hospitalization/--SHOSP>
+  a n4sch:Property;
+  n4sch:label "--SHOSP";
+  n4sch:Class.label "Requires or Prolongs Hospitalization" .
+
+<neo4j://graph.schema#Property/Is%20Life%20Threatening/--SLIFE> a n4sch:Property;
+  n4sch:Class.label "Is Life Threatening";
+  n4sch:label "--SLIFE" .
+
+<neo4j://graph.schema#Property/Occurred%20with%20Overdose/--SOD> a n4sch:Property;
+  n4sch:label "--SOD";
+  n4sch:Class.label "Occurred with Overdose" .
+
+<neo4j://graph.schema#Property/Other%20Medically%20Important%20Serious%20Event/--SMIE>
+  a n4sch:Property;
+  n4sch:Class.label "Other Medically Important Serious Event";
+  n4sch:label "--SMIE" .
+
+<neo4j://graph.schema#Property/Concomitant%20or%20Additional%20Trtmnt%20Given/--CONTRT>
+  a n4sch:Property;
+  n4sch:label "--CONTRT";
+  n4sch:Class.label "Concomitant or Additional Trtmnt Given" .
+
+<neo4j://graph.schema#Class/Result%20or%20Finding%20in%20Standard%20Format> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "Result or Finding in Standard Format";
+  n4sch:from_domains "VS" .
+
+<neo4j://graph.schema#Property/Toxicity%20Grade/--TOXGR> a n4sch:Property;
+  n4sch:label "--TOXGR";
+  n4sch:Class.label "Toxicity Grade" .
+
+<neo4j://graph.schema#Property/Epoch/EPOCH> a n4sch:Property;
+  n4sch:Class.label "Epoch";
+  n4sch:label "EPOCH" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EPOCH> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "16"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Permissible";
+  n4sch:_domain_ "EX";
+  n4sch:_columnname_ "EPOCH";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Epoch/EPOCH> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/EPOCH> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "VS";
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "EPOCH";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Epoch/EPOCH>;
+  n4sch:Order "26"^^<http://www.w3.org/2001/XMLSchema#long> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/EPOCH> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "10"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Permissible";
+  n4sch:_domain_ "DS";
+  n4sch:_columnname_ "EPOCH";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Epoch/EPOCH> .
+
+<neo4j://graph.schema#Property/Start%20Date/Time%20of%20Observation/--STDTC> a n4sch:Property;
+  n4sch:label "--STDTC";
+  n4sch:Class.label "Start Date/Time of Observation" .
+
+<neo4j://graph.schema#Class/Start%20Date/Time%20of%20Observation> n4sch:HAS_PROPERTY
+    <neo4j://graph.schema#Property/Start%20Date/Time%20of%20Observation/--STDTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSSTDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "DSSTDTC";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Start%20Date/Time%20of%20Observation/--STDTC>;
+  n4sch:Core "Expected";
+  n4sch:_domain_ "DS";
+  n4sch:Order "11"^^<http://www.w3.org/2001/XMLSchema#long> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESTDTC> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Start%20Date/Time%20of%20Observation/--STDTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXSTDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "17"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "EXSTDTC";
+  n4sch:Core "Expected";
+  n4sch:_domain_ "EX";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Start%20Date/Time%20of%20Observation/--STDTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/AE> n4sch:HAS_COLUMN <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESTDTC>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENDTC>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESTDY>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENDY>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEDUR>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENRF>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENRTPT>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENTPT> .
+
+<neo4j://graph.schema#Class/Exposure> n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/End%20Date/Time%20of%20Observation>,
+    <neo4j://graph.schema#Class/Study%20Day%20of%20Start%20of%20Observation>, <neo4j://graph.schema#Class/Study%20Day%20of%20End%20of%20Observation>,
+    <neo4j://graph.schema#Class/Route%20of%20Administration>, <neo4j://graph.schema#Class/Name%20of%20Treatment>,
+    <neo4j://graph.schema#Class/Planned%20Time%20Point%20Name>, <neo4j://graph.schema#Class/Start%20Date/Time%20of%20Observation>,
+    <neo4j://graph.schema#Class/Dose>, <neo4j://graph.schema#Class/Subject%20Identifier%20for%20the%20Study>,
+    <neo4j://graph.schema#Class/Visit%20Number>, <neo4j://graph.schema#Class/Time%20Point%20Reference>,
+    <neo4j://graph.schema#Class/Dose%20Units>, <neo4j://graph.schema#Class/Dosing%20Frequency%20per%20Interval>,
+    <neo4j://graph.schema#Class/Planned%20Time%20Point%20Number>, <neo4j://graph.schema#Class/Study>,
+    <neo4j://graph.schema#Class/Visit%20Name>, <neo4j://graph.schema#Class/Dose%20Form>,
+    <neo4j://graph.schema#Class/Epoch>, <neo4j://graph.schema#Class/Planned%20Elapsed%20Time%20from%20Time%20Point%20Ref>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Exposure/USUBJID>, <neo4j://graph.schema#Property/Exposure/STUDYID>,
+    <neo4j://graph.schema#Property/Exposure/--SEQ>, <neo4j://graph.schema#Property/Exposure/DOMAIN>,
+    <neo4j://graph.schema#Property/Exposure/--REFID>, <neo4j://graph.schema#Property/Exposure/--LNKID> .
+
+<neo4j://graph.schema#Class/Adverse%20Events> n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/End%20Date/Time%20of%20Observation>,
+    <neo4j://graph.schema#Class/Study%20Day%20of%20Start%20of%20Observation>, <neo4j://graph.schema#Class/Study%20Day%20of%20End%20of%20Observation>,
+    <neo4j://graph.schema#Class/Duration>, <neo4j://graph.schema#Class/End%20Relative%20to%20Reference%20Period>,
+    <neo4j://graph.schema#Class/End%20Relative%20to%20Reference%20Time%20Point>, <neo4j://graph.schema#Class/End%20Reference%20Time%20Point> .
+
+<neo4j://graph.schema#Property/End%20Date/Time%20of%20Observation/--ENDTC> a n4sch:Property;
+  n4sch:Class.label "End Date/Time of Observation";
+  n4sch:label "--ENDTC" .
+
+<neo4j://graph.schema#Class/End%20Date/Time%20of%20Observation> n4sch:HAS_PROPERTY
+    <neo4j://graph.schema#Property/End%20Date/Time%20of%20Observation/--ENDTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXENDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "18"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "EXENDTC";
+  n4sch:_domain_ "EX";
+  n4sch:Core "Expected";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/End%20Date/Time%20of%20Observation/--ENDTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENDTC> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/End%20Date/Time%20of%20Observation/--ENDTC> .
+
+<neo4j://graph.schema#Class/Disposition> n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Study%20Day%20of%20Start%20of%20Observation>,
+    <neo4j://graph.schema#Class/Study%20Day%20of%20Visit/Collection/Exam>, <neo4j://graph.schema#Class/Epoch>,
+    <neo4j://graph.schema#Class/Reported%20Term>, <neo4j://graph.schema#Class/Dictionary-Derived%20Term>,
+    <neo4j://graph.schema#Class/Subcategory>, <neo4j://graph.schema#Class/Study>, <neo4j://graph.schema#Class/Category>,
+    <neo4j://graph.schema#Class/Subject%20Identifier%20for%20the%20Study>, <neo4j://graph.schema#Class/Start%20Date/Time%20of%20Observation>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Disposition/USUBJID>, <neo4j://graph.schema#Property/Disposition/STUDYID>,
+    <neo4j://graph.schema#Property/Disposition/DOMAIN>, <neo4j://graph.schema#Property/Disposition/--SEQ> .
+
+<neo4j://graph.schema#Property/Study%20Day%20of%20Start%20of%20Observation/--STDY>
+  a n4sch:Property;
+  n4sch:label "--STDY";
+  n4sch:Class.label "Study Day of Start of Observation" .
+
+<neo4j://graph.schema#Class/Study%20Day%20of%20Start%20of%20Observation> n4sch:HAS_PROPERTY
+    <neo4j://graph.schema#Property/Study%20Day%20of%20Start%20of%20Observation/--STDY> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSSTDY> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:_domain_ "DS";
+  n4sch:Order "13"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Study%20Day%20of%20Start%20of%20Observation/--STDY>;
+  n4sch:_columnname_ "DSSTDY" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AESTDY> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Study%20Day%20of%20Start%20of%20Observation/--STDY> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXSTDY> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "EXSTDY";
+  n4sch:Order "19"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Study%20Day%20of%20Start%20of%20Observation/--STDY>;
+  n4sch:_domain_ "EX";
+  n4sch:Core "Permissible" .
+
+<neo4j://graph.schema#Property/Study%20Day%20of%20End%20of%20Observation/--ENDY> a
+    n4sch:Property;
+  n4sch:label "--ENDY";
+  n4sch:Class.label "Study Day of End of Observation" .
+
+<neo4j://graph.schema#Class/Study%20Day%20of%20End%20of%20Observation> n4sch:HAS_PROPERTY
+    <neo4j://graph.schema#Property/Study%20Day%20of%20End%20of%20Observation/--ENDY> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXENDY> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Study%20Day%20of%20End%20of%20Observation/--ENDY>;
+  n4sch:Order "20"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "EXENDY";
+  n4sch:_domain_ "EX" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENDY> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Study%20Day%20of%20End%20of%20Observation/--ENDY> .
+
+<neo4j://graph.schema#Property/Duration/--DUR> a n4sch:Property;
+  n4sch:Class.label "Duration";
+  n4sch:label "--DUR" .
+
+<neo4j://graph.schema#Class/Duration> n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Duration/--DUR> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEDUR> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Duration/--DUR> .
+
+<neo4j://graph.schema#Property/End%20Relative%20to%20Reference%20Period/--ENRF> a
+    n4sch:Property;
+  n4sch:label "--ENRF";
+  n4sch:Class.label "End Relative to Reference Period" .
+
+<neo4j://graph.schema#Class/End%20Relative%20to%20Reference%20Period> n4sch:HAS_PROPERTY
+    <neo4j://graph.schema#Property/End%20Relative%20to%20Reference%20Period/--ENRF> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENRF> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/End%20Relative%20to%20Reference%20Period/--ENRF> .
+
+<neo4j://graph.schema#Property/End%20Relative%20to%20Reference%20Time%20Point/--ENRTPT>
+  a n4sch:Property;
+  n4sch:Class.label "End Relative to Reference Time Point";
+  n4sch:label "--ENRTPT" .
+
+<neo4j://graph.schema#Class/End%20Relative%20to%20Reference%20Time%20Point> n4sch:HAS_PROPERTY
+    <neo4j://graph.schema#Property/End%20Relative%20to%20Reference%20Time%20Point/--ENRTPT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENRTPT> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/End%20Relative%20to%20Reference%20Time%20Point/--ENRTPT> .
+
+<neo4j://graph.schema#Property/End%20Reference%20Time%20Point/--ENTPT> a n4sch:Property;
+  n4sch:label "--ENTPT";
+  n4sch:Class.label "End Reference Time Point" .
+
+<neo4j://graph.schema#Class/End%20Reference%20Time%20Point> n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/End%20Reference%20Time%20Point/--ENTPT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/AEENTPT> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/End%20Reference%20Time%20Point/--ENTPT> .
+
+<neo4j://graph.schema#Class/Age> a n4sch:Class;
+  n4sch:from_domains "DM";
+  n4sch:CoreClass false;
+  n4sch:label "Age";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Age/AGE> .
+
+<neo4j://graph.schema#Class/Demographics> n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Age>,
+    <neo4j://graph.schema#Class/Country>, <neo4j://graph.schema#Class/Subject%20Identifier%20for%20the%20Study>,
+    <neo4j://graph.schema#Class/Date/Time%20of%20Birth>, <neo4j://graph.schema#Class/Subject%20Death%20Flag>,
+    <neo4j://graph.schema#Class/Date/Time%20of%20Last%20Study%20Treatment>, <neo4j://graph.schema#Class/Sex>,
+    <neo4j://graph.schema#Class/Date/Time%20of%20Death>, <neo4j://graph.schema#Class/Date/Time%20of%20End%20of%20Participation>,
+    <neo4j://graph.schema#Class/Age%20Units>, <neo4j://graph.schema#Class/Study>, <neo4j://graph.schema#Class/Subject%20Reference%20Start%20Date/Time>,
+    <neo4j://graph.schema#Class/Study%20Site%20Identifier>, <neo4j://graph.schema#Class/Date/Time%20of%20First%20Study%20Treatment>,
+    <neo4j://graph.schema#Class/Investigator%20Identifier>, <neo4j://graph.schema#Class/Actual%20Arm%20Code>,
+    <neo4j://graph.schema#Class/Description%20of%20Actual%20Arm>, <neo4j://graph.schema#Class/Subject%20Reference%20End%20Date/Time>,
+    <neo4j://graph.schema#Class/Race>, <neo4j://graph.schema#Class/Date/Time%20of%20Collection>,
+    <neo4j://graph.schema#Class/Description%20of%20Planned%20Arm>, <neo4j://graph.schema#Class/Date/Time%20of%20Informed%20Consent>,
+    <neo4j://graph.schema#Class/Planned%20Arm%20Code>, <neo4j://graph.schema#Class/Ethnicity>,
+    <neo4j://graph.schema#Class/Study%20Day%20of%20Visit/Collection/Exam>, <neo4j://graph.schema#Class/Investigator%20Name>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Demographics/DOMAIN>, <neo4j://graph.schema#Property/Demographics/USUBJID>,
+    <neo4j://graph.schema#Property/Demographics/STUDYID> .
+
+<neo4j://graph.schema#Class/Country> a n4sch:Class;
+  n4sch:label "Country";
+  n4sch:from_domains "DM";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Country/COUNTRY> .
+
+<neo4j://graph.schema#Class/Date/Time%20of%20Birth> a n4sch:Class;
+  n4sch:from_domains "DM";
+  n4sch:label "Date/Time of Birth";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20Birth/BRTHDTC> .
+
+<neo4j://graph.schema#Class/Subject%20Death%20Flag> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "Subject Death Flag";
+  n4sch:from_domains "DM";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Subject%20Death%20Flag/DTHFL> .
+
+<neo4j://graph.schema#Class/Date/Time%20of%20Last%20Study%20Treatment> a n4sch:Class;
+  n4sch:from_domains "DM";
+  n4sch:label "Date/Time of Last Study Treatment";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20Last%20Study%20Treatment/RFXENDTC> .
+
+<neo4j://graph.schema#Class/Sex> a n4sch:Class;
+  n4sch:from_domains "DM";
+  n4sch:CoreClass false;
+  n4sch:label "Sex";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Sex/SEX> .
+
+<neo4j://graph.schema#Class/Date/Time%20of%20Death> a n4sch:Class;
+  n4sch:label "Date/Time of Death";
+  n4sch:from_domains "DM";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20Death/DTHDTC> .
+
+<neo4j://graph.schema#Class/Date/Time%20of%20End%20of%20Participation> a n4sch:Class;
+  n4sch:from_domains "DM";
+  n4sch:label "Date/Time of End of Participation";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20End%20of%20Participation/RFPENDTC> .
+
+<neo4j://graph.schema#Class/Age%20Units> a n4sch:Class;
+  n4sch:label "Age Units";
+  n4sch:from_domains "DM";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Age%20Units/AGEU> .
+
+<neo4j://graph.schema#Class/Subject%20Reference%20Start%20Date/Time> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "Subject Reference Start Date/Time";
+  n4sch:from_domains "DM";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Subject%20Reference%20Start%20Date/Time/RFSTDTC> .
+
+<neo4j://graph.schema#Class/Study%20Site%20Identifier> a n4sch:Class;
+  n4sch:label "Study Site Identifier";
+  n4sch:from_domains "DM";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Study%20Site%20Identifier/SITEID> .
+
+<neo4j://graph.schema#Class/Date/Time%20of%20First%20Study%20Treatment> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "DM";
+  n4sch:label "Date/Time of First Study Treatment";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20First%20Study%20Treatment/RFXSTDTC> .
+
+<neo4j://graph.schema#Class/Investigator%20Identifier> a n4sch:Class;
+  n4sch:label "Investigator Identifier";
+  n4sch:from_domains "DM";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Investigator%20Identifier/INVID> .
+
+<neo4j://graph.schema#Class/Actual%20Arm%20Code> a n4sch:Class;
+  n4sch:from_domains "DM";
+  n4sch:CoreClass false;
+  n4sch:label "Actual Arm Code";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Actual%20Arm%20Code/ACTARMCD> .
+
+<neo4j://graph.schema#Class/Description%20of%20Actual%20Arm> a n4sch:Class;
+  n4sch:label "Description of Actual Arm";
+  n4sch:from_domains "DM";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Description%20of%20Actual%20Arm/ACTARM> .
+
+<neo4j://graph.schema#Class/Subject%20Reference%20End%20Date/Time> a n4sch:Class;
+  n4sch:label "Subject Reference End Date/Time";
+  n4sch:from_domains "DM";
+  n4sch:CoreClass false;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Subject%20Reference%20End%20Date/Time/RFENDTC> .
+
+<neo4j://graph.schema#Class/Race> a n4sch:Class;
+  n4sch:from_domains "DM";
+  n4sch:CoreClass false;
+  n4sch:label "Race";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Race/RACE> .
+
+<neo4j://graph.schema#Class/Date/Time%20of%20Collection> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "Date/Time of Collection";
+  n4sch:from_domains "DM", "VS";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20Collection/--DTC> .
+
+<neo4j://graph.schema#Class/Description%20of%20Planned%20Arm> a n4sch:Class;
+  n4sch:from_domains "DM";
+  n4sch:CoreClass false;
+  n4sch:label "Description of Planned Arm";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Description%20of%20Planned%20Arm/ARM> .
+
+<neo4j://graph.schema#Class/Date/Time%20of%20Informed%20Consent> a n4sch:Class;
+  n4sch:label "Date/Time of Informed Consent";
+  n4sch:CoreClass false;
+  n4sch:from_domains "DM";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20Informed%20Consent/RFICDTC> .
+
+<neo4j://graph.schema#Class/Planned%20Arm%20Code> a n4sch:Class;
+  n4sch:label "Planned Arm Code";
+  n4sch:CoreClass false;
+  n4sch:from_domains "DM";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Planned%20Arm%20Code/ARMCD> .
+
+<neo4j://graph.schema#Class/Ethnicity> a n4sch:Class;
+  n4sch:from_domains "DM";
+  n4sch:CoreClass false;
+  n4sch:label "Ethnicity";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Ethnicity/ETHNIC> .
+
+<neo4j://graph.schema#Class/Study%20Day%20of%20Visit/Collection/Exam> a n4sch:Class;
+  n4sch:from_domains "VS", "DS", "DM";
+  n4sch:CoreClass false;
+  n4sch:label "Study Day of Visit/Collection/Exam";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Study%20Day%20of%20Visit/Collection/Exam/--DY> .
+
+<neo4j://graph.schema#Class/Investigator%20Name> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "Investigator Name";
+  n4sch:from_domains "DM";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Investigator%20Name/INVNAM> .
+
+<neo4j://graph.schema#Class/Subject> n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Demographics>,
+    <neo4j://graph.schema#Class/Subject%20Reference%20Start%20Date/Time>, <neo4j://graph.schema#Class/Subject%20Reference%20End%20Date/Time>,
+    <neo4j://graph.schema#Class/Date/Time%20of%20First%20Study%20Treatment>, <neo4j://graph.schema#Class/Date/Time%20of%20Last%20Study%20Treatment>,
+    <neo4j://graph.schema#Class/Date/Time%20of%20Informed%20Consent>, <neo4j://graph.schema#Class/Date/Time%20of%20End%20of%20Participation>,
+    <neo4j://graph.schema#Class/Date/Time%20of%20Death>, <neo4j://graph.schema#Class/Subject%20Death%20Flag>,
+    <neo4j://graph.schema#Class/Study%20Site%20Identifier>, <neo4j://graph.schema#Class/Investigator%20Identifier>,
+    <neo4j://graph.schema#Class/Investigator%20Name>, <neo4j://graph.schema#Class/Date/Time%20of%20Birth>,
+    <neo4j://graph.schema#Class/Age>, <neo4j://graph.schema#Class/Age%20Units>, <neo4j://graph.schema#Class/Sex>,
+    <neo4j://graph.schema#Class/Race>, <neo4j://graph.schema#Class/Ethnicity>, <neo4j://graph.schema#Class/Planned%20Arm%20Code>,
+    <neo4j://graph.schema#Class/Description%20of%20Planned%20Arm>, <neo4j://graph.schema#Class/Actual%20Arm%20Code>,
+    <neo4j://graph.schema#Class/Description%20of%20Actual%20Arm>, <neo4j://graph.schema#Class/Country>,
+    <neo4j://graph.schema#Class/Date/Time%20of%20Collection>, <neo4j://graph.schema#Class/Study%20Day%20of%20Visit/Collection/Exam>,
+    <neo4j://graph.schema#Class/Disposition>, <neo4j://graph.schema#Class/Exposure>, <neo4j://graph.schema#Class/Vital%20Signs> .
+
+<neo4j://graph.schema#Property/Demographics/DOMAIN> a n4sch:Property;
+  n4sch:label "DOMAIN";
+  n4sch:Class.label "Demographics" .
+
+<neo4j://graph.schema#Property/Demographics/USUBJID> a n4sch:Property;
+  n4sch:label "USUBJID";
+  n4sch:Class.label "Demographics" .
+
+<neo4j://graph.schema#Property/Demographics/STUDYID> a n4sch:Property;
+  n4sch:label "STUDYID";
+  n4sch:Class.label "Demographics" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/STUDYID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "DM";
+  n4sch:_columnname_ "STUDYID";
+  n4sch:Order "1"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Demographics/STUDYID>, <neo4j://graph.schema#Property/Study/STUDYID>;
+  n4sch:Core "Required" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/DOMAIN> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "DM";
+  n4sch:Order "2"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "DOMAIN";
+  n4sch:Core "Required";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Demographics/DOMAIN> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/DM> n4sch:HAS_COLUMN <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/DOMAIN>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/AGEU>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/DMDTC>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/SITEID>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/ETHNIC>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/INVID>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/RACE>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/AGE>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/SEX>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/USUBJID>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/DTHFL>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/RFICDTC>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/ACTARM>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/DMDY>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/RFSTDTC>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/ARMCD>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/RFXENDTC>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/INVNAM>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/SUBJID>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/RFPENDTC>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/RFXSTDTC>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/RFENDTC>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/ACTARMCD>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/ARM>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/DTHDTC>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/STUDYID>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/BRTHDTC>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/COUNTRY> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/AGEU> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "DM";
+  n4sch:_columnname_ "AGEU";
+  n4sch:Core "Expected";
+  n4sch:Order "18"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Age%20Units/AGEU> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/DMDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "27"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "DMDTC";
+  n4sch:_domain_ "DM";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20Collection/--DTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/SITEID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Required";
+  n4sch:_columnname_ "SITEID";
+  n4sch:_domain_ "DM";
+  n4sch:Order "13"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Study%20Site%20Identifier/SITEID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/ETHNIC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "21"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "ETHNIC";
+  n4sch:_domain_ "DM";
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Ethnicity/ETHNIC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/INVID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "INVID";
+  n4sch:Core "Permissible";
+  n4sch:Order "14"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "DM";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Investigator%20Identifier/INVID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/RACE> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "RACE";
+  n4sch:Order "20"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:_domain_ "DM";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Race/RACE> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/AGE> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "17"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "DM";
+  n4sch:Core "Expected";
+  n4sch:_columnname_ "AGE";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Age/AGE> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/SEX> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "DM";
+  n4sch:Core "Required";
+  n4sch:Order "19"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "SEX";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Sex/SEX> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/USUBJID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "3"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required";
+  n4sch:_columnname_ "USUBJID";
+  n4sch:_domain_ "DM";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Demographics/USUBJID>, <neo4j://graph.schema#Property/Subject/USUBJID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/DTHFL> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "DTHFL";
+  n4sch:_domain_ "DM";
+  n4sch:Order "12"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Subject%20Death%20Flag/DTHFL> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/RFICDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "9"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:_domain_ "DM";
+  n4sch:_columnname_ "RFICDTC";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20Informed%20Consent/RFICDTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/ACTARM> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "ACTARM";
+  n4sch:_domain_ "DM";
+  n4sch:Order "25"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Description%20of%20Actual%20Arm/ACTARM> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/DMDY> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "28"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "DMDY";
+  n4sch:_domain_ "DM";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Study%20Day%20of%20Visit/Collection/Exam/--DY> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/RFSTDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "RFSTDTC";
+  n4sch:Core "Expected";
+  n4sch:Order "5"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "DM";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Subject%20Reference%20Start%20Date/Time/RFSTDTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/ARMCD> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "ARMCD";
+  n4sch:_domain_ "DM";
+  n4sch:Core "Required";
+  n4sch:Order "22"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Planned%20Arm%20Code/ARMCD> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/RFXENDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "DM";
+  n4sch:_columnname_ "RFXENDTC";
+  n4sch:Order "8"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20Last%20Study%20Treatment/RFXENDTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/INVNAM> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "DM";
+  n4sch:_columnname_ "INVNAM";
+  n4sch:Order "15"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Investigator%20Name/INVNAM> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/RFPENDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Expected";
+  n4sch:Order "10"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "RFPENDTC";
+  n4sch:_domain_ "DM";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20End%20of%20Participation/RFPENDTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/RFXSTDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "7"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "DM";
+  n4sch:_columnname_ "RFXSTDTC";
+  n4sch:Core "Expected";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20First%20Study%20Treatment/RFXSTDTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/RFENDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Expected";
+  n4sch:Order "6"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "RFENDTC";
+  n4sch:_domain_ "DM";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Subject%20Reference%20End%20Date/Time/RFENDTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/ACTARMCD> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "ACTARMCD";
+  n4sch:_domain_ "DM";
+  n4sch:Order "24"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Actual%20Arm%20Code/ACTARMCD> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/ARM> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "23"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required";
+  n4sch:_columnname_ "ARM";
+  n4sch:_domain_ "DM";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Description%20of%20Planned%20Arm/ARM> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/DTHDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "11"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:_columnname_ "DTHDTC";
+  n4sch:_domain_ "DM";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20Death/DTHDTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Data%20Extraction%20Standard/MDR3_2> n4sch:HAS_TABLE
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/DM>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/DS>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/EX> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/BRTHDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:Order "16"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "BRTHDTC";
+  n4sch:_domain_ "DM";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20Birth/BRTHDTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/COUNTRY> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "DM";
+  n4sch:_columnname_ "COUNTRY";
+  n4sch:Order "26"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Country/COUNTRY> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/SUBJID> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Subject%20Identifier%20for%20the%20Study/SUBJID> .
+
+<neo4j://graph.schema#Property/Subject%20Reference%20Start%20Date/Time/RFSTDTC> a
+    n4sch:Property;
+  n4sch:Class.label "Subject Reference Start Date/Time";
+  n4sch:label "RFSTDTC" .
+
+<neo4j://graph.schema#Property/Subject%20Reference%20End%20Date/Time/RFENDTC> a n4sch:Property;
+  n4sch:label "RFENDTC";
+  n4sch:Class.label "Subject Reference End Date/Time" .
+
+<neo4j://graph.schema#Property/Date/Time%20of%20First%20Study%20Treatment/RFXSTDTC>
+  a n4sch:Property;
+  n4sch:label "RFXSTDTC";
+  n4sch:Class.label "Date/Time of First Study Treatment" .
+
+<neo4j://graph.schema#Property/Date/Time%20of%20Last%20Study%20Treatment/RFXENDTC>
+  a n4sch:Property;
+  n4sch:Class.label "Date/Time of Last Study Treatment";
+  n4sch:label "RFXENDTC" .
+
+<neo4j://graph.schema#Property/Date/Time%20of%20Informed%20Consent/RFICDTC> a n4sch:Property;
+  n4sch:label "RFICDTC";
+  n4sch:Class.label "Date/Time of Informed Consent" .
+
+<neo4j://graph.schema#Property/Date/Time%20of%20End%20of%20Participation/RFPENDTC>
+  a n4sch:Property;
+  n4sch:label "RFPENDTC";
+  n4sch:Class.label "Date/Time of End of Participation" .
+
+<neo4j://graph.schema#Property/Date/Time%20of%20Death/DTHDTC> a n4sch:Property;
+  n4sch:Class.label "Date/Time of Death";
+  n4sch:label "DTHDTC" .
+
+<neo4j://graph.schema#Property/Subject%20Death%20Flag/DTHFL> a n4sch:Property;
+  n4sch:label "DTHFL";
+  n4sch:Class.label "Subject Death Flag" .
+
+<neo4j://graph.schema#Property/Study%20Site%20Identifier/SITEID> a n4sch:Property;
+  n4sch:label "SITEID";
+  n4sch:Class.label "Study Site Identifier" .
+
+<neo4j://graph.schema#Property/Investigator%20Identifier/INVID> a n4sch:Property;
+  n4sch:Class.label "Investigator Identifier";
+  n4sch:label "INVID" .
+
+<neo4j://graph.schema#Property/Investigator%20Name/INVNAM> a n4sch:Property;
+  n4sch:Class.label "Investigator Name";
+  n4sch:label "INVNAM" .
+
+<neo4j://graph.schema#Property/Date/Time%20of%20Birth/BRTHDTC> a n4sch:Property;
+  n4sch:Class.label "Date/Time of Birth";
+  n4sch:label "BRTHDTC" .
+
+<neo4j://graph.schema#Property/Age/AGE> a n4sch:Property;
+  n4sch:label "AGE";
+  n4sch:Class.label "Age" .
+
+<neo4j://graph.schema#Property/Age%20Units/AGEU> a n4sch:Property;
+  n4sch:label "AGEU";
+  n4sch:Class.label "Age Units" .
+
+<neo4j://graph.schema#Property/Sex/SEX> a n4sch:Property;
+  n4sch:label "SEX";
+  n4sch:Class.label "Sex" .
+
+<neo4j://graph.schema#Property/Race/RACE> a n4sch:Property;
+  n4sch:Class.label "Race";
+  n4sch:label "RACE" .
+
+<neo4j://graph.schema#Property/Ethnicity/ETHNIC> a n4sch:Property;
+  n4sch:Class.label "Ethnicity";
+  n4sch:label "ETHNIC" .
+
+<neo4j://graph.schema#Property/Planned%20Arm%20Code/ARMCD> a n4sch:Property;
+  n4sch:Class.label "Planned Arm Code";
+  n4sch:label "ARMCD" .
+
+<neo4j://graph.schema#Property/Description%20of%20Planned%20Arm/ARM> a n4sch:Property;
+  n4sch:label "ARM";
+  n4sch:Class.label "Description of Planned Arm" .
+
+<neo4j://graph.schema#Property/Actual%20Arm%20Code/ACTARMCD> a n4sch:Property;
+  n4sch:Class.label "Actual Arm Code";
+  n4sch:label "ACTARMCD" .
+
+<neo4j://graph.schema#Property/Description%20of%20Actual%20Arm/ACTARM> a n4sch:Property;
+  n4sch:label "ACTARM";
+  n4sch:Class.label "Description of Actual Arm" .
+
+<neo4j://graph.schema#Property/Country/COUNTRY> a n4sch:Property;
+  n4sch:label "COUNTRY";
+  n4sch:Class.label "Country" .
+
+<neo4j://graph.schema#Class/Vital%20Signs> n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Date/Time%20of%20Collection>,
+    <neo4j://graph.schema#Class/Study%20Day%20of%20Visit/Collection/Exam>, <neo4j://graph.schema#Class/Visit%20Number>,
+    <neo4j://graph.schema#Class/Visit%20Name>, <neo4j://graph.schema#Class/Planned%20Time%20Point%20Name>,
+    <neo4j://graph.schema#Class/Planned%20Time%20Point%20Number>, <neo4j://graph.schema#Class/Planned%20Elapsed%20Time%20from%20Time%20Point%20Ref>,
+    <neo4j://graph.schema#Class/Time%20Point%20Reference>, <neo4j://graph.schema#Class/Name%20of%20Measurement,%20Test%20or%20Examination>,
+    <neo4j://graph.schema#Class/Category>, <neo4j://graph.schema#Class/Laterality>, <neo4j://graph.schema#Class/Subject%20Identifier%20for%20the%20Study>,
+    <neo4j://graph.schema#Class/Result%20or%20Finding%20in%20Original%20Units>, <neo4j://graph.schema#Class/Numeric%20Result/Finding%20in%20Standard%20Units>,
+    <neo4j://graph.schema#Class/Position%20of%20Subject%20During%20Observation>, <neo4j://graph.schema#Class/Date/Time%20of%20Reference%20Time%20Point>,
+    <neo4j://graph.schema#Class/Completion%20Status>, <neo4j://graph.schema#Class/Location%20of%20Event>,
+    <neo4j://graph.schema#Class/Result%20or%20Finding%20in%20Standard%20Format> .
+
+<neo4j://graph.schema#Property/Date/Time%20of%20Collection/--DTC> a n4sch:Property;
+  n4sch:Class.label "Date/Time of Collection";
+  n4sch:label "--DTC" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Expected";
+  n4sch:Order "27"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "VS";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20Collection/--DTC>;
+  n4sch:_columnname_ "VSDTC" .
+
+<neo4j://graph.schema#Property/Study%20Day%20of%20Visit/Collection/Exam/--DY> a n4sch:Property;
+  n4sch:label "--DY";
+  n4sch:Class.label "Study Day of Visit/Collection/Exam" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSDY> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "12"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "DS";
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "DSDY";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Study%20Day%20of%20Visit/Collection/Exam/--DY> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSDY> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "28"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "VS";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Study%20Day%20of%20Visit/Collection/Exam/--DY>;
+  n4sch:_columnname_ "VSDY";
+  n4sch:Core "Permissible" .
+
+<neo4j://graph.schema#Property/Disposition/USUBJID> a n4sch:Property;
+  n4sch:Class.label "Disposition";
+  n4sch:label "USUBJID" .
+
+<neo4j://graph.schema#Property/Disposition/STUDYID> a n4sch:Property;
+  n4sch:Class.label "Disposition";
+  n4sch:label "STUDYID" .
+
+<neo4j://graph.schema#Property/Disposition/DOMAIN> a n4sch:Property;
+  n4sch:label "DOMAIN";
+  n4sch:Class.label "Disposition" .
+
+<neo4j://graph.schema#Property/Disposition/--SEQ> a n4sch:Property;
+  n4sch:Class.label "Disposition";
+  n4sch:label "--SEQ" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/STUDYID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Required";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Disposition/STUDYID>, <neo4j://graph.schema#Property/Study/STUDYID>;
+  n4sch:Order "1"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "DS";
+  n4sch:_columnname_ "STUDYID" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/DS> n4sch:HAS_COLUMN <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSSTDY>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/STUDYID>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/SUBJID>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/EPOCH>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSSTDTC>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSTERM>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSSCAT>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DOMAIN>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/USUBJID>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSSEQ>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSDECOD>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSCAT>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSDY> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DOMAIN> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Required";
+  n4sch:_domain_ "DS";
+  n4sch:Order "2"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "DOMAIN";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Disposition/DOMAIN> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/USUBJID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "DS";
+  n4sch:Order "3"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required";
+  n4sch:_columnname_ "USUBJID";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Disposition/USUBJID>, <neo4j://graph.schema#Property/Subject/USUBJID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSSEQ> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Required";
+  n4sch:_domain_ "DS";
+  n4sch:Order "5"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "DSSEQ";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Disposition/--SEQ> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/SUBJID> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Subject%20Identifier%20for%20the%20Study/SUBJID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSTERM> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Reported%20Term/--TERM> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSDECOD> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Dictionary-Derived%20Term/--DECOD> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSCAT> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Category/--CAT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/DSSCAT> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Subcategory/--SCAT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/EPOCH> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Epoch/EPOCH> .
+
+<neo4j://graph.schema#Class/Route%20of%20Administration> a n4sch:Class;
+  n4sch:label "Route of Administration";
+  n4sch:CoreClass false;
+  n4sch:from_domains "EX";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Name%20of%20Treatment>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Route%20of%20Administration/--ROUTE> .
+
+<neo4j://graph.schema#Class/Planned%20Time%20Point%20Name> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "EX", "VS";
+  n4sch:label "Planned Time Point Name";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Planned%20Time%20Point%20Name/--TPT> .
+
+<neo4j://graph.schema#Class/Dose> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "EX";
+  n4sch:label "Dose";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Dose/--DOSE> .
+
+<neo4j://graph.schema#Class/Visit%20Number> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "Visit Number";
+  n4sch:from_domains "VS", "EX";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Visit%20Number/VISITNUM> .
+
+<neo4j://graph.schema#Class/Time%20Point%20Reference> a n4sch:Class;
+  n4sch:from_domains "EX", "VS";
+  n4sch:CoreClass false;
+  n4sch:label "Time Point Reference";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Time%20Point%20Reference/--TPTREF> .
+
+<neo4j://graph.schema#Class/Dose%20Units> a n4sch:Class;
+  n4sch:from_domains "EX";
+  n4sch:label "Dose Units";
+  n4sch:CoreClass false;
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Dose>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Dose%20Units/--DOSU> .
+
+<neo4j://graph.schema#Class/Dosing%20Frequency%20per%20Interval> a n4sch:Class;
+  n4sch:label "Dosing Frequency per Interval";
+  n4sch:from_domains "EX";
+  n4sch:CoreClass false;
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Dose>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Dosing%20Frequency%20per%20Interval/--DOSFRQ> .
+
+<neo4j://graph.schema#Class/Planned%20Time%20Point%20Number> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "Planned Time Point Number";
+  n4sch:from_domains "VS", "EX";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Planned%20Time%20Point%20Number/--TPTNUM> .
+
+<neo4j://graph.schema#Class/Visit%20Name> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "EX", "VS";
+  n4sch:label "Visit Name";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Visit%20Name/VISIT> .
+
+<neo4j://graph.schema#Class/Dose%20Form> a n4sch:Class;
+  n4sch:from_domains "EX";
+  n4sch:CoreClass false;
+  n4sch:label "Dose Form";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Dose>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Dose%20Form/--DOSFRM> .
+
+<neo4j://graph.schema#Class/Planned%20Elapsed%20Time%20from%20Time%20Point%20Ref>
+  a n4sch:Class;
+  n4sch:from_domains "EX", "VS";
+  n4sch:CoreClass false;
+  n4sch:label "Planned Elapsed Time from Time Point Ref";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Planned%20Elapsed%20Time%20from%20Time%20Point%20Ref/--ELTM> .
+
+<neo4j://graph.schema#Property/Exposure/USUBJID> a n4sch:Property;
+  n4sch:label "USUBJID";
+  n4sch:Class.label "Exposure" .
+
+<neo4j://graph.schema#Property/Exposure/STUDYID> a n4sch:Property;
+  n4sch:label "STUDYID";
+  n4sch:Class.label "Exposure" .
+
+<neo4j://graph.schema#Property/Exposure/--SEQ> a n4sch:Property;
+  n4sch:label "--SEQ";
+  n4sch:Class.label "Exposure" .
+
+<neo4j://graph.schema#Property/Exposure/DOMAIN> a n4sch:Property;
+  n4sch:Class.label "Exposure";
+  n4sch:label "DOMAIN" .
+
+<neo4j://graph.schema#Property/Exposure/--REFID> a n4sch:Property;
+  n4sch:Class.label "Exposure";
+  n4sch:label "--REFID" .
+
+<neo4j://graph.schema#Property/Exposure/--LNKID> a n4sch:Property;
+  n4sch:label "--LNKID";
+  n4sch:Class.label "Exposure" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/STUDYID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Exposure/STUDYID>, <neo4j://graph.schema#Property/Study/STUDYID>;
+  n4sch:_columnname_ "STUDYID";
+  n4sch:Core "Required";
+  n4sch:_domain_ "EX";
+  n4sch:Order "1"^^<http://www.w3.org/2001/XMLSchema#long> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/EX> n4sch:HAS_COLUMN <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXELTM>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EPOCH>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXREFID>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXENDY>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/VISITNUM>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXDOSU>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/VISIT>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXSTDTC>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXLNKID>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXSEQ>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXTPT>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXTPTREF>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/STUDYID>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/DOMAIN>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/USUBJID>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXTRT>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXROUTE>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXTPTNUM>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXDOSFRQ>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXENDTC>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXSTDY>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/SUBJID>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXDOSFRM>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXDOSE> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXELTM> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "23"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "EXELTM";
+  n4sch:_domain_ "EX";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Planned%20Elapsed%20Time%20from%20Time%20Point%20Ref/--ELTM> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXREFID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:Order "6"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "EX";
+  n4sch:_columnname_ "EXREFID";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Exposure/--REFID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/VISITNUM> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "VISITNUM";
+  n4sch:Order "14"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "EX";
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Visit%20Number/VISITNUM> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXDOSU> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "EXDOSU";
+  n4sch:Order "10"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "EX";
+  n4sch:Core "Expected";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Dose%20Units/--DOSU> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/VISIT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:_domain_ "EX";
+  n4sch:Order "15"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "VISIT";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Visit%20Name/VISIT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXLNKID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "EX";
+  n4sch:Order "7"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "EXLNKID";
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Exposure/--LNKID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXSEQ> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "5"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "EX";
+  n4sch:Core "Required";
+  n4sch:_columnname_ "EXSEQ";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Exposure/--SEQ> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXTPT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "21"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "EXTPT";
+  n4sch:_domain_ "EX";
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Planned%20Time%20Point%20Name/--TPT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXTPTREF> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "EXTPTREF";
+  n4sch:Order "24"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "EX";
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Time%20Point%20Reference/--TPTREF> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/DOMAIN> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "DOMAIN";
+  n4sch:Order "2"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "EX";
+  n4sch:Core "Required";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Exposure/DOMAIN> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/USUBJID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "USUBJID";
+  n4sch:_domain_ "EX";
+  n4sch:Order "3"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Exposure/USUBJID>, <neo4j://graph.schema#Property/Subject/USUBJID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXTRT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "8"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "EX";
+  n4sch:_columnname_ "EXTRT";
+  n4sch:Core "Required";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Name%20of%20Treatment/--TRT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXROUTE> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "EXROUTE";
+  n4sch:Order "13"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "EX";
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Route%20of%20Administration/--ROUTE> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXTPTNUM> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "22"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "EXTPTNUM";
+  n4sch:_domain_ "EX";
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Planned%20Time%20Point%20Number/--TPTNUM> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXDOSFRQ> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "12"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "EXDOSFRQ";
+  n4sch:_domain_ "EX";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Dosing%20Frequency%20per%20Interval/--DOSFRQ> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXDOSFRM> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "EXDOSFRM";
+  n4sch:Order "11"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:_domain_ "EX";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Dose%20Form/--DOSFRM> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EXDOSE> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "9"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "EX";
+  n4sch:Core "Expected";
+  n4sch:_columnname_ "EXDOSE";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Dose/--DOSE> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/SUBJID> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Subject%20Identifier%20for%20the%20Study/SUBJID> .
+
+<neo4j://graph.schema#Class/Name%20of%20Treatment> n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Category>,
+    <neo4j://graph.schema#Class/Subcategory>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Name%20of%20Treatment/--TRT> .
+
+<neo4j://graph.schema#Class/Pre-specified> n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Name%20of%20Treatment> .
+
+<neo4j://graph.schema#Property/Name%20of%20Treatment/--TRT> a n4sch:Property;
+  n4sch:label "--TRT";
+  n4sch:Class.label "Name of Treatment" .
+
+<neo4j://graph.schema#Property/Dose/--DOSE> a n4sch:Property;
+  n4sch:Class.label "Dose";
+  n4sch:label "--DOSE" .
+
+<neo4j://graph.schema#Property/Dose%20Units/--DOSU> a n4sch:Property;
+  n4sch:label "--DOSU";
+  n4sch:Class.label "Dose Units" .
+
+<neo4j://graph.schema#Property/Dose%20Form/--DOSFRM> a n4sch:Property;
+  n4sch:label "--DOSFRM";
+  n4sch:Class.label "Dose Form" .
+
+<neo4j://graph.schema#Property/Dosing%20Frequency%20per%20Interval/--DOSFRQ> a n4sch:Property;
+  n4sch:label "--DOSFRQ";
+  n4sch:Class.label "Dosing Frequency per Interval" .
+
+<neo4j://graph.schema#Property/Route%20of%20Administration/--ROUTE> a n4sch:Property;
+  n4sch:Class.label "Route of Administration";
+  n4sch:label "--ROUTE" .
+
+<neo4j://graph.schema#Property/Visit%20Number/VISITNUM> a n4sch:Property;
+  n4sch:Class.label "Visit Number";
+  n4sch:label "VISITNUM" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VISITNUM> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "24"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:_columnname_ "VISITNUM";
+  n4sch:_domain_ "VS";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Visit%20Number/VISITNUM> .
+
+<neo4j://graph.schema#Property/Visit%20Name/VISIT> a n4sch:Property;
+  n4sch:Class.label "Visit Name";
+  n4sch:label "VISIT" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VISIT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "VISIT";
+  n4sch:Core "Expected";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Visit%20Name/VISIT>;
+  n4sch:_domain_ "VS";
+  n4sch:Order "25"^^<http://www.w3.org/2001/XMLSchema#long> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/EPOCH> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Epoch/EPOCH> .
+
+<neo4j://graph.schema#Property/Planned%20Time%20Point%20Name/--TPT> a n4sch:Property;
+  n4sch:Class.label "Planned Time Point Name";
+  n4sch:label "--TPT" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSTPT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "VSTPT";
+  n4sch:_domain_ "VS";
+  n4sch:Core "Permissible";
+  n4sch:Order "29"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Planned%20Time%20Point%20Name/--TPT> .
+
+<neo4j://graph.schema#Property/Planned%20Time%20Point%20Number/--TPTNUM> a n4sch:Property;
+  n4sch:label "--TPTNUM";
+  n4sch:Class.label "Planned Time Point Number" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSTPTNUM> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Planned%20Time%20Point%20Number/--TPTNUM>;
+  n4sch:_columnname_ "VSTPTNUM";
+  n4sch:Core "Permissible";
+  n4sch:Order "30"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "VS" .
+
+<neo4j://graph.schema#Property/Planned%20Elapsed%20Time%20from%20Time%20Point%20Ref/--ELTM>
+  a n4sch:Property;
+  n4sch:Class.label "Planned Elapsed Time from Time Point Ref";
+  n4sch:label "--ELTM" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSELTM> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "VSELTM";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Planned%20Elapsed%20Time%20from%20Time%20Point%20Ref/--ELTM>;
+  n4sch:Core "Permissible";
+  n4sch:Order "31"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "VS" .
+
+<neo4j://graph.schema#Property/Time%20Point%20Reference/--TPTREF> a n4sch:Property;
+  n4sch:Class.label "Time Point Reference";
+  n4sch:label "--TPTREF" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSTPTREF> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "VSTPTREF";
+  n4sch:Order "32"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "VS";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Time%20Point%20Reference/--TPTREF> .
+
+<neo4j://graph.schema#Class/Laterality> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "Laterality";
+  n4sch:from_domains "VS" .
+
+<neo4j://graph.schema#Class/Result%20or%20Finding%20in%20Original%20Units> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "VS";
+  n4sch:label "Result or Finding in Original Units" .
+
+<neo4j://graph.schema#Class/Numeric%20Result/Finding%20in%20Standard%20Units> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "Numeric Result/Finding in Standard Units";
+  n4sch:from_domains "VS" .
+
+<neo4j://graph.schema#Class/Position%20of%20Subject%20During%20Observation> a n4sch:Class;
+  n4sch:label "Position of Subject During Observation";
+  n4sch:from_domains "VS";
+  n4sch:CoreClass false .
+
+<neo4j://graph.schema#Class/Date/Time%20of%20Reference%20Time%20Point> a n4sch:Class;
+  n4sch:label "Date/Time of Reference Time Point";
+  n4sch:CoreClass false;
+  n4sch:from_domains "VS" .
+
+<neo4j://graph.schema#Class/Completion%20Status> a n4sch:Class;
+  n4sch:from_domains "VS";
+  n4sch:label "Completion Status";
+  n4sch:CoreClass false .
+
+<neo4j://graph.schema#Class/Vital%20Signs> n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Original%20Units>,
+    <neo4j://graph.schema#Class/Visit%20Name>, <neo4j://graph.schema#Class/Study>, <neo4j://graph.schema#Class/Planned%20Time%20Point%20Name>,
+    <neo4j://graph.schema#Class/Reason%20Not%20Done>, <neo4j://graph.schema#Class/Subcategory>,
+    <neo4j://graph.schema#Class/Date/Time%20of%20Collection>, <neo4j://graph.schema#Class/Study%20Day%20of%20Visit/Collection/Exam>,
+    <neo4j://graph.schema#Class/Epoch>, <neo4j://graph.schema#Class/Standard%20Units>,
+    <neo4j://graph.schema#Class/Time%20Point%20Reference>, <neo4j://graph.schema#Class/Derived%20Flag>,
+    <neo4j://graph.schema#Class/Planned%20Time%20Point%20Number>, <neo4j://graph.schema#Class/Short%20Name%20of%20Measurement,%20Test%20or%20Examination>,
+    <neo4j://graph.schema#Class/Baseline%20Flag>, <neo4j://graph.schema#Class/Visit%20Number>,
+    <neo4j://graph.schema#Class/Name%20of%20Measurement,%20Test%20or%20Examination>, <neo4j://graph.schema#Class/Position%20of%20Subject%20During%20Observation>,
+    <neo4j://graph.schema#Class/Result%20or%20Finding%20in%20Original%20Units>, <neo4j://graph.schema#Class/Result%20or%20Finding%20in%20Standard%20Format>,
+    <neo4j://graph.schema#Class/Numeric%20Result/Finding%20in%20Standard%20Units>, <neo4j://graph.schema#Class/Completion%20Status>,
+    <neo4j://graph.schema#Class/Laterality>, <neo4j://graph.schema#Class/Date/Time%20of%20Reference%20Time%20Point>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Vital%20Signs/--SPID>, <neo4j://graph.schema#Property/Vital%20Signs/STUDYID>,
+    <neo4j://graph.schema#Property/Vital%20Signs/USUBJID>, <neo4j://graph.schema#Property/Vital%20Signs/--GRPID>,
+    <neo4j://graph.schema#Property/Vital%20Signs/DOMAIN>, <neo4j://graph.schema#Property/Vital%20Signs/--SEQ> .
+
+<neo4j://graph.schema#Class/Original%20Units> a n4sch:Class;
+  n4sch:from_domains "VS";
+  n4sch:label "Original Units";
+  n4sch:CoreClass false;
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Result%20or%20Finding%20in%20Original%20Units>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Original%20Units/--ORRESU> .
+
+<neo4j://graph.schema#Class/Reason%20Not%20Done> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "VS";
+  n4sch:label "Reason Not Done";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Reason%20Not%20Done/--REASND> .
+
+<neo4j://graph.schema#Class/Standard%20Units> a n4sch:Class;
+  n4sch:label "Standard Units";
+  n4sch:CoreClass false;
+  n4sch:from_domains "VS";
+  n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Result%20or%20Finding%20in%20Standard%20Format>,
+    <neo4j://graph.schema#Class/Numeric%20Result/Finding%20in%20Standard%20Units>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Standard%20Units/--STRESU> .
+
+<neo4j://graph.schema#Class/Derived%20Flag> a n4sch:Class;
+  n4sch:label "Derived Flag";
+  n4sch:CoreClass false;
+  n4sch:from_domains "VS";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Derived%20Flag/--DRVFL> .
+
+<neo4j://graph.schema#Class/Short%20Name%20of%20Measurement,%20Test%20or%20Examination>
+  a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:label "Short Name of Measurement, Test or Examination";
+  n4sch:from_domains "VS";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Short%20Name%20of%20Measurement,%20Test%20or%20Examination/--TESTCD> .
+
+<neo4j://graph.schema#Class/Baseline%20Flag> a n4sch:Class;
+  n4sch:CoreClass false;
+  n4sch:from_domains "VS";
+  n4sch:label "Baseline Flag";
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Baseline%20Flag/--BLFL> .
+
+<neo4j://graph.schema#Property/Vital%20Signs/--SPID> a n4sch:Property;
+  n4sch:label "--SPID";
+  n4sch:Class.label "Vital Signs" .
+
+<neo4j://graph.schema#Property/Vital%20Signs/STUDYID> a n4sch:Property;
+  n4sch:label "STUDYID";
+  n4sch:Class.label "Vital Signs" .
+
+<neo4j://graph.schema#Property/Vital%20Signs/USUBJID> a n4sch:Property;
+  n4sch:label "USUBJID";
+  n4sch:Class.label "Vital Signs" .
+
+<neo4j://graph.schema#Property/Vital%20Signs/--GRPID> a n4sch:Property;
+  n4sch:Class.label "Vital Signs";
+  n4sch:label "--GRPID" .
+
+<neo4j://graph.schema#Property/Vital%20Signs/DOMAIN> a n4sch:Property;
+  n4sch:Class.label "Vital Signs";
+  n4sch:label "DOMAIN" .
+
+<neo4j://graph.schema#Property/Vital%20Signs/--SEQ> a n4sch:Property;
+  n4sch:Class.label "Vital Signs";
+  n4sch:label "--SEQ" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/STUDYID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Required";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Vital%20Signs/STUDYID>, <neo4j://graph.schema#Property/Study/STUDYID>;
+  n4sch:_domain_ "VS";
+  n4sch:_columnname_ "STUDYID";
+  n4sch:Order "1"^^<http://www.w3.org/2001/XMLSchema#long> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSBLFL> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "VS";
+  n4sch:Order "22"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "VSBLFL";
+  n4sch:Core "Expected";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Baseline%20Flag/--BLFL> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/VS> n4sch:HAS_COLUMN <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSBLFL>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSTEST>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSPOS>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSDY>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSGRPID>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSORRES>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSRFTDTC>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSLAT>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSSPID>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSLOC>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSDTC>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VISIT>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSSTRESN>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/SUBJID>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSORRESU>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VISITNUM>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/STUDYID>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSELTM>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/EPOCH>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSCAT>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSTPTNUM>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSDRVFL>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSTESTCD>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSREASND>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/USUBJID>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSSEQ>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSSTRESC>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/DOMAIN>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSTPT>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSSTRESU>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSSTAT>,
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSSCAT>, <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSTPTREF> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSTEST> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Required";
+  n4sch:Order "9"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_columnname_ "VSTEST";
+  n4sch:_domain_ "VS";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Name%20of%20Measurement,%20Test%20or%20Examination/--TEST> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSPOS> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "12"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "VSPOS";
+  n4sch:_domain_ "VS";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Position%20of%20Subject%20During%20Observation/--POS> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSGRPID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "VS";
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "VSGRPID";
+  n4sch:Order "6"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Vital%20Signs/--GRPID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSORRES> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Expected";
+  n4sch:Order "13"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "VS";
+  n4sch:_columnname_ "VSORRES";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Result%20or%20Finding%20in%20Original%20Units/--ORRES> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSRFTDTC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Permissible";
+  n4sch:_domain_ "VS";
+  n4sch:_columnname_ "VSRFTDTC";
+  n4sch:Order "33"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Date/Time%20of%20Reference%20Time%20Point/--RFTDTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSLAT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "21"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "VS";
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "VSLAT";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Laterality/--LAT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSSPID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "VSSPID";
+  n4sch:_domain_ "VS";
+  n4sch:Order "7"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Permissible";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Vital%20Signs/--SPID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSSTRESN> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "VS";
+  n4sch:Order "16"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:_columnname_ "VSSTRESN";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Numeric%20Result/Finding%20in%20Standard%20Units/--STRESN> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSORRESU> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Core "Expected";
+  n4sch:_domain_ "VS";
+  n4sch:_columnname_ "VSORRESU";
+  n4sch:Order "14"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Original%20Units/--ORRESU> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSDRVFL> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "23"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Permissible";
+  n4sch:_domain_ "VS";
+  n4sch:_columnname_ "VSDRVFL";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Derived%20Flag/--DRVFL> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSTESTCD> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "8"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "VS";
+  n4sch:_columnname_ "VSTESTCD";
+  n4sch:Core "Required";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Short%20Name%20of%20Measurement,%20Test%20or%20Examination/--TESTCD> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSREASND> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "VS";
+  n4sch:_columnname_ "VSREASND";
+  n4sch:Core "Permissible";
+  n4sch:Order "19"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Reason%20Not%20Done/--REASND> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/USUBJID> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "3"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required";
+  n4sch:_columnname_ "USUBJID";
+  n4sch:_domain_ "VS";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Vital%20Signs/USUBJID>, <neo4j://graph.schema#Property/Subject/USUBJID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSSEQ> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "VSSEQ";
+  n4sch:_domain_ "VS";
+  n4sch:Order "5"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Vital%20Signs/--SEQ> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSSTRESC> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_domain_ "VS";
+  n4sch:_columnname_ "VSSTRESC";
+  n4sch:Core "Expected";
+  n4sch:Order "15"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Result%20or%20Finding%20in%20Standard%20Format/--STRESC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/DOMAIN> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "DOMAIN";
+  n4sch:_domain_ "VS";
+  n4sch:Order "2"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Required";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Vital%20Signs/DOMAIN> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Data%20Extraction%20Standard/MDR3_2> n4sch:HAS_TABLE
+    <neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Table/VS> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSSTRESU> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:_columnname_ "VSSTRESU";
+  n4sch:_domain_ "VS";
+  n4sch:Order "17"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:Core "Expected";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Standard%20Units/--STRESU> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSSTAT> a <neo4j://graph.schema#Source%20Data%20Column>;
+  n4sch:Order "18"^^<http://www.w3.org/2001/XMLSchema#long>;
+  n4sch:_domain_ "VS";
+  n4sch:Core "Permissible";
+  n4sch:_columnname_ "VSSTAT";
+  n4sch:MAPS_TO_PROPERTY <neo4j://graph.schema#Property/Completion%20Status/--STAT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/SUBJID> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Subject%20Identifier%20for%20the%20Study/SUBJID> .
+
+<neo4j://graph.schema#Class/Name%20of%20Measurement,%20Test%20or%20Examination> n4sch:CLASS_RELATES_TO
+    <neo4j://graph.schema#Class/Short%20Name%20of%20Measurement,%20Test%20or%20Examination>,
+    <neo4j://graph.schema#Class/Category>, <neo4j://graph.schema#Class/Subcategory>, <neo4j://graph.schema#Class/Result%20or%20Finding%20in%20Standard%20Format>,
+    <neo4j://graph.schema#Class/Numeric%20Result/Finding%20in%20Standard%20Units>, <neo4j://graph.schema#Class/Result%20or%20Finding%20in%20Original%20Units>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Name%20of%20Measurement,%20Test%20or%20Examination/--TEST> .
+
+<neo4j://graph.schema#Property/Short%20Name%20of%20Measurement,%20Test%20or%20Examination/--TESTCD>
+  a n4sch:Property;
+  n4sch:label "--TESTCD";
+  n4sch:Class.label "Short Name of Measurement, Test or Examination" .
+
+<neo4j://graph.schema#Property/Name%20of%20Measurement,%20Test%20or%20Examination/--TEST>
+  a n4sch:Property;
+  n4sch:Class.label "Name of Measurement, Test or Examination";
+  n4sch:label "--TEST" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSCAT> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Category/--CAT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSSCAT> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Subcategory/--SCAT> .
+
+<neo4j://graph.schema#Property/Position%20of%20Subject%20During%20Observation/--POS>
+  a n4sch:Property;
+  n4sch:label "--POS";
+  n4sch:Class.label "Position of Subject During Observation" .
+
+<neo4j://graph.schema#Class/Position%20of%20Subject%20During%20Observation> n4sch:HAS_PROPERTY
+    <neo4j://graph.schema#Property/Position%20of%20Subject%20During%20Observation/--POS> .
+
+<neo4j://graph.schema#Class/Result%20or%20Finding%20in%20Original%20Units> n4sch:HAS_PROPERTY
+    <neo4j://graph.schema#Property/Result%20or%20Finding%20in%20Original%20Units/--ORRES> .
+
+<neo4j://graph.schema#Property/Result%20or%20Finding%20in%20Original%20Units/--ORRES>
+  a n4sch:Property;
+  n4sch:Class.label "Result or Finding in Original Units";
+  n4sch:label "--ORRES" .
+
+<neo4j://graph.schema#Property/Original%20Units/--ORRESU> a n4sch:Property;
+  n4sch:Class.label "Original Units";
+  n4sch:label "--ORRESU" .
+
+<neo4j://graph.schema#Class/Toxicity%20Grade> n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Result%20or%20Finding%20in%20Standard%20Format> .
+
+<neo4j://graph.schema#Property/Result%20or%20Finding%20in%20Standard%20Format/--STRESC>
+  a n4sch:Property;
+  n4sch:Class.label "Result or Finding in Standard Format";
+  n4sch:label "--STRESC" .
+
+<neo4j://graph.schema#Class/Result%20or%20Finding%20in%20Standard%20Format> n4sch:HAS_PROPERTY
+    <neo4j://graph.schema#Property/Result%20or%20Finding%20in%20Standard%20Format/--STRESC> .
+
+<neo4j://graph.schema#Property/Numeric%20Result/Finding%20in%20Standard%20Units/--STRESN>
+  a n4sch:Property;
+  n4sch:label "--STRESN";
+  n4sch:Class.label "Numeric Result/Finding in Standard Units" .
+
+<neo4j://graph.schema#Class/Numeric%20Result/Finding%20in%20Standard%20Units> n4sch:HAS_PROPERTY
+    <neo4j://graph.schema#Property/Numeric%20Result/Finding%20in%20Standard%20Units/--STRESN> .
+
+<neo4j://graph.schema#Property/Standard%20Units/--STRESU> a n4sch:Property;
+  n4sch:Class.label "Standard Units";
+  n4sch:label "--STRESU" .
+
+<neo4j://graph.schema#Property/Completion%20Status/--STAT> a n4sch:Property;
+  n4sch:Class.label "Completion Status";
+  n4sch:label "--STAT" .
+
+<neo4j://graph.schema#Class/Completion%20Status> n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Completion%20Status/--STAT> .
+
+<neo4j://graph.schema#Property/Reason%20Not%20Done/--REASND> a n4sch:Property;
+  n4sch:Class.label "Reason Not Done";
+  n4sch:label "--REASND" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSLOC> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Location%20of%20Event/--LOC> .
+
+<neo4j://graph.schema#Property/Laterality/--LAT> a n4sch:Property;
+  n4sch:Class.label "Laterality";
+  n4sch:label "--LAT" .
+
+<neo4j://graph.schema#Class/Laterality> n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Laterality/--LAT> .
+
+<neo4j://graph.schema#Property/Baseline%20Flag/--BLFL> a n4sch:Property;
+  n4sch:Class.label "Baseline Flag";
+  n4sch:label "--BLFL" .
+
+<neo4j://graph.schema#Property/Derived%20Flag/--DRVFL> a n4sch:Property;
+  n4sch:Class.label "Derived Flag";
+  n4sch:label "--DRVFL" .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VISITNUM> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Visit%20Number/VISITNUM> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VISIT> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Visit%20Name/VISIT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/EPOCH> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Epoch/EPOCH> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSDTC> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Date/Time%20of%20Collection/--DTC> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSDY> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Study%20Day%20of%20Visit/Collection/Exam/--DY> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSTPT> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Planned%20Time%20Point%20Name/--TPT> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSTPTNUM> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Planned%20Time%20Point%20Number/--TPTNUM> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSELTM> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Planned%20Elapsed%20Time%20from%20Time%20Point%20Ref/--ELTM> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/VS/VSTPTREF> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Time%20Point%20Reference/--TPTREF> .
+
+<neo4j://graph.schema#Property/Date/Time%20of%20Reference%20Time%20Point/--RFTDTC>
+  a n4sch:Property;
+  n4sch:Class.label "Date/Time of Reference Time Point";
+  n4sch:label "--RFTDTC" .
+
+<neo4j://graph.schema#Class/Date/Time%20of%20Reference%20Time%20Point> n4sch:HAS_PROPERTY
+    <neo4j://graph.schema#Property/Date/Time%20of%20Reference%20Time%20Point/--RFTDTC> .
+
+<neo4j://graph.schema#Class/Subject> n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Adverse%20Events>,
+    <neo4j://graph.schema#Class/Vital%20Signs>, <neo4j://graph.schema#Class/Exposure>,
+    <neo4j://graph.schema#Class/Disposition>, <neo4j://graph.schema#Class/Date/Time%20of%20End%20of%20Participation>,
+    <neo4j://graph.schema#Class/Date/Time%20of%20First%20Study%20Treatment>, <neo4j://graph.schema#Class/Date/Time%20of%20Last%20Study%20Treatment>,
+    <neo4j://graph.schema#Class/Planned%20Arm%20Code>, <neo4j://graph.schema#Class/Subject%20Identifier%20for%20the%20Study>,
+    <neo4j://graph.schema#Class/Age>, <neo4j://graph.schema#Class/Ethnicity>, <neo4j://graph.schema#Class/Race>,
+    <neo4j://graph.schema#Class/Age%20Units>, <neo4j://graph.schema#Class/Subject%20Reference%20End%20Date/Time>,
+    <neo4j://graph.schema#Class/Study%20Site%20Identifier>, <neo4j://graph.schema#Class/Sex>,
+    <neo4j://graph.schema#Class/Subject%20Death%20Flag>, <neo4j://graph.schema#Class/Date/Time%20of%20Birth>,
+    <neo4j://graph.schema#Class/Country>, <neo4j://graph.schema#Class/Study%20Day%20of%20Visit/Collection/Exam>,
+    <neo4j://graph.schema#Class/Date/Time%20of%20Death>, <neo4j://graph.schema#Class/Date/Time%20of%20Collection>,
+    <neo4j://graph.schema#Class/Study>, <neo4j://graph.schema#Class/Description%20of%20Planned%20Arm>,
+    <neo4j://graph.schema#Class/Subject%20Reference%20Start%20Date/Time>, <neo4j://graph.schema#Class/Description%20of%20Actual%20Arm>,
+    <neo4j://graph.schema#Class/Date/Time%20of%20Informed%20Consent>, <neo4j://graph.schema#Class/Investigator%20Identifier>,
+    <neo4j://graph.schema#Class/Investigator%20Name>, <neo4j://graph.schema#Class/Actual%20Arm%20Code>,
+    <neo4j://graph.schema#Class/Demographics>;
+  n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Subject/USUBJID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/USUBJID> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Subject/USUBJID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/USUBJID> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Subject/USUBJID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/USUBJID> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Subject/USUBJID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/USUBJID> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Subject/USUBJID> .
+
+<neo4j://graph.schema#Class/Demographics> n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Study> .
+
+<neo4j://graph.schema#Class/Adverse%20Events> n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Study> .
+
+<neo4j://graph.schema#Class/Disposition> n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Study> .
+
+<neo4j://graph.schema#Class/Exposure> n4sch:CLASS_RELATES_TO <neo4j://graph.schema#Class/Study> .
+
+<neo4j://graph.schema#Class/Study> n4sch:HAS_PROPERTY <neo4j://graph.schema#Property/Study/STUDYID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/AE/STUDYID> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Study/STUDYID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DM/STUDYID> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Study/STUDYID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/DS/STUDYID> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Study/STUDYID> .
+
+<neo4j://graph.schema#Metadata/mdr3_2/Source%20Data%20Column/EX/STUDYID> n4sch:MAPS_TO_PROPERTY
+    <neo4j://graph.schema#Property/Study/STUDYID> .

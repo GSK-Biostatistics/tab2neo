@@ -1,0 +1,188 @@
+{
+  "style": {
+    "node-color": "#ffffff",
+    "border-width": 4,
+    "border-color": "#000000",
+    "radius": 50,
+    "node-padding": 5,
+    "node-margin": 2,
+    "outside-position": "auto",
+    "node-icon-image": "",
+    "node-background-image": "",
+    "icon-position": "inside",
+    "icon-size": 64,
+    "caption-position": "inside",
+    "caption-max-width": 200,
+    "caption-color": "#000000",
+    "caption-font-size": 50,
+    "caption-font-weight": "normal",
+    "label-position": "inside",
+    "label-display": "pill",
+    "label-color": "#000000",
+    "label-background-color": "#ffffff",
+    "label-border-color": "#000000",
+    "label-border-width": 4,
+    "label-font-size": 40,
+    "label-padding": 5,
+    "label-margin": 4,
+    "directionality": "directed",
+    "detail-position": "inline",
+    "detail-orientation": "parallel",
+    "arrow-width": 5,
+    "arrow-color": "#000000",
+    "margin-start": 5,
+    "margin-end": 5,
+    "margin-peer": 20,
+    "attachment-start": "normal",
+    "attachment-end": "normal",
+    "relationship-icon-image": "",
+    "type-color": "#000000",
+    "type-background-color": "#ffffff",
+    "type-border-color": "#000000",
+    "type-border-width": 0,
+    "type-font-size": 16,
+    "type-padding": 5,
+    "property-position": "outside",
+    "property-alignment": "colon",
+    "property-color": "#000000",
+    "property-font-size": 16,
+    "property-font-weight": "normal"
+  },
+  "nodes": [
+    {
+      "id": "n3",
+      "position": {
+        "x": 120.35528190568664,
+        "y": -254.21522558167555
+      },
+      "caption": "",
+      "style": {},
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Subject",
+        "short_label": "USUBJID"
+      }
+    },
+    {
+      "id": "n4",
+      "position": {
+        "x": 533.5406670324633,
+        "y": -254.21522558167555
+      },
+      "caption": "",
+      "style": {},
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Planned Treatment Period 1",
+        "short_label": "TRT01P"
+      }
+    },
+    {
+      "id": "n5",
+      "position": {
+        "x": 120.35528190568664,
+        "y": 86.38578454510116
+      },
+      "caption": "",
+      "style": {},
+      "labels": [
+        "Property"
+      ],
+      "properties": {
+        "label": "rdfs:label"
+      }
+    },
+    {
+      "id": "n6",
+      "position": {
+        "x": 533.5406670324633,
+        "y": 86.38578454510116
+      },
+      "caption": "",
+      "style": {},
+      "labels": [
+        "Property"
+      ],
+      "properties": {
+        "label": "rdfs:label"
+      }
+    },
+    {
+      "id": "n7",
+      "position": {
+        "x": 533.5406670324633,
+        "y": -445.84319253078854
+      },
+      "caption": "",
+      "style": {},
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Sex",
+        "short_label": "SEX"
+      }
+    },
+    {
+      "id": "n8",
+      "position": {
+        "x": 884.2220750403233,
+        "y": -445.84319253078854
+      },
+      "caption": "",
+      "style": {},
+      "labels": [
+        "Property"
+      ],
+      "properties": {
+        "label": "rdfs:label"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "id": "n0",
+      "type": "CLASS_RELATES_TO",
+      "style": {},
+      "properties": {},
+      "fromId": "n3",
+      "toId": "n4"
+    },
+    {
+      "id": "n1",
+      "type": "HAS_PROPERTY",
+      "style": {},
+      "properties": {},
+      "fromId": "n3",
+      "toId": "n5"
+    },
+    {
+      "id": "n2",
+      "type": "HAS_PROPERTY",
+      "style": {},
+      "properties": {},
+      "fromId": "n4",
+      "toId": "n6"
+    },
+    {
+      "id": "n3",
+      "type": "CLASS_RELATES_TO",
+      "style": {},
+      "properties": {},
+      "fromId": "n3",
+      "toId": "n7"
+    },
+    {
+      "id": "n4",
+      "type": "HAS_PROPERTY",
+      "style": {},
+      "properties": {},
+      "fromId": "n7",
+      "toId": "n8"
+    }
+  ]
+}
