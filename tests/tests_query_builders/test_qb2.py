@@ -294,3 +294,127 @@ def test_generate_query_body(qbr: QueryBuilder):
     expected_q = "MATCH (`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`)\nWHERE EXISTS {MATCH (`Subject`)-[]-(x) WHERE NOT (x:`Adverse Events`)}"
     assert q == expected_q
     assert params == {}
+
+
+def test_generate_call(qbr: QueryBuilder):
+
+    # no call query section as no labels_to_pack
+    q1 = qbr.generate_call(
+        labels=['Subject', 'Exposure'],
+        rels=[{'to': 'Exposure', 'from': 'Subject', 'type': 'Exposure'}],
+        labels_to_pack={},
+        only_props=['rdfs:label']
+    )
+    expected_q1 = ""
+    assert q1 == expected_q1
+
+    q2 = qbr.generate_call(
+        labels=['Exposure', 'Exposure Definition'],
+        rels=[{'to': 'Exposure Definition', 'from': 'Exposure', 'type': 'Exposure_Definition_Exposure Definition'}],
+        labels_to_pack={'Exposure Definition': ['Exposure']},
+        only_props=['rdfs:label']
+    )
+    expected_q2 = 'CALL apoc.path.subgraphNodes(`Exposure`, {relationshipFilter: "Definition", optional:true, minLevel: 1, maxLevel: 1}) YIELD node AS `Exposure Definition_coll`'
+    assert q2 == expected_q2
+
+
+def test_generate_with(qbr: QueryBuilder):
+
+    q1 = qbr.generate_with(
+        labels=['Subject', 'Population'],
+        labels_to_pack={},
+        only_props=['rdfs:label']
+    )
+    expected_q1 = '''WITH `Subject`
+, `Population`'''
+    assert q1 == expected_q1
+
+    q2 = qbr.generate_with(
+        labels=['Subject', 'Population'],
+        labels_to_pack={'Population': ['Safety Population', 'Completers Population']},
+        only_props=['rdfs:label']
+    )
+    expected_q2 = '''WITH `Subject`
+, collect(distinct `Population_coll`.`rdfs:label`) as `Population_coll`'''
+    assert q2 == expected_q2
+
+    q3 = qbr.generate_with(
+        labels=['Subject', 'Age Group'],
+        labels_to_pack={'Subject': 'Age Group'},
+        only_props=['rdfs:label']
+    )
+    # With string as value in labels_to_pack (i.e. when we have classes that need to be combined into one column
+    # such as with PREXGR1 and PREXGR2
+    expected_q3 = '''WITH 
+                    apoc.map.fromPairs(collect([CASE
+                        WHEN `Age Group`.`Term Code` IS NOT NULL
+                        THEN `Age Group`.`Term Code`
+                        ELSE `Age Group`.`Short Label`
+                        END, `Subject`.`rdfs:label`])) as `Subject_coll`'''
+    assert q3 == expected_q3
+
+
+def test_generate_return(qbr: QueryBuilder):
+    q1 = qbr.generate_return(
+        labels=['Subject', 'Population'],
+        labels_to_pack={},
+    )
+    expected_q1 = '''RETURN apoc.map.mergeList([CASE 
+                                    WHEN `Subject`.Order IS NULL THEN {} 
+                                    ELSE {`Subject (N)`:`Subject`.Order} 
+                            END
+, apoc.map.fromPairs([key in keys(CASE WHEN `Subject`{.*} IS NULL THEN {} ELSE `Subject`{.*} END) | ["Subject" + "." + key, CASE WHEN `Subject`{.*} IS NULL THEN {} ELSE `Subject`{.*} END[key]]])
+, CASE 
+                                    WHEN `Population`.Order IS NULL THEN {} 
+                                    ELSE {`Population (N)`:`Population`.Order} 
+                            END
+, apoc.map.fromPairs([key in keys(CASE WHEN `Population`{.*} IS NULL THEN {} ELSE `Population`{.*} END) | ["Population" + "." + key, CASE WHEN `Population`{.*} IS NULL THEN {} ELSE `Population`{.*} END[key]]])]) as all'''
+    assert q1 == expected_q1
+
+    q2 = qbr.generate_return(
+        labels=['Exposure', 'Exposure Definition'],
+        labels_to_pack={'Exposure Definition': ['Exposure']},
+    )
+    expected_q2 = '''RETURN apoc.map.mergeList([CASE 
+                                    WHEN `Exposure`.Order IS NULL THEN {} 
+                                    ELSE {`Exposure (N)`:`Exposure`.Order} 
+                            END
+, apoc.map.fromPairs([key in keys(CASE WHEN `Exposure`{.*} IS NULL THEN {} ELSE `Exposure`{.*} END) | ["Exposure" + "." + key, CASE WHEN `Exposure`{.*} IS NULL THEN {} ELSE `Exposure`{.*} END[key]]])
+, CASE 
+                                    WHEN `Exposure Definition`.Order IS NULL THEN {} 
+                                    ELSE {`Exposure Definition (N)`:`Exposure Definition`.Order} 
+                            END
+, apoc.map.fromPairs([key in keys(CASE WHEN `Exposure Definition`{.*} IS NULL THEN {} ELSE `Exposure Definition`{.*} END) | ["Exposure Definition" + "." + key, CASE WHEN `Exposure Definition`{.*} IS NULL THEN {} ELSE `Exposure Definition`{.*} END[key]]])]) as all'''
+    assert q2 == expected_q2
+
+    q3 = qbr.generate_return(
+        labels=['Subject', 'Population'],
+        labels_to_pack={'Population': ['Safety Population', 'Completers Population']},
+    )
+    expected_q3 = '''RETURN apoc.map.mergeList([CASE 
+                                    WHEN `Subject`.Order IS NULL THEN {} 
+                                    ELSE {`Subject (N)`:`Subject`.Order} 
+                            END
+, apoc.map.fromPairs([key in keys(CASE WHEN `Subject`{.*} IS NULL THEN {} ELSE `Subject`{.*} END) | ["Subject" + "." + key, CASE WHEN `Subject`{.*} IS NULL THEN {} ELSE `Subject`{.*} END[key]]])
+, CASE 
+                                    WHEN `Population`.Order IS NULL THEN {} 
+                                    ELSE {`Population (N)`:`Population`.Order} 
+                            END
+, apoc.map.fromPairs([key in keys(CASE WHEN `Population`{.*} IS NULL THEN {} ELSE `Population`{.*} END) | ["Population" + "." + key, CASE WHEN `Population`{.*} IS NULL THEN {} ELSE `Population`{.*} END[key]]])]) as all'''
+    assert q3 == expected_q3
+
+    q4 = qbr.generate_return(
+        labels=['Subject', 'No. of Exacerb in Last Year Group 1'],
+        labels_to_pack={'No. of Exacerb in Last Year Group 1': '<=2'},
+    )
+    expected_q4 = '''RETURN apoc.map.mergeList([CASE 
+                                    WHEN `Subject`.Order IS NULL THEN {} 
+                                    ELSE {`Subject (N)`:`Subject`.Order} 
+                            END
+, apoc.map.fromPairs([key in keys(CASE WHEN `Subject`{.*} IS NULL THEN {} ELSE `Subject`{.*} END) | ["Subject" + "." + key, CASE WHEN `Subject`{.*} IS NULL THEN {} ELSE `Subject`{.*} END[key]]])
+, CASE 
+                                    WHEN `No. of Exacerb in Last Year Group 1`.Order IS NULL THEN {} 
+                                    ELSE {`No. of Exacerb in Last Year Group 1 (N)`:`No. of Exacerb in Last Year Group 1`.Order} 
+                            END
+, CASE WHEN `No. of Exacerb in Last Year Group 1`{.*} IS NULL THEN {} ELSE `No. of Exacerb in Last Year Group 1`{.*} END]) as all'''
+    assert q4 == expected_q4
