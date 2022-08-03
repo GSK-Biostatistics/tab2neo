@@ -122,7 +122,7 @@ class ModelManager(NeoInterface):
         # Identify all the unique names in inner elements of rel_list
         class_set = set()  # Empty set
         for rel in rel_list:
-            class_set = class_set.union(rel)  # The Set Union operation will avoid duplicates
+            class_set = class_set.union(rel[:2])  # The Set Union operation will avoid duplicates
 
         class_list = sorted(list(class_set))  # Convert the final set back to list
 
@@ -132,7 +132,7 @@ class ModelManager(NeoInterface):
         WHERE apoc.meta.type(left) = apoc.meta.type(right) = 'STRING'  
         MERGE (ln:Class {{label:left}})
         MERGE (rn:Class {{label:right}})   
-        MERGE (ln)<-[:FROM]-(:Relationship{{type:type}})-[:TO]->(rn)   
+        MERGE (ln)<-[:FROM]-(:Relationship{{relationship_type:type}})-[:TO]->(rn)   
         """
         params = {"rels": [(r if len(r) == 3 else r + [self.gen_default_reltype(to_label=r[1])]) for r in rel_list]}
         self.query(q, params)
@@ -319,6 +319,7 @@ class ModelManager(NeoInterface):
             where_map = {}
         if not where_rel_map:
             where_rel_map = {}
+
         q = """
         MATCH (c:Class)
         WHERE c.label in $labels
@@ -841,12 +842,13 @@ class ModelManager(NeoInterface):
             MERGE (sdf)-[:HAS_TABLE]->(sdt)
             """
         params = {'standard': standard}
-        self.query(q, params)
 
         # set the SortOrder property for each source data table in the graph
         self.set_sort_order(domain=domain, standard=standard)
         # Extend the extraction metadata with MAPS_TO_COLUMN rel between relationship and source data column nodes
         self.extend_extraction_metadata(domain=domain, standard=standard)
+
+        self.query(q, params)
 
     def set_sort_order(self, domain: list, standard: str):
 
