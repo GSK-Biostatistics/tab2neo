@@ -222,7 +222,7 @@ class QueryBuilder():
                         label = "!" + label
 
                     # For list inclusions, use "in"; in all other case check for equality
-                    operator = ("in" if type(property_value) == list else "=")
+                    operator = ("in" if isinstance(property_value, list) else "=")
 
                     # Extend the list of Cypher strings and their corresponding data dictionary
                     t = next(parameter_token_stack)
