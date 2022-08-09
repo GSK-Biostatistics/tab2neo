@@ -99,29 +99,31 @@ class ModelManager(NeoInterface):
         """
         Create `Class` and `Relationship` nodes between them, as specified by rel_list
 
-        Given a list of name pairs, perform 2 operations:
+        Given a list of relationship triplets, perform 2 operations:
         1)  Identify all the unique names, and create new nodes labeled "Class",
             each new node has one of the unique names stored in an attribute named "label"
-        2)  Adds <-[:FROM]-(:Relationship)-[:TO]-> relationships to pairs of the newly-created nodes,
-            as specified by the pairs in the elements of rel_list
+        2)  Adds <-[:FROM]-(:Relationship{relationship_type:'...'})-[:TO]-> relationships to pairs of the newly-created nodes,
+            as specified by the triplets in the elements of rel_list
 
-        EXAMPLE:  if rel_list is  [  ["Study", "Site"],  ["Study", "Subject"]  ]
+        EXAMPLE:  if rel_list is  [  ["Study", "Site", "Site],  ["Study", "Subject", "Subject]  ]
                   then 3 new `Class`-labeled nodes will be created, with "label" attributes respectively
                   valued "Study", "Site" and "Subject",
-                  plus <-[:FROM]-(:Relationship)-[:TO]-> relationship from "Study" to "Site", and one from "Study" to "Subject"
+                  plus <-[:FROM]-(:Relationship{relationship_type:'Site'})-[:TO]-> relationship from "Study" to "Site",
+                  and <-[:FROM]-(:Relationship{relationship_type:'Subject'})-[:TO]-> relationship from "Study" to "Subject"
 
-        :param rel_list: A list of 2-element lists, indicating a relationship among nodes of type `Class`
+        :param rel_list: A list of 3-element lists, indicating a relationship among nodes of type `Class`
                          EXAMPLE:   [
-                                        ["Study", "Site"],
-                                        ["Study", "Subject"],
-                                        ["Subject", "Race"]
+                                        ["Study", "Site", "Site'],
+                                        ["Study", "Subject", "Subject"],
+                                        ["Subject", "Race", "Race"]
                                     ]
         :return:         List of all the class names; repeated ones are taken out
         """
 
-        # Identify all the unique names in inner elements of rel_list
+        # Identify all the unique class names in inner elements of rel_list
         class_set = set()  # Empty set
         for rel in rel_list:
+            # [:2] in order to get only the first two items (classes) out of rel_list; [2] is the relationship type
             class_set = class_set.union(rel[:2])  # The Set Union operation will avoid duplicates
 
         class_list = sorted(list(class_set))  # Convert the final set back to list
