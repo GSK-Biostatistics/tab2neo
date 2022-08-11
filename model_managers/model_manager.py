@@ -95,7 +95,7 @@ class ModelManager(NeoInterface):
         params = {'label': label, 'short_label': short_label}
         self.query(q, params)
 
-    def create_related_classes_from_list(self, rel_list: [[str, str]]) -> [str]:
+    def create_related_classes_from_list(self, rel_list: [[str, str, str]]) -> [str]:
         """
         Create `Class` and `Relationship` nodes between them, as specified by rel_list
 
