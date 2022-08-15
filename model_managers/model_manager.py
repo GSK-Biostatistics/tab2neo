@@ -866,17 +866,6 @@ class ModelManager(NeoInterface):
 
             self.query(q, params)
 
-            q = """
-            MATCH (sdf:`Data Extraction Standard`{_tag_:$standard})-[:HAS_TABLE]->(sdt:`Source Data Table`{_domain_:$domain})-[:HAS_COLUMN]->(sdc:`Source Data Column`)
-            WITH sdc, sdt
-            ORDER BY sdc.Order
-            WITH collect(sdc._columnname_) AS col_order, sdt
-            SET sdt.SortOrder = col_order
-            """
-            params = {'domain': dom, 'standard': standard}
-
-            self.query(q, params)
-
     def extend_extraction_metadata(self, domain: list, standard: str):
         # Adds the relationship MAPS_TO_COLUMN between the source data column node and the relationship that
         # sdc node's variable is pointing 'TO'. WHERE that relationship is 'FROM' a core class (ie FA, EX, VS, ... etc)
