@@ -95,34 +95,36 @@ class ModelManager(NeoInterface):
         params = {'label': label, 'short_label': short_label}
         self.query(q, params)
 
-    def create_related_classes_from_list(self, rel_list: [[str, str]]) -> [str]:
+    def create_related_classes_from_list(self, rel_list: [[str, str, str]]) -> [str]:
         """
         Create `Class` and `Relationship` nodes between them, as specified by rel_list
 
-        Given a list of name pairs, perform 2 operations:
+        Given a list of relationship triplets, perform 2 operations:
         1)  Identify all the unique names, and create new nodes labeled "Class",
             each new node has one of the unique names stored in an attribute named "label"
-        2)  Adds <-[:FROM]-(:Relationship)-[:TO]-> relationships to pairs of the newly-created nodes,
-            as specified by the pairs in the elements of rel_list
+        2)  Adds <-[:FROM]-(:Relationship{relationship_type:'...'})-[:TO]-> relationships to pairs of the newly-created nodes,
+            as specified by the triplets in the elements of rel_list
 
-        EXAMPLE:  if rel_list is  [  ["Study", "Site"],  ["Study", "Subject"]  ]
+        EXAMPLE:  if rel_list is  [  ["Study", "Site", "Site],  ["Study", "Subject", "Subject]  ]
                   then 3 new `Class`-labeled nodes will be created, with "label" attributes respectively
                   valued "Study", "Site" and "Subject",
-                  plus <-[:FROM]-(:Relationship)-[:TO]-> relationship from "Study" to "Site", and one from "Study" to "Subject"
+                  plus <-[:FROM]-(:Relationship{relationship_type:'Site'})-[:TO]-> relationship from "Study" to "Site",
+                  and <-[:FROM]-(:Relationship{relationship_type:'Subject'})-[:TO]-> relationship from "Study" to "Subject"
 
-        :param rel_list: A list of 2-element lists, indicating a relationship among nodes of type `Class`
+        :param rel_list: A list of 3-element lists, indicating a relationship among nodes of type `Class`
                          EXAMPLE:   [
-                                        ["Study", "Site"],
-                                        ["Study", "Subject"],
-                                        ["Subject", "Race"]
+                                        ["Study", "Site", "Site'],
+                                        ["Study", "Subject", "Subject"],
+                                        ["Subject", "Race", "Race"]
                                     ]
         :return:         List of all the class names; repeated ones are taken out
         """
 
-        # Identify all the unique names in inner elements of rel_list
+        # Identify all the unique class names in inner elements of rel_list
         class_set = set()  # Empty set
         for rel in rel_list:
-            class_set = class_set.union(rel)  # The Set Union operation will avoid duplicates
+            # [:2] in order to get only the first two items (classes) out of rel_list; [2] is the relationship type
+            class_set = class_set.union(rel[:2])  # The Set Union operation will avoid duplicates
 
         class_list = sorted(list(class_set))  # Convert the final set back to list
 
@@ -132,7 +134,7 @@ class ModelManager(NeoInterface):
         WHERE apoc.meta.type(left) = apoc.meta.type(right) = 'STRING'  
         MERGE (ln:Class {{label:left}})
         MERGE (rn:Class {{label:right}})   
-        MERGE (ln)<-[:FROM]-(:Relationship{{type:type}})-[:TO]->(rn)   
+        MERGE (ln)<-[:FROM]-(:Relationship{{relationship_type:type}})-[:TO]->(rn)   
         """
         params = {"rels": [(r if len(r) == 3 else r + [self.gen_default_reltype(to_label=r[1])]) for r in rel_list]}
         self.query(q, params)
@@ -319,6 +321,7 @@ class ModelManager(NeoInterface):
             where_map = {}
         if not where_rel_map:
             where_rel_map = {}
+
         q = """
         MATCH (c:Class)
         WHERE c.label in $labels
@@ -841,27 +844,17 @@ class ModelManager(NeoInterface):
             MERGE (sdf)-[:HAS_TABLE]->(sdt)
             """
         params = {'standard': standard}
-        self.query(q, params)
 
         # set the SortOrder property for each source data table in the graph
         self.set_sort_order(domain=domain, standard=standard)
         # Extend the extraction metadata with MAPS_TO_COLUMN rel between relationship and source data column nodes
         self.extend_extraction_metadata(domain=domain, standard=standard)
 
+        self.query(q, params)
+
     def set_sort_order(self, domain: list, standard: str):
 
         for dom in domain:
-            q = """
-            MATCH (sdf:`Data Extraction Standard`{_tag_:$standard})-[:HAS_TABLE]->(sdt:`Source Data Table`{_domain_:$domain})-[:HAS_COLUMN]->(sdc:`Source Data Column`)
-            WITH sdc, sdt
-            ORDER BY sdc.Order
-            WITH collect(sdc._columnname_) AS col_order, sdt
-            SET sdt.SortOrder = col_order
-            """
-            params = {'domain': dom, 'standard': standard}
-
-            self.query(q, params)
-
             q = """
             MATCH (sdf:`Data Extraction Standard`{_tag_:$standard})-[:HAS_TABLE]->(sdt:`Source Data Table`{_domain_:$domain})-[:HAS_COLUMN]->(sdc:`Source Data Column`)
             WITH sdc, sdt

@@ -1,11 +1,14 @@
-import pandas as pd
 import logging
+
+import pandas as pd
 from neointerface import NeoInterface
-from query_builders.query_builder import QueryBuilder
-from model_managers import ModelManager
+
 from logger.logger import logger
+from model_managers import ModelManager
+from query_builders.query_builder import QueryBuilder
 
 logger.setLevel(logging.INFO)
+
 
 class DataProvider(NeoInterface):
     """
@@ -54,7 +57,14 @@ class DataProvider(NeoInterface):
             limit=None,
             return_q_and_dict=False)
 
-    def get_data_cld(self, labels: list, rels: list = None, where_map=None, where_rel_map=None, return_nodeid=True):
+    def get_data_cld(self,
+                     labels: list,
+                     rels: list = None,
+                     where_map=None,
+                     where_rel_map=None,
+                     return_nodeid=True,
+                     return_termorder=True,
+                     return_class_uris=False):
         """
         A typical get_data_generic call for CLD project:
             Class-Relationship schema is used and shortlabel is used as the
@@ -72,6 +82,8 @@ class DataProvider(NeoInterface):
             use_shortlabel=True,
             return_nodeid=return_nodeid,
             return_propname=False,
+            return_termorder=return_termorder,
+            return_class_uris=return_class_uris,
             only_props=["rdfs:label"],
             check_schema=False,
             limit=None,
@@ -91,8 +103,10 @@ class DataProvider(NeoInterface):
             # use_rel_labels only active when use_shortlabel == True; the short_label of the [:TO] class is updated with the one in Relationship.short_label
             return_nodeid: bool = True,
             return_propname: bool = True,
-            only_props: list = None, #to return only specified properties. If None - return all
-            return_disjoint: bool = False, #to return dict with Class as key and distinct values as values set to True
+            return_termorder: bool = False,
+            only_props: list = None,  # to return only specified properties. If None - return all
+            return_disjoint: bool = False,  # to return dict with Class as key and distinct values as values set to True
+            return_class_uris: bool = False,  # to return dict with Class as key and distinct values as values set to True
             check_schema=False,
             limit=None,
             return_q_and_dict=False
@@ -155,7 +169,7 @@ class DataProvider(NeoInterface):
             # building sub-query
             _where_map = {k: i for k, i in where_map.items() if k in _labels}
             _where_rel_map = {k: i for k, i in where_rel_map.items() if k in _labels}
-            #TODO: validate the insides of where_rel_map only contain labels in _labels
+            # TODO: validate the insides of where_rel_map only contain labels in _labels
 
             if use_shortlabel:
                 _labels, _rels, _labels_to_pack, _where_map, _where_rel_map = self.mm.translate_to_shortlabel(
@@ -179,7 +193,8 @@ class DataProvider(NeoInterface):
 
         q_body = "\n".join(q_body_list)
         if use_shortlabel:
-            translated = self.mm.translate_to_shortlabel(labels_clean, rels, labels_to_pack, {}, use_rel_labels=use_rel_labels)
+            translated = self.mm.translate_to_shortlabel(labels_clean, rels, labels_to_pack, {},
+                                                         use_rel_labels=use_rel_labels)
             labels_clean = [dct['short_label'] for dct in translated[0]]
             rels = translated[1]
             labels_to_pack = translated[2]
@@ -204,6 +219,8 @@ class DataProvider(NeoInterface):
             labels_to_pack=labels_to_pack,
             return_nodeid=return_nodeid,
             return_propname=return_propname,
+            return_termorder=return_termorder,
+            return_class_uris=return_class_uris,
             only_props=only_props,
             return_disjoint=return_disjoint
         )

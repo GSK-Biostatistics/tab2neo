@@ -1,6 +1,5 @@
 import pandas as pd
 from collections import OrderedDict
-from model_managers import ModelManager
 
 
 def get_tag_label(
@@ -19,6 +18,7 @@ def get_tag_label(
             short_label = label['short_label']
         label = label['label']
     return short_label, label
+
 
 class QueryBuilder():
     """
@@ -39,7 +39,7 @@ class QueryBuilder():
     @staticmethod
     def generate_1match_schema_check(
             self,
-            label: str # str or dict (if dict then format: {'short_label':<short_label>, 'label':<label>}}
+            label: str  # str or dict (if dict then format: {'short_label':<short_label>, 'label':<label>}}
     ):
         short_label, label = self._get_tag_label(label)
         return f"(`{short_label}`:`Class`{{label:'{label}'}})"
@@ -88,7 +88,7 @@ class QueryBuilder():
             subclass_clause2 = f"()<-[:SUBCLASS_OF*0..{str(subclass_depth)}]-"
         else:
             subclass_clause1, subclass_clause2 = "", ""
-        q = f"(`{tag_dict['from']}`){subclass_clause1}<-[:FROM]-(`{type_tag}`:Relationship)"\
+        q = f"(`{tag_dict['from']}`){subclass_clause1}<-[:FROM]-(`{type_tag}`:Relationship)" \
             "-[:TO]->{subclass_clause2}(`{tag_dict['to']}`)"
         where_map = {}
         if rel.get('type'):
@@ -216,8 +216,13 @@ class QueryBuilder():
                     if full_str:
                         cypher_list.append(full_str)
                 else:
-                    operator = ("in" if type(
-                        property_value) == list else "=")  # For list inclusions, use "in"; in all other case check for equality
+                    # Handle NOT, get the key value (typically a Term) and prepend !
+                    if isinstance(property_value, dict) and set(property_value.keys()).intersection({"not_in"}):
+                        property_value = property_value.get("not_in")
+                        label = "!" + label
+
+                    # For list inclusions, use "in"; in all other case check for equality
+                    operator = ("in" if isinstance(property_value, list) else "=")
 
                     # Extend the list of Cypher strings and their corresponding data dictionary
                     t = next(parameter_token_stack)
@@ -225,6 +230,7 @@ class QueryBuilder():
                         cypher_list.append(f"""NOT (`{label[1:]}`.`{property_name}` {operator} ${t})""")  # The $ refers to the data binding
                     else:
                         cypher_list.append(f"`{label}`.`{property_name}` {operator} ${t}")
+
                     data_dictionary[t] = property_value
 
         return cypher_list, data_dictionary
@@ -408,6 +414,7 @@ class QueryBuilder():
         q_where = ""
         q_where_list, q_where_dict = [], {}
         q_where_rel_list, q_where_rel_dict = [], {}
+
         if where_map:
             q_where_list, q_where_dict = self.list_where_conditions_per_dict(mp=where_map)
         if where_rel_map:
@@ -445,8 +452,12 @@ class QueryBuilder():
     #         q_where = "WHERE " + " AND ".join(q_where_list)
     #     return ("\n".join([q_match, q_where]), q_where_dict)
     @staticmethod
-    def gen_id_col_name(label:str, tag: str = None):
+    def gen_id_col_name(label: str, tag: str = None):
         return '_id_' + label
+
+    @staticmethod
+    def gen_uri_col_name(label: str, tag: str = None):
+        return '_uri_' + label
 
     @staticmethod
     def generate_call(labels: list,
@@ -522,6 +533,8 @@ class QueryBuilder():
                         return_disjoint: bool = False,
                         return_nodeid: bool = False,
                         return_propname: bool = True,
+                        return_termorder: bool = True,
+                        return_class_uris: bool = False,
                         only_props: list = None,
                         ) -> str:
         """
@@ -549,6 +562,16 @@ class QueryBuilder():
             if return_nodeid:
                 id_col_name = self.gen_id_col_name(label, tag)
                 item_str = f"{{`{id_col_name}`:id(`{label}`)}}"
+                return_items[label].append(item_str)
+            if return_termorder:
+                item_str = f"""CASE 
+                                    WHEN `{label}`.Order IS NULL THEN {{}} 
+                                    ELSE {{`{label + 'N' if "".join(labels).isupper() else label + ' (N)'}`:`{label}`.Order}} 
+                            END"""
+                return_items[label].append(item_str)
+            if return_class_uris:
+                uri_col_name = self.gen_uri_col_name(label)
+                item_str = f"CASE WHEN `{label}`.uri IS NULL THEN {{}} ELSE {{`{uri_col_name}`:`{label}`.uri}} END"
                 return_items[label].append(item_str)
 
             if only_props:
