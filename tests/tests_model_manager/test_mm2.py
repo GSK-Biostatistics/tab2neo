@@ -292,7 +292,8 @@ def test_get_class_ct(mm):
     '''
     mm.query(q)
     res = mm.get_class_ct(class_='Test Class')
-    assert res == ['test term text 2', 'test term text 1']
+    expected = ['test term text 2', 'test term text 1']
+    assert set(res) == set(expected)
 
 
 def test_propagate_rels_to_parent_class(mm):
