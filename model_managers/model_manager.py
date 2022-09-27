@@ -844,17 +844,27 @@ class ModelManager(NeoInterface):
             MERGE (sdf)-[:HAS_TABLE]->(sdt)
             """
         params = {'standard': standard}
+        self.query(q, params)
 
         # set the SortOrder property for each source data table in the graph
         self.set_sort_order(domain=domain, standard=standard)
         # Extend the extraction metadata with MAPS_TO_COLUMN rel between relationship and source data column nodes
         self.extend_extraction_metadata(domain=domain, standard=standard)
 
-        self.query(q, params)
-
     def set_sort_order(self, domain: list, standard: str):
 
         for dom in domain:
+            q = """
+            MATCH (sdf:`Data Extraction Standard`{_tag_:$standard})-[:HAS_TABLE]->(sdt:`Source Data Table`{_domain_:$domain})-[:HAS_COLUMN]->(sdc:`Source Data Column`)
+            WITH sdc, sdt
+            ORDER BY sdc.Order
+            WITH collect(sdc._columnname_) AS col_order, sdt
+            SET sdt.SortOrder = col_order
+            """
+            params = {'domain': dom, 'standard': standard}
+
+            self.query(q, params)
+
             q = """
             MATCH (sdf:`Data Extraction Standard`{_tag_:$standard})-[:HAS_TABLE]->(sdt:`Source Data Table`{_domain_:$domain})-[:HAS_COLUMN]->(sdc:`Source Data Column`)
             WITH sdc, sdt
@@ -912,7 +922,7 @@ class ModelManager(NeoInterface):
         """
         self.query(q)
 
-    def export_model_ttl(self, folder: str, filename: str, include_mappings = False):
+    def export_model_ttl(self, folder: str, filename: str, include_mappings=False):
         uri_map1 = {
             "Data Extraction Standard": {"properties": "_tag_"},
             "Source Data Folder": {"properties": "_folder_"},
