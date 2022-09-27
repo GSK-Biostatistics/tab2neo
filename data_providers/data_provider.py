@@ -1,8 +1,6 @@
 import logging
-
 import pandas as pd
 from neointerface import NeoInterface
-
 from logger.logger import logger
 from model_managers import ModelManager
 from query_builders.query_builder import QueryBuilder
@@ -63,7 +61,7 @@ class DataProvider(NeoInterface):
                      where_map=None,
                      where_rel_map=None,
                      return_nodeid=True,
-                     return_termorder=True,
+                     return_termorder=False,
                      return_class_uris=False):
         """
         A typical get_data_generic call for CLD project:
