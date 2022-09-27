@@ -189,6 +189,22 @@ def test_check_connectedness(qbr: QueryBuilder):
         ])
     assert not res
 
+    res = qbr.check_connectedness(
+        ['Subject', 'Demographics', 'Sex'],
+        [
+            {'from': 'Subject', 'to': 'Demographics'},
+            {'from': 'Demographics', 'to': 'Sex'}
+        ])
+    assert res
+    # not connected
+    res = qbr.check_connectedness(
+        ['Subject', 'Demographics', 'Sex'],
+        [
+            {'from': 'Subject', 'to': 'Demographics'}
+        ])
+    assert not res
+
+
 def test_enrich_labels_from_rels(qbr: QueryBuilder):
     res = qbr.enrich_labels_from_rels(
         labels = ['Study', 'Domain**'],
@@ -201,6 +217,21 @@ def test_enrich_labels_from_rels(qbr: QueryBuilder):
         oclass_marker = '**'
     )
     assert res == ['Study', 'Domain**', 'Subject', 'Sex', 'Exposure', 'Exposure Dose', 'Exposure Dose Unit**']
+
+
+def test_where_not_in(qbr):
+    # single not in value
+    test_map = {'DOMAIN': {'rdfs:label': {'not_in': 'LB'}}}
+    (Cypher_list, data_binding_dict) = qbr.list_where_conditions_per_dict(mp=test_map)
+    expected = ['NOT (`DOMAIN`.`rdfs:label` = $par_1)']
+    assert Cypher_list == expected
+    assert data_binding_dict == {'par_1': 'LB'}
+    # multiple not in values
+    test_map = {'DOMAIN': {'rdfs:label': [{'not_in': 'DS'}, {'not_in': 'LB'}]}}
+    (Cypher_list, data_binding_dict) = qbr.list_where_conditions_per_dict(mp=test_map)
+    expected = ['NOT (`DOMAIN`.`rdfs:label` in $par_1)']
+    assert Cypher_list == expected
+    assert data_binding_dict == {'par_1': ['DS', 'LB']}
 
 
 def test_where_conditions_ranges(qbr):
