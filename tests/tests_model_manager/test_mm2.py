@@ -411,9 +411,9 @@ def test_remove_auxilary_term_labels(mm):
     RETURN apoc.map.fromPairs(collect([t.label, labels(t)])) as map
     '''
     res = mm.query(q2)[0]
-    expected_res = {'map': {'Term 4': ['Class', 'Term', 'ExtraLabel1'],
-                            'Term 3': ['Class', 'Term'],
-                            'Term 2': ['Term', 'ExtraLabel1', 'ExtraLabel'],
-                            'Term 1': ['Term']}
-                    }
-    assert res == expected_res
+    assert 'map' in res
+    assert all(i in res.get('map') for i in ['Term 1', 'Term 2', 'Term 3', 'Term 4'])
+    assert not set(res.get('map').get('Term 1')) ^ {'Term'}
+    assert not set(res.get('map').get('Term 2')) ^ {'Term', 'ExtraLabel1', 'ExtraLabel'}
+    assert not set(res.get('map').get('Term 3')) ^ {'Class', 'Term'}
+    assert not set(res.get('map').get('Term 4')) ^ {'Class', 'Term', 'ExtraLabel1'}
