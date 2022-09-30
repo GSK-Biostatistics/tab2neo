@@ -221,8 +221,14 @@ class QueryBuilder():
                         property_value = property_value.get("not_in")
                         label = "!" + label
 
+                    # Handle multiple NOT IN's
+                    elif isinstance(property_value, list) and all(isinstance(item, dict) for item in property_value):
+                        # list of dictionaries e.g. {'rdfs:label': [{'not_in': 'DS'}, {'not_in': 'LB'}]}
+                        property_value = [dct.get('not_in') for dct in property_value]
+                        label = "!" + label
+
                     # For list inclusions, use "in"; in all other case check for equality
-                    operator = ("in" if isinstance(property_value, list) else "=")
+                    operator = ("in" if type(property_value) == list else "=")
 
                     # Extend the list of Cypher strings and their corresponding data dictionary
                     t = next(parameter_token_stack)
@@ -268,13 +274,22 @@ class QueryBuilder():
                 cypher_list.append(f"{check_} {{MATCH (`{label}`){leftdir}-[]-{rightdir}(x) {inner_cond}}}")
         return cypher_list, {}
 
-
     @staticmethod
     def check_connectedness(labels: list, rels: list):
+
         rels_ = rels.copy()
         if (len(labels) <= 1 and not rels_):
             return True
-        elif rels_:
+        elif labels and rels_:
+            # check to see if all labels are present in rels' to/from classes
+            all_rel_labels = set()
+            for rel in rels_:
+                all_rel_labels.update({rel.get('to'), rel.get('from')})
+            for label in labels:
+                if label not in all_rel_labels:
+                    return False
+
+        if rels_:
             processed_rels = []
             processed_rels.append(rels_.pop(0))
             processed_labels = {processed_rels[0].get('from'), processed_rels[0].get('to')}
@@ -305,7 +320,7 @@ class QueryBuilder():
                         cur_opt = 1
                     else:
                         cur_opt = 0
-                    rel_opt = (1 if rel.get('optional') else 0)
+                    rel_opt = (1 if rel.get('optional') and key == 'to' else 0)
                     labels_from_rels[rel.get(key)] = min([cur_opt, rel_opt])
             new_labels = []
             for label in labels + list(labels_from_rels.keys()):
@@ -533,7 +548,7 @@ class QueryBuilder():
                         return_disjoint: bool = False,
                         return_nodeid: bool = False,
                         return_propname: bool = True,
-                        return_termorder: bool = True,
+                        return_termorder: bool = False,
                         return_class_uris: bool = False,
                         only_props: list = None,
                         ) -> str:

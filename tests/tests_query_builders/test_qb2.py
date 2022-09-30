@@ -163,10 +163,6 @@ def test_check_connectedness(qbr: QueryBuilder):
     res = qbr.check_connectedness(["1Label"], [])
     assert res
 
-    # 1 label test (2)
-    res = qbr.check_connectedness(["1Label"], [{'from': '', 'to': ''}, {'from': '', 'to': ''}])
-    assert res
-
     # connected
     res = qbr.check_connectedness(
         [],
@@ -189,6 +185,22 @@ def test_check_connectedness(qbr: QueryBuilder):
         ])
     assert not res
 
+    res = qbr.check_connectedness(
+        ['Subject', 'Demographics', 'Sex'],
+        [
+            {'from': 'Subject', 'to': 'Demographics'},
+            {'from': 'Demographics', 'to': 'Sex'}
+        ])
+    assert res
+    # not connected
+    res = qbr.check_connectedness(
+        ['Subject', 'Demographics', 'Sex'],
+        [
+            {'from': 'Subject', 'to': 'Demographics'}
+        ])
+    assert not res
+
+
 def test_enrich_labels_from_rels(qbr: QueryBuilder):
     res = qbr.enrich_labels_from_rels(
         labels = ['Study', 'Domain**'],
@@ -201,6 +213,21 @@ def test_enrich_labels_from_rels(qbr: QueryBuilder):
         oclass_marker = '**'
     )
     assert res == ['Study', 'Domain**', 'Subject', 'Sex', 'Exposure', 'Exposure Dose', 'Exposure Dose Unit**']
+
+
+def test_where_not_in(qbr):
+    # single not in value
+    test_map = {'DOMAIN': {'rdfs:label': {'not_in': 'LB'}}}
+    (Cypher_list, data_binding_dict) = qbr.list_where_conditions_per_dict(mp=test_map)
+    expected = ['NOT (`DOMAIN`.`rdfs:label` = $par_1)']
+    assert Cypher_list == expected
+    assert data_binding_dict == {'par_1': 'LB'}
+    # multiple not in values
+    test_map = {'DOMAIN': {'rdfs:label': [{'not_in': 'DS'}, {'not_in': 'LB'}]}}
+    (Cypher_list, data_binding_dict) = qbr.list_where_conditions_per_dict(mp=test_map)
+    expected = ['NOT (`DOMAIN`.`rdfs:label` in $par_1)']
+    assert Cypher_list == expected
+    assert data_binding_dict == {'par_1': ['DS', 'LB']}
 
 
 def test_where_conditions_ranges(qbr):
@@ -358,6 +385,7 @@ def test_generate_return(qbr: QueryBuilder):
     q1 = qbr.generate_return(
         labels=['Subject', 'Population'],
         labels_to_pack={},
+        return_termorder=True
     )
     expected_q1 = '''RETURN apoc.map.mergeList([CASE 
                                     WHEN `Subject`.Order IS NULL THEN {} 
@@ -374,6 +402,7 @@ def test_generate_return(qbr: QueryBuilder):
     q2 = qbr.generate_return(
         labels=['Exposure', 'Exposure Definition'],
         labels_to_pack={'Exposure Definition': ['Exposure']},
+        return_termorder=True
     )
     expected_q2 = '''RETURN apoc.map.mergeList([CASE 
                                     WHEN `Exposure`.Order IS NULL THEN {} 
@@ -390,6 +419,7 @@ def test_generate_return(qbr: QueryBuilder):
     q3 = qbr.generate_return(
         labels=['Subject', 'Population'],
         labels_to_pack={'Population': ['Safety Population', 'Completers Population']},
+        return_termorder=True
     )
     expected_q3 = '''RETURN apoc.map.mergeList([CASE 
                                     WHEN `Subject`.Order IS NULL THEN {} 
@@ -406,6 +436,7 @@ def test_generate_return(qbr: QueryBuilder):
     q4 = qbr.generate_return(
         labels=['Subject', 'No. of Exacerb in Last Year Group 1'],
         labels_to_pack={'No. of Exacerb in Last Year Group 1': '<=2'},
+        return_termorder=True
     )
     expected_q4 = '''RETURN apoc.map.mergeList([CASE 
                                     WHEN `Subject`.Order IS NULL THEN {} 
