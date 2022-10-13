@@ -512,36 +512,57 @@ class ModelManager(NeoInterface):
             """
         self.query(q)
 
-        print("Creating Class from Variable") #when no DataElement exists
+        print("Creating Class from Variable")  # when no DataElement exists
         q = """
-        MATCH (d:Dataset)-[:HAS_VARIABLE]->(v:Variable)
-        WHERE NOT 
+            MATCH (d:Dataset)-[:HAS_VARIABLE]->(v:Variable)
+            WHERE NOT 
             (
                 (v.Variable starts with 'COVAL' AND v.Variable <> 'COVAL') 
                     OR
                 (v.Variable starts with 'TSVAL' AND NOT v.Variable in ['TSVAL', 'TSVALCD', 'TSVALNF'])
             )// - should be handled separately
-        AND NOT EXISTS 
+            AND NOT EXISTS 
             (
                 (v)-[:IS_DATA_ELEMENT]->(:DataElement)
             )        
-        SET v:Class
-        SET v.label =                           
+            SET v:Class
+            SET v.label =                           
             CASE WHEN v.n_with_same_label > 1 THEN 
                 d.Description + ' ' + v.Label
             ELSE
                 v.Label
             END                
-        SET v.short_label =             
+            SET v.short_label =             
             CASE WHEN v.n_with_same_name > 1 THEN 
                 d.Dataset + v.Variable
             ELSE
                 v.Variable
             END
-        SET v.create = False 
-        MERGE (d)<-[:FROM]-(:Relationship{relationship_type:v.Label})-[:TO]->(v)          
-        """
-        self.query(q)
+            SET v.create = False 
+            // for the DM table, like all the variable to the (soon to be) subject class, otherwise link to the dataset 
+            // class
+            WITH d, v
+            CALL apoc.do.when(
+                d.Dataset in $datasets
+                ,
+                '
+                MERGE (d)<-[:FROM]-(:Relationship{relationship_type:v.Label})-[:TO]->(v)
+                WITH d, v
+                MATCH (s:Variable)
+                WHERE s.Dataset in $datasets AND s.Label = "Unique Subject Identifier"
+                MERGE (s)<-[:FROM]-(:Relationship{relationship_type:v.Label})-[:TO]->(v) 
+                '
+                ,
+                '
+                MERGE (d)<-[:FROM]-(:Relationship{relationship_type:v.Label})-[:TO]->(v) 
+                '
+                ,
+                {d:d, v:v, datasets:$datasets}
+            )
+            YIELD value
+            RETURN value
+            """
+        self.query(q, {'datasets': ['DM']})
 
         print("Creating Class from dataElement and Relationship from Variable")
         q = """
@@ -583,6 +604,19 @@ class ModelManager(NeoInterface):
             MATCH (v)-[:HAS_CONTROLLED_TERM]->(t:Term)
             MERGE (dehl)-[:HAS_CONTROLLED_TERM]->(t)
             """
+        self.query(q)
+
+        # In the DM dateset, migrate the relationships going TO variables FROM the Unique Subject Identifier
+        # variable/relationship to the Subject Class (created from the USI variable above)
+        q = """
+        MATCH (var:Variable:Relationship)
+        WHERE var.Dataset = 'DM' AND var.Label = "Unique Subject Identifier"
+        MATCH (var)<-[from_rel:FROM]-(rel:Relationship)
+        DELETE from_rel
+        WITH rel
+        MATCH (subject:Class{label:'Subject'})
+        MERGE (rel)-[:FROM]->(subject)
+        """
         self.query(q)
 
         #Merging duplicate dehl Terms:
