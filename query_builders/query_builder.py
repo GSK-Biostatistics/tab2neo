@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from gsk_model_managers import ModelManager
+from model_managers import ModelManager
 import pandas as pd
 
 
