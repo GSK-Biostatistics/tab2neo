@@ -1,5 +1,6 @@
-import pandas as pd
 from collections import OrderedDict
+from model_managers import ModelManager
+import pandas as pd
 
 
 def get_tag_label(
@@ -312,15 +313,26 @@ class QueryBuilder():
     def enrich_labels_from_rels(labels: list, rels: list, oclass_marker: str):
         if rels:
             labels_from_rels = {}
+            all_optional_bool = all(rel.get('optional', False) for rel in rels)
             for rel in rels:
                 for key in ['from', 'to']:
                     if labels_from_rels.get(rel.get(key)) is None:
+                        # if the label hasn't been found already
                         cur_opt = 2
                     elif labels_from_rels.get(rel.get(key)):
+                        # the label has been found and the cur_opt is != 0
                         cur_opt = 1
                     else:
+                        # the label has been found and the cur_opt is == 0
                         cur_opt = 0
-                    rel_opt = (1 if rel.get('optional') and key == 'to' else 0)
+                    if all_optional_bool:
+                        # if all the relationships are optional, we need to have something to MATCH on normally.
+                        # So we take all the 'left' or 'from' classes to be normal MATCHes.
+                        # If those classes also feature in optional relationships on the 'right' or 'to' side,
+                        # they become OPTIONAL MATCHes as well.
+                        rel_opt = (1 if rel.get('optional') and key == 'to' else 0)
+                    else:
+                        rel_opt = 1 if rel.get('optional') else 0
                     labels_from_rels[rel.get(key)] = min([cur_opt, rel_opt])
             new_labels = []
             for label in labels + list(labels_from_rels.keys()):
@@ -328,8 +340,17 @@ class QueryBuilder():
                     cur_label = label + oclass_marker
                 else:
                     cur_label = label
-                if cur_label not in new_labels:
+
+                if label not in new_labels and label + oclass_marker not in new_labels:
+                    # neither label or optional label is in the new labels, so add it
+                    # we use `label + oclass_marker` here not `cur_label` as when a label has come round a second time,
+                    # it might not be optional, but we still need to check to see if it already has been selected AS
+                    # optional on a previous iteration
                     new_labels.append(cur_label)
+                elif label in new_labels and cur_label not in new_labels:
+                    # label is there, but optional is not (And we want to have an optional label),so replace label with
+                    # optional label in new_labels
+                    new_labels = list(map(lambda _label: _label.replace(label, cur_label), new_labels))
             return new_labels
         else:
             return labels
