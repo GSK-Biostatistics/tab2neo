@@ -315,8 +315,8 @@ class ModelManager(NeoInterface):
             rels.append(dct)
         return rels
 
-    def translate_to_shortlabel(self, labels: list, rels: list, labels_to_pack, where_map: dict=None,
-                                where_rel_map:dict=None, use_rel_labels=True):
+    def translate_to_shortlabel(self, labels: list, rels: list, labels_to_pack, where_map: dict = None,
+                                where_rel_map: dict = None, use_rel_labels=True):
         if not where_map:
             where_map = {}
         if not where_rel_map:
@@ -339,7 +339,8 @@ class ModelManager(NeoInterface):
         if labels_to_pack is not None:
             labels_lst = []
             for key, value in labels_to_pack.items():
-                assert isinstance(value, (str, list)), f'Value in labels_to_pack is not string or list. It was: {type(value)}'
+                assert isinstance(value,
+                                  (str, list)), f'Value in labels_to_pack is not string or list. It was: {type(value)}'
                 labels_lst.append(key)
                 if isinstance(value, str):
                     labels_lst.append(value)
@@ -365,14 +366,16 @@ class ModelManager(NeoInterface):
             mapped_labels_to_pack = {}
             # print(f'MAP: {map}')
             for key, value in labels_to_pack.items():
-                assert isinstance(value, (str, list)), f'Value in labels_to_pack is not string or list. It was: {type(value)}'
+                assert isinstance(value,
+                                  (str, list)), f'Value in labels_to_pack is not string or list. It was: {type(value)}'
                 if isinstance(value, str):
                     mapped_labels_to_pack[map[key]] = map[value]
                 elif isinstance(value, list):
                     # print(f'KEY: {key}')
                     # print(f'VALUE: {value}')
                     assert key in map.keys(), f'{key} was not found as a key in {map}'
-                    assert (True if i in map.keys() else False for i in value), f'a value from {value} was not found as a key in {map}'
+                    assert (True if i in map.keys() else False for i in
+                            value), f'a value from {value} was not found as a key in {map}'
                     mapped_labels_to_pack[map[key]] = [map[i] for i in value]
                     # convert the fromclass/coreclass label to short label only
                     # leave the label as it needs to be long format for the generate_call function
@@ -512,7 +515,7 @@ class ModelManager(NeoInterface):
             """
         self.query(q)
 
-        print("Creating Class from Variable") #when no DataElement exists
+        print("Creating Class from Variable")  # when no DataElement exists
         q = """
         MATCH (d:Dataset)-[:HAS_VARIABLE]->(v:Variable)
         WHERE NOT 
@@ -585,10 +588,10 @@ class ModelManager(NeoInterface):
             """
         self.query(q)
 
-        #Merging duplicate dehl Terms:
-        #Note: this is rather a workaround
-        #In the graph world for the case where 'Weight' is part of 4 codelists CVTEST, MOTEST, PCTEST, VSTEST
-        #it would make more sense to have 1 codelist for all tests and value-level metadata based on the DOMAIN value
+        # Merging duplicate dehl Terms:
+        # Note: this is rather a workaround
+        # In the graph world for the case where 'Weight' is part of 4 codelists CVTEST, MOTEST, PCTEST, VSTEST
+        # it would make more sense to have 1 codelist for all tests and value-level metadata based on the DOMAIN value
         q = """
         MATCH path=(dehl:Class)-[r:HAS_CONTROLLED_TERM]->(t:Term)
         WHERE NOT dehl:Variable
@@ -609,7 +612,7 @@ class ModelManager(NeoInterface):
         """
         self.query(q)
 
-        #Link Domain Abbreviation to all dehl classes
+        # Link Domain Abbreviation to all dehl classes
         q = """
         MATCH (de:DataElement)-[:SUBCLASS_OF]->(dehl:Class), (domain_class:Class{label:'Domain Abbreviation'})
         WHERE dehl <> domain_class AND NOT dehl.label in ['Subject', 'Study']
@@ -678,7 +681,6 @@ class ModelManager(NeoInterface):
         MERGE (t)-[:HAS_CONTROLLED_TERM]->(vlterm)                       
         """
         self.query(q)
-
 
         # ------------------ LINKING-----------------------
         # (0)
@@ -957,3 +959,44 @@ class ModelManager(NeoInterface):
         rdf_file_path = os.path.join(folder, filename)
         with open(rdf_file_path, "w") as file:
             file.write(rdf)
+
+    def create_model_from_data(
+            self,
+            data_label: str = "Source Data Row",
+            data_table_label: str = "Source Data Table",
+            domain_property: str = "_domain_",
+            no_domain_label: str = "Thing",
+            data_column_label: str = "Source Data Column",
+            columnname_property: str = "_columnname_",
+            exclude_properties: list = None,
+    ):
+        """
+        Creates Class and Relationship nodes to represent a trivial schema to reshape data ingested e.g. with
+        FileDataLoader - Tables loaded into nodes one row to one node, column names used as property names.
+
+        data_labels: labels of the nodes where loaded data is stored (mm with use OR btw labels to fetch data nodes)
+        domain_property: property where the name of the table/domain can be found
+        """
+        if exclude_properties is None:
+            exclude_properties = ["_filename_", "_folder_"]
+        q = f"""
+        MATCH (data:`{data_label}`)<-[:HAS_DATA]-(dt:`{data_table_label}`)        
+        WITH distinct dt, dt._domain_ as domain, keys(data) as ks
+        WITH *, CASE WHEN domain IS NULL THEN $no_domain_label ELSE domain END as domain
+        WITH dt, domain, [k in ks WHERE NOT k IN $exclude_properties] as ks
+        WITH dt, domain, apoc.coll.flatten(apoc.coll.toSet(ks)) as ks
+        MERGE (c:Class{{label: domain, short_label: domain, create: True}})
+        MERGE (dt)-[:MAPS_TO_CLASS]->(c)
+        WITH *
+        UNWIND ks as k
+        MATCH (dt)-[:HAS_COLUMN]->(col:`{data_column_label}`)
+        WHERE col.`{columnname_property}` = k
+        MERGE (c2:Class{{label: k, short_label: k}})        
+        MERGE (c)<-[:FROM]-(r:Relationship{{relationship_type: k}})-[:TO]->(c2)
+        MERGE (col)-[:MAPS_TO_CLASS]->(c2)        
+        """
+        params = {
+            "exclude_properties": exclude_properties + [domain_property],
+            "no_domain_label": no_domain_label
+        }
+        self.query(q, params)
