@@ -965,10 +965,10 @@ class ModelManager(NeoInterface):
             data_label: str = "Source Data Row",
             data_table_label: str = "Source Data Table",
             domain_property: str = "_domain_",
+            no_domain_label: str = "Thing",
             data_column_label: str = "Source Data Column",
             columnname_property: str = "_columnname_",
-            no_domain_label: str = "Thing",
-            exclude_properties: list = ["_filename_", "_folder_"],
+            exclude_properties: list = None,
     ):
         """
         Creates Class and Relationship nodes to represent a trivial schema to reshape data ingested e.g. with
@@ -977,9 +977,12 @@ class ModelManager(NeoInterface):
         data_labels: labels of the nodes where loaded data is stored (mm with use OR btw labels to fetch data nodes)
         domain_property: property where the name of the table/domain can be found
         """
+        if exclude_properties is None:
+            exclude_properties = ["_filename_", "_folder_"]
         q = f"""
         MATCH (data:`{data_label}`)<-[:HAS_DATA]-(dt:`{data_table_label}`)        
         WITH distinct dt, dt._domain_ as domain, keys(data) as ks
+        WITH *, CASE WHEN domain IS NULL THEN $no_domain_label ELSE domain END as domain
         WITH dt, domain, [k in ks WHERE NOT k IN $exclude_properties] as ks
         WITH dt, domain, apoc.coll.flatten(apoc.coll.toSet(ks)) as ks
         MERGE (c:Class{{label: domain, short_label: domain, create: True}})
@@ -993,6 +996,7 @@ class ModelManager(NeoInterface):
         MERGE (col)-[:MAPS_TO_CLASS]->(c2)        
         """
         params = {
-            "exclude_properties": exclude_properties + [domain_property]
+            "exclude_properties": exclude_properties + [domain_property],
+            "no_domain_label": no_domain_label
         }
         self.query(q, params)
