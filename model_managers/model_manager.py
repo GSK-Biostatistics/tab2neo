@@ -557,7 +557,16 @@ class ModelManager(NeoInterface):
                         WHEN 'USUBJID' THEN 'Subject'
                         WHEN 'STUDYID' THEN 'Study'
                     ELSE
-                        de.dataElementLabel
+                        CASE 
+                            WHEN de.dataElementName = '--DECOD' 
+                            THEN 'Dictionary-Derived Term' 
+                        ELSE 
+                            CASE 
+                                WHEN de.dataElementLabel = 'Class' 
+                                THEN de.vg  // rename label of 'Class' as causes problems in extract_class_entities() when reshaping
+                            ELSE de.dataElementLabel
+                            END
+                        END
                     END,
                 short_label: de.dataElementName,
                 create: 
