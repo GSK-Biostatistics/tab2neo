@@ -1,0 +1,11 @@
+STUDYID,Study
+USUBJID,Subject
+DOMAIN,Domain
+VS,Observation
+VSCAT,Observation.category
+VSTESTCD,Observation.code
+VSDTC,Observation.effectiveDateTime
+//
+VS,Observation.valueQuantity
+VSSTRES,Quantity.value
+VSSTRESU,Quantity.unit

@@ -1,6 +1,6 @@
-Encounter
-Encounter.identifier
-Encounter.type
+//Encounter
+//Encounter.identifier
+//Encounter.type
 MedicationAdministration
 MedicationAdministration.statusReason
 MedicationAdministration.medicationCodeableConcept
@@ -12,7 +12,7 @@ MedicationAdministration.dosage.site
 MedicationAdministration.dosage.route
 MedicationAdministration.dosage.method
 MedicationAdministration.dosage.dose
-MedicationAdministration.dosage.dosage.text
+MedicationAdministration.dosage.text
 Observation
 Observation.category
 Observation.code
@@ -22,6 +22,10 @@ Observation.valueCodeableConcept
 Observation.valueString
 Observation.valueTime
 Observation.valueDateTime
+Quantity
+Quantity.value
+Quantity.unit
+Quantity.code
 Observation.interpretation
 Observation.bodySite
 Observation.method

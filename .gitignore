@@ -135,6 +135,9 @@ temp.py
 02_activate_environment.bat
 03_install_dependencies.bat
 
+# VSCode-specific
+.vscode/*
+
 # Project-specific
 neo4j_interface/neo4j_liaison.py
 julian_extra.py
