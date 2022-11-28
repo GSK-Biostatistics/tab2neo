@@ -1,9 +1,7 @@
 import pytest
 from model_appliers import model_applier
 import neointerface
-import pycurl
-import certifi
-from io import BytesIO
+
 
 # Provide a database connection that can be used by the various tests that need it
 @pytest.fixture(scope="module")
