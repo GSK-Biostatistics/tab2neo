@@ -4,7 +4,8 @@ from data_loaders.file_data_loader import FileDataLoader
 from model_managers.model_manager import ModelManager
 from model_appliers.model_applier import ModelApplier
 from data_providers.data_provider import DataProvider
-import string
+import pandas as pd
+
 
 DATA_PATH = 'tests/tests_model_applier/data/test_reshape_fhirlike/' 
     
@@ -51,11 +52,13 @@ def add_clin_classes(mm:ModelManager):
     mm.create_class("Study")
     mm.create_class("Site")
     mm.create_class("Subject")
+    mm.create_class("Arm")
     mm.create_class("Visit")
     mm.create_related_classes_from_list(rel_list=[
-        ["Study", "Site", "Site"], 
+        ["Study", "Site", "Site"], #[from_class, to_class, rel_type]
         ["Study", "Subject", "Subject"],
         ["Site", "Subject", "Subject"],
+        ["Subject", "Arm", "Arm"],
         ["Subject", "AdverseEvent", "AdverseEvent"],
         ["Subject", "MedicationAdministration", "MedicationAdministration"],
         ["Subject", "Observation", "Observation"],
@@ -80,11 +83,13 @@ def map_columns(interface, data_path:str):
         AND 
         c.label = pair[1]
         MERGE (x)-[:MAPS_TO_CLASS]->(c)
-        RETURN DISTINCT c.label as class
+        WITH [coalesce(x._columnname_, x._domain_), c.label] as pair
+        RETURN pair
         """,
         {"pairs": [line.split(",") for line in lines]}
-    )
-    return [r["class"] for r in res]
+    )    
+    return [r["pair"] for r in res]
+    
 
 def test_reshape_fhirlike():
     fdl = FileDataLoader(rdf=True)
@@ -97,19 +102,20 @@ def test_reshape_fhirlike():
     create_model_from_fhir(fdl, DATA_PATH)
     add_clin_classes(mm)    
 
-    fdl.load_file(
+    fdl.delete_nodes_by_label(delete_labels=["Source Data Row"])
+    vs_df = fdl.load_file(
         folder=DATA_PATH,
         filename='VS.csv'        
     )
+    vs_df = vs_df.drop(['_domain_', '_folder_', '_filename_'], axis=1)
 
-    classes_mapped = map_columns(fdl, DATA_PATH)
-    print(classes_mapped)
+    mapped_classes = map_columns(fdl, DATA_PATH)    
     ma.reshape_all()
 
-    df = dp.get_data_cld(labels=classes_mapped)
-    print(df)
-
-
-
-
-test_reshape_fhirlike()
+    data, q, params = dp.get_data_cld(labels=list(set([pair[1] for pair in mapped_classes])))
+    df = pd.DataFrame(data)
+    df = df.rename({pair[1]: pair[0] for pair in mapped_classes}, axis=1)
+    df = df[list(vs_df.columns)].sort_values(["STUDYID","DOMAIN","USUBJID","VISIT","VSTESTCD"], ignore_index=True)
+    print(df)    
+    
+    pd.testing.assert_frame_equal(vs_df, df)

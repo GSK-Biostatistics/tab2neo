@@ -1,8 +1,9 @@
 STUDYID,Study
 USUBJID,Subject
+ARM,Arm
 DOMAIN,Domain
 VS,Observation
-VSCAT,Observation.category
+VISIT,Visit
 VSTESTCD,Observation.code
 VSDTC,Observation.effectiveDateTime
 //
