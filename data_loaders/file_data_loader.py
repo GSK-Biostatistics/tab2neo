@@ -115,7 +115,7 @@ class FileDataLoader(neointerface.NeoInterface):
         return (df, meta)
 
 
-    def load_file(self, folder:str, filename:str, query=None, metadataonly = False, dataonly = False, test_run = False,
+    def load_file(self, folder:str, filename:str, sheet_name=0, query=None, metadataonly = False, dataonly = False, test_run = False,
                         load_to_neo = True, colcharsbl =r'[^A-Za-z0-9_]+'):
         """
         Read in an external file as a Pandas data frame.
@@ -138,6 +138,7 @@ class FileDataLoader(neointerface.NeoInterface):
 
         :param folder:          Name of directory where the file to load resides
         :param filename:        Name (exclusive of path) of file to load
+        :param sheet_name       Only for xls and xlsx - name of the sheet to load
         :param query:           A parameter to be passed to read_file
         :param metadataonly:    If True then only the folder, filename, and column names are imported
         :param dataonly:
@@ -155,7 +156,7 @@ class FileDataLoader(neointerface.NeoInterface):
                                         0    mid987650  214356.0  987650.000001  ...  33420.0  1983-06-30  1983.0
                                         1    mid987650  214356.0  987650.000002  ...  33420.0  1956-06-30  1956.0
         """
-        (df, meta) = self.read_file(folder=folder, filename=filename, query=query, metadataonly=metadataonly,
+        (df, meta) = self.read_file(folder=folder, filename=filename, sheet_name=sheet_name, query=query, metadataonly=metadataonly,
                                     test_run=test_run, colcharsbl=colcharsbl)
 
         fn = ".".join(filename.split(".")[:-1])     # The filename excluding the dot and the extension suffix
