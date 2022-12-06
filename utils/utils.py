@@ -28,51 +28,6 @@ def compare_recordsets(jsonable1, jsonable2) -> bool:
     r2 = [json.loads(i) for i in sorted([json.dumps(i) for i in jsonable2])]
     return r1 == r2
 
-def compare_recordsets_old(rs1: [{}], rs2: [{}]) -> bool:
-    """
-    We define "recordsets" as "lists of dictionaries".  Each element of the lists is regarded as a "record".
-
-    EXAMPLE of recordset:  [{'Field_A': 1},
-                            {'Field_A': 1},
-                            {'Field_A': 99, 'Field_B': 'hello'}]
-
-    Compare 2 recordsets WITHOUT REGARD to the position of the dictionaries within the lists,
-    and also WITHOUT REGARD to the position of the key:value pairs within the dictionaries.
-    Duplicates records, if present, are treated as completely separate.
-
-    Return True if the given recordsets match, as defined above; False, otherwise.
-
-    WARNING: this function is meant for comparing SMALL datasets, because it's Order n square!
-
-    :param rs1: A (possibly empty) list of dictionaries
-    :param rs2: A (possibly empty) list of dictionaries
-
-    :return:    True if there's a match, or False otherwise
-    """
-
-    # Verify the type of the arguments
-    assert isinstance(rs1, list), "compare_recordsets() : The 1st argument is not a list!  Value = " + str(rs1)
-    assert isinstance(rs2, list), "compare_recordsets() : The 2nd argument is not a list!  Value = " + str(rs2)
-
-    if len(rs1) != len(rs2):
-        return False  # Datasets of different sizes will never match
-
-    # Consider each element (i.e. a dictionary) in turn in the first list:
-    #   attempt to remove it from the other list; if the removal fails, then it means
-    #   that we have an element in the 1st list that is not present in the 2nd one (hence a mismatch)
-    for rec1 in rs1:
-        # Note: since Python 3.7 dictionaries are order-preserving, but
-        #       built-in Python functions such as "remove"
-        #       do not distinguish dictionaries based on order:
-        #           {'a': 1, 'b': 2} will match {'b': 2, 'a': 1}
-
-        try:
-            rs2.remove(rec1)  # Remove (the first instance of) the element rec1 from the list rs2
-        except Exception:
-            return False  # The remove failed - i.e. the first list contains an element not in the 2nd one
-
-    return True
-
 
 def summarize_dataframe(df, caption="") -> None:
     """
