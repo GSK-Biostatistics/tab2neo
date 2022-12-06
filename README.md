@@ -21,4 +21,4 @@ QUERY BUILDERS
 - QueryBuilder - Class to support creation of cypher queries to work with data in Neo4j  
 
 Dependencies:
-- https://mygithub.gsk.com/gsk-tech/neointerface
+- https://github.com/GSK-Biostatistics/neointerface
