@@ -25,7 +25,7 @@ class DataProvider(NeoInterface):
 
     def check_schema(self, labels: list, rels: list):
         for label in labels:
-            q = "MATCH " + self.qb.generate_1match_schema_check(label) + " RETURN *"
+            q = "MATCH " + self.qb.generate_1match_schema_check(label=label) + " RETURN *"
             res = self.query(q)
             assert res, f"Class {label} not found in the schema"
         for rel in rels:
