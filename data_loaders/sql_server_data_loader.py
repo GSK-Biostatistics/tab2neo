@@ -15,12 +15,7 @@ class SQLServerDataLoader(neointerface.NeoInterface):
         self._con = f"jdbc:sqlserver://{sqldburl};databaseName={self.sqldbname};user={self.sqluser};password={self._sqlpassword};"
         super().__init__(*args, **kwargs)
         if self.autoconnect:
-            self.remove_apoc_custom("load_tables_from_sql")
-            self.setup_apoc_custom_load_tables_from_sql()
             self.query("call db.clearQueryCaches()")
-
-            self.create_index("Source Data Row", "_study_")
-            self.create_index("Source Data Row", "_domain_")
 
     def sql_query(self, sqlq:str):
         q = "CALL apoc.load.jdbc($con, $sqlq) YIELD row RETURN row"

@@ -545,7 +545,7 @@ class ModelApplier(NeoInterface):
 
     def label_entities(self,
                        class_='Observation',
-                       add_label={'Class': 'Category', 'Property': 'name'},
+                       add_label=None,
                        cond_via_rel='HAS_OBSERVATION',
                        cond_via_rel_direction='<',
                        cond_cypher=None,
@@ -570,6 +570,8 @@ class ModelApplier(NeoInterface):
         assert type(add_label) == dict
         assert "Class" in add_label.keys()
         assert "Property" in add_label.keys()
+        if not add_label:
+            add_label = {'Class': 'Category', 'Property': 'name'}
         if cond_cypher:
             assert re.search(f'RETURN.*{class_.lower()}', cond_cypher)
             assert re.search(f'RETURN.*{add_label["Class"].lower()}', cond_cypher)

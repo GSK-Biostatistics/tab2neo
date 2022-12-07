@@ -46,7 +46,7 @@ class AzureDataLoader(FileDataLoader):
         Lists all files (full path) in a directory on Azure blob storage
 
         :param path: A list of strings
-                     # EXAMPLE of list item: "rd/space/test_compound/117106/testing_01/sdtm/gsk_117106_vs.sas7bdat"
+                     # EXAMPLE of list item: "rd/space/test_compound/trial_01/testing_01/sdtm/vs.sas7bdat"
         """
         return [path.name for path in self.fs.get_paths(path=path)]
 

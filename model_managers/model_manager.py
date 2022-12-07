@@ -529,6 +529,125 @@ class ModelManager(NeoInterface):
         with open(rdf_file_path, "w") as file:
             file.write(rdf)
 
+    def create_custom_mappings_from_dict(self, groupings = None) -> None:
+        """
+        Function to support MethodApplier(mode="schema_PROPERTY")
+
+        Create a set of nodes labeled "Class", all taken from the groupings dictionary; their names are
+            stored in an attribute named "label".  EXAMPLES: "Study", "Site", "Race", "Adverse Event".
+
+        Also, create a set of nodes labeled "Property"; likewise, their names are
+            stored in an attribute named "label".  EXAMPLES: "RACE", "RACEN", "SITEID".
+
+        In addition, create relationships named "HAS_PROPERTY", from each of the "Class" nodes to the appropriate
+            "Property" nodes.   EXAMPLE:  The "Race" node (labeled "Class") links to the "RACE", "RACEN" nodes
+            (labeled "Property")
+
+        Finally,  create relationships named "MAPS_TO_PROPERTY", from `Source Data Column` nodes to `Property` nodes.
+            These relationships are created based on matches between the "_columnname_" attribute on `Source Data Column` nodes
+            and entries in the lists contained in groupings (e.g., "RACEN"); in some cases, further restrictions are applied,
+            requiring the `Source Data Column` node to be linked to a particular `Source Data Table` node.
+
+        :param groupings:   A dictionary.  The keys are either "*" (meaning no `Source Data Table` restriction)
+                                           or the name of a specific `Source Data Table`.
+                                           The values are dictionaries such as {"Race": ["RACE", "RACEN"]}
+        :return:            None
+        """
+        if not groupings:
+            groupings = {}
+
+        # Loop over all the keys/values of the groupings dictionary
+        for table, groupping in groupings.items():
+            # EXAMPLES of table:  "ADSL" or "*" (the star indicates "all tables")
+            # groupping is a dictionary with entries such as  "Race": ["RACE", "RACEN"]
+
+            # Define the Cypher query, which depends on the value of the "table" variable in the outer loop;
+            #       for examples of how the query shapes up, see below (inside inner loop)
+            q = f"""                    
+                MERGE (class:Class {{label:$class}})
+                WITH * UNWIND $properties as property
+                MERGE (class)-[:HAS_PROPERTY]->(p:Property {{label:property}})
+                WITH *
+                MATCH (sdc:`Source Data Column` {{_columnname_:property}})
+                {
+                "" if table == "*" else "<-[:HAS_COLUMN]-(sdt:`Source Data Table` {_domain_:$table})"
+                }                     
+                MERGE (sdc)-[:MAPS_TO_PROPERTY]->(p)
+                """
+
+            for class_, properties in groupping.items():
+                # EXAMPLE of class_ : "Race"
+                # EXAMPLE of properties: ["RACE", "RACEN"]
+
+                params = {"table":table, "class": class_, "properties": properties}
+                self.query(q, params)
+
+                # EXAMPLE1 of query (involving a specific table, such as "ADSL")
+                """
+                    MERGE (class:Class {label:$class})
+                    WITH * UNWIND $properties as property
+                    MERGE (class)-[:HAS_PROPERTY]->(p:Property {label:property})
+                    WITH *
+                    MATCH (sdc:`Source Data Column` {_columnname_:property})
+                    <-[:HAS_COLUMN]-(sdt:`Source Data Table` {_domain_:$table})                     
+                    MERGE (sdc)-[:MAPS_TO_PROPERTY]->(p)
+                """
+
+                # EXAMPLE2 of query (involving any table, indicated by the "*" value of the table variable)
+                """
+                    MERGE (class:Class {label:$class})
+                    WITH * UNWIND $properties as property
+                    MERGE (class)-[:HAS_PROPERTY]->(p:Property {label:property})
+                    WITH *
+                    MATCH (sdc:`Source Data Column` {_columnname_:property})                     
+                    MERGE (sdc)-[:MAPS_TO_PROPERTY]->(p)
+                """
+                # EXAMPLE of params: {'table': 'ADSL', 'class': 'Race', 'properties': ['RACE', 'RACEN']}
+
+    def create_custom_rels_from_list(self, rels: [[str, str]], create_if_absent = False) -> None:
+        """
+        Adds "CLASS_RELATES_TO" relationships to pairs of nodes with "Class" label,
+        based on the list passed as the argument "rels".
+        Matches occur based on node attributes named "label".
+        Optionally, create the Class nodes if needed.
+        To create just a single relationship, see create_class_relationship()
+
+        NOTE: this is a more general version of the method create_related_classes_from_list()
+
+        :param rels:    A list of 2-element lists, indicating a relationship among nodes of type `Class`
+                        EXAMPLE:   [
+                                        ["Study", "Site"],
+                                        ["Study", "Subject"],
+                                        ["Subject", "Race"]
+                                   ]
+        :param create_if_absent: If True, the Class nodes specified in the argument "rel" get created as needed;
+                                        otherwise, no relationships get created whenever their start or end class is missing
+        :return:                 None
+        """
+        if rels is None or rels == []:
+            return      # There's nothing to do
+
+        if create_if_absent:
+            q = f"""            
+                UNWIND $rels as rel
+                WITH rel[0] as left, rel[1] as right      
+                WHERE apoc.meta.type(left) = apoc.meta.type(right) = 'STRING'  
+                MERGE (ln:Class {{label:left}})
+                MERGE (rn:Class {{label:right}})   
+                MERGE (ln)-[:CLASS_RELATES_TO]->(rn)   
+                """
+        else:   # The Class nodes MUST be present, or no relationship gets created
+            q = f"""            
+                UNWIND $rels as rel
+                WITH rel[0] as left, rel[1] as right    
+                WHERE apoc.meta.type(left) = apoc.meta.type(right) = 'STRING'      
+                MATCH (ln:Class {{label:left}}), (rn:Class {{label:right}})    
+                MERGE (ln)-[:CLASS_RELATES_TO]->(rn)   
+                """
+
+        params = {"rels": rels}
+        self.query(q, params)
+
     def create_model_from_data(
             self,
             data_label: str = "Source Data Row",
