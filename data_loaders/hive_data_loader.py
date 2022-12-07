@@ -29,7 +29,7 @@ class HiveDataLoader:
         cursor = self._connection.cursor()
         cursor.execute(statement)
         results = cursor.fetchall()
-        names = [item[0].split('.')[1] for item in cursor.description]
+        names = [item[0] for item in cursor.description]
         df = pd.DataFrame(results)
         df.columns = names
         cursor.close()
