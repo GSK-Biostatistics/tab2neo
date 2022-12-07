@@ -604,6 +604,50 @@ class ModelManager(NeoInterface):
                 """
                 # EXAMPLE of params: {'table': 'ADSL', 'class': 'Race', 'properties': ['RACE', 'RACEN']}
 
+    def create_custom_rels_from_list(self, rels: [[str, str]], create_if_absent = False) -> None:
+        """
+        Adds "CLASS_RELATES_TO" relationships to pairs of nodes with "Class" label,
+        based on the list passed as the argument "rels".
+        Matches occur based on node attributes named "label".
+        Optionally, create the Class nodes if needed.
+        To create just a single relationship, see create_class_relationship()
+
+        NOTE: this is a more general version of the method create_related_classes_from_list()
+
+        :param rels:    A list of 2-element lists, indicating a relationship among nodes of type `Class`
+                        EXAMPLE:   [
+                                        ["Study", "Site"],
+                                        ["Study", "Subject"],
+                                        ["Subject", "Race"]
+                                   ]
+        :param create_if_absent: If True, the Class nodes specified in the argument "rel" get created as needed;
+                                        otherwise, no relationships get created whenever their start or end class is missing
+        :return:                 None
+        """
+        if rels is None or rels == []:
+            return      # There's nothing to do
+
+        if create_if_absent:
+            q = f"""            
+                UNWIND $rels as rel
+                WITH rel[0] as left, rel[1] as right      
+                WHERE apoc.meta.type(left) = apoc.meta.type(right) = 'STRING'  
+                MERGE (ln:Class {{label:left}})
+                MERGE (rn:Class {{label:right}})   
+                MERGE (ln)-[:CLASS_RELATES_TO]->(rn)   
+                """
+        else:   # The Class nodes MUST be present, or no relationship gets created
+            q = f"""            
+                UNWIND $rels as rel
+                WITH rel[0] as left, rel[1] as right    
+                WHERE apoc.meta.type(left) = apoc.meta.type(right) = 'STRING'      
+                MATCH (ln:Class {{label:left}}), (rn:Class {{label:right}})    
+                MERGE (ln)-[:CLASS_RELATES_TO]->(rn)   
+                """
+
+        params = {"rels": rels}
+        self.query(q, params)
+
     def create_model_from_data(
             self,
             data_label: str = "Source Data Row",
