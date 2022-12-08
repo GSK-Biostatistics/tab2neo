@@ -1,4 +1,3 @@
-import re
 import pytest
 from query_builders.query_builder import QueryBuilder
 

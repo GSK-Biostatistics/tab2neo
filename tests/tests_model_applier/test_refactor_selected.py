@@ -13,20 +13,20 @@ def prep_data(db):
     # Set up the metadata
     # first create the nodes
     q1 = """ 
-            UNWIND [{_id:19220, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:4, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"gsk_mae.xlsx"}}, 
-                    {_id:19221, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:29, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"gsk_mae.xlsx"}}, 
-                    {_id:19222, properties:{AEDECOD:"Nasopharyngitis", _folder_:"data/dummy_study", AESTDY:43, AEBODSYS:"Infections and infestations", USUBJID:999, _domain_:"AE", STUDYID:"dummy_study0", _filename_:"gsk_mae.xlsx"}}, 
-                    {_id:19223, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:85, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"gsk_mae.xlsx"}}, 
-                    {_id:19224, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:113, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"gsk_mae.xlsx"}}, 
-                    {_id:19225, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:141, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"gsk_mae.xlsx"}}, 
-                    {_id:19226, properties:{AEDECOD:"Nasopharyngitis", _folder_:"data/dummy_study", AESTDY:162, AEBODSYS:"Infections and infestations", USUBJID:999, _domain_:"AE", STUDYID:"dummy_study0", _filename_:"gsk_mae.xlsx"}}, 
-                    {_id:19227, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:169, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"gsk_mae.xlsx"}}, 
-                    {_id:19228, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:197, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"gsk_mae.xlsx"}}, 
-                    {_id:19229, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:225, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"gsk_mae.xlsx"}}, 
-                    {_id:19230, properties:{AEDECOD:"symptom", _folder_:"data/dummy_study", AESTDY:97, AEBODSYS:"Infections and infestations", USUBJID:9999, _domain_:"AE", STUDYID:"dummy_study0", _filename_:"gsk_mae.xlsx"}}, 
-                    {_id:19231, properties:{AEDECOD:"symptom2", _folder_:"data/dummy_study", AESTDY:118, AEBODSYS:"Infections and infestations", _domain_:"AE", USUBJID:9999, STUDYID:"dummy_study0", _filename_:"gsk_mae.xlsx"}}, 
-                    {_id:19239, properties:{_folder_:"data/dummy_study", SEX:"F", _domain_:"DM", USUBJID:999, SITEID:99, ARM:"100 mg- PARALLEL", STUDYID:"dummy_study0", AGE:109, _filename_:"gsk_mdm.xlsx"}}, 
-                    {_id:19240, properties:{_folder_:"data/dummy_study", SEX:"F", _domain_:"DM", USUBJID:9999, SITEID:99, ARM:"Placebo - PARALLEL", STUDYID:"dummy_study0", AGE:66, _filename_:"gsk_mdm.xlsx"}}] AS row
+            UNWIND [{_id:19220, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:4, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"mae.xlsx"}}, 
+                    {_id:19221, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:29, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"mae.xlsx"}}, 
+                    {_id:19222, properties:{AEDECOD:"Nasopharyngitis", _folder_:"data/dummy_study", AESTDY:43, AEBODSYS:"Infections and infestations", USUBJID:999, _domain_:"AE", STUDYID:"dummy_study0", _filename_:"mae.xlsx"}}, 
+                    {_id:19223, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:85, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"mae.xlsx"}}, 
+                    {_id:19224, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:113, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"mae.xlsx"}}, 
+                    {_id:19225, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:141, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"mae.xlsx"}}, 
+                    {_id:19226, properties:{AEDECOD:"Nasopharyngitis", _folder_:"data/dummy_study", AESTDY:162, AEBODSYS:"Infections and infestations", USUBJID:999, _domain_:"AE", STUDYID:"dummy_study0", _filename_:"mae.xlsx"}}, 
+                    {_id:19227, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:169, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"mae.xlsx"}}, 
+                    {_id:19228, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:197, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"mae.xlsx"}}, 
+                    {_id:19229, properties:{AEDECOD:"Injection site reaction", _folder_:"data/dummy_study", AESTDY:225, AEBODSYS:"General disorders and administration site conditions", _domain_:"AE", USUBJID:999, STUDYID:"dummy_study0", _filename_:"mae.xlsx"}}, 
+                    {_id:19230, properties:{AEDECOD:"symptom", _folder_:"data/dummy_study", AESTDY:97, AEBODSYS:"Infections and infestations", USUBJID:9999, _domain_:"AE", STUDYID:"dummy_study0", _filename_:"mae.xlsx"}}, 
+                    {_id:19231, properties:{AEDECOD:"symptom2", _folder_:"data/dummy_study", AESTDY:118, AEBODSYS:"Infections and infestations", _domain_:"AE", USUBJID:9999, STUDYID:"dummy_study0", _filename_:"mae.xlsx"}}, 
+                    {_id:19239, properties:{_folder_:"data/dummy_study", SEX:"F", _domain_:"DM", USUBJID:999, SITEID:99, ARM:"100 mg- PARALLEL", STUDYID:"dummy_study0", AGE:109, _filename_:"mdm.xlsx"}}, 
+                    {_id:19240, properties:{_folder_:"data/dummy_study", SEX:"F", _domain_:"DM", USUBJID:9999, SITEID:99, ARM:"Placebo - PARALLEL", STUDYID:"dummy_study0", AGE:66, _filename_:"mdm.xlsx"}}] AS row
             CREATE (n:`UIL`{`UIID`: row._id}) SET n += row.properties SET n:`Source Data Row`;
             """
     db.query(q1)
@@ -72,8 +72,8 @@ def prep_data(db):
     db.query(q4)
 
     q5 = """
-            UNWIND [{_id:19233, properties:{_folder_:"data/dummy_study", SortOrder:"USUBJID,STUDYID", _domain_:"AE", uri:"neo4j://graph.schema#Source%20Data%20Table/AE", _filename_:"gsk_mae.xlsx"}}, 
-                    {_id:19241, properties:{_folder_:"data/dummy_study", SortOrder:"STUDYID,USUBJID", _domain_:"DM", uri:"neo4j://graph.schema#Source%20Data%20Table/DM", _filename_:"gsk_mdm.xlsx"}}] AS row
+            UNWIND [{_id:19233, properties:{_folder_:"data/dummy_study", SortOrder:"USUBJID,STUDYID", _domain_:"AE", uri:"neo4j://graph.schema#Source%20Data%20Table/AE", _filename_:"mae.xlsx"}}, 
+                    {_id:19241, properties:{_folder_:"data/dummy_study", SortOrder:"STUDYID,USUBJID", _domain_:"DM", uri:"neo4j://graph.schema#Source%20Data%20Table/DM", _filename_:"mdm.xlsx"}}] AS row
             CREATE (n:`UIL`{`UIID`: row._id}) SET n += row.properties SET n:`Source Data Table`;
             """
     db.query(q5)
@@ -249,14 +249,14 @@ def test_refactor_selected(db):
 
     # Verify nodes haven't been created for AE domain, other than for Subject class
     cypher = """MATCH p=(n:`Source Data Table`)-[r1:HAS_DATA]-(n2:`Source Data Row`)<-[r2:FROM_DATA]-(n3)
-                WHERE n._filename_ = 'gsk_mae.xlsx'
+                WHERE n._filename_ = 'mae.xlsx'
                 RETURN DISTINCT n3"""
     result = db.query(cypher)
     assert len(result) == 2  # only 2 data nodes should exist for Subject (refactored above)
 
     # Verify nodes have been created for DM domain
     cypher = """MATCH p=(n:`Source Data Table`)-[r1:HAS_DATA]-(n2:`Source Data Row`)<-[r2:FROM_DATA]-(n3)
-                WHERE n._filename_ = 'gsk_mdm.xlsx'
+                WHERE n._filename_ = 'mdm.xlsx'
                 RETURN DISTINCT n3"""
     result = db.query(cypher)
     assert len(result) == 11  # all 11 data nodes should now exist for DM
@@ -266,17 +266,17 @@ def test_refactor_selected(db):
 
     # Verify missing nodes have now been created for AE domain
     cypher = """MATCH p=(n:`Source Data Table`)-[r1:HAS_DATA]-(n2:`Source Data Row`)<-[r2:FROM_DATA]-(n3)
-                WHERE n._filename_ = 'gsk_mae.xlsx'
+                WHERE n._filename_ = 'mae.xlsx'
                 RETURN DISTINCT n3"""
     result = db.query(cypher)
     assert len(result) == 23  # all 23 data nodes should now exist for AE
 
     # Finally verify all expected relationships were created
-    cypher = """MATCH(n)-[r]-(n1) WHERE n._filename_ = 'gsk_mae.xlsx' RETURN DISTINCT r"""
+    cypher = """MATCH(n)-[r]-(n1) WHERE n._filename_ = 'mae.xlsx' RETURN DISTINCT r"""
     result = db.query(cypher)
     assert len(result) == 90
 
-    cypher = """MATCH(n)-[r]-(n1) WHERE n._filename_ = 'gsk_mdm.xlsx' RETURN DISTINCT r"""
+    cypher = """MATCH(n)-[r]-(n1) WHERE n._filename_ = 'mdm.xlsx' RETURN DISTINCT r"""
     result = db.query(cypher)
     assert len(result) == 23
 
@@ -321,7 +321,7 @@ def test_refactor_selected_2classes_domains(db):
 
     q3 = """
     MATCH p=(n:`Source Data Table`)-[r1:HAS_DATA]-(n2:`Source Data Row`)
-    WHERE n._filename_ = 'gsk_mae.xlsx'    
+    WHERE n._filename_ = 'mae.xlsx'    
     OPTIONAL MATCH (n2)<-[r2:FROM_DATA]-(n3)
     RETURN count(n2) as rows, count(r2) as rels
     """

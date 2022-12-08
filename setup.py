@@ -32,7 +32,7 @@ setuptools.setup(
     name="tab2neo",                           # This is the name of the package
     version="1.1.0.0",                      # Release.Major Feature.Minor Feature.Bug Fix
     author="Alexey Kuznetsov",              # Full name of the author
-    description="Clinical Linked Data: High-level Python classes to load, model and fetch and enrich data in Neo4j database",
+    description="Clinical Linked Data: High-level Python classes to load, model and reshape tabular data imported into Neo4j database",
     long_description=long_description,      # Long description read from the the readme file
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(include=[
