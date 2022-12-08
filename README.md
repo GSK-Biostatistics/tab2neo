@@ -1,6 +1,12 @@
 # tab2neo- backend classes
 High-level Python classes to load, model and reshape tabular data imported into Neo4j database
 
+## Installation
+
+`pip install tab2neo`
+
+## Modules
+
 DATA LOADERS - modules allowing to read data from various formats and write it to neo4j
 - FileDataLoader -  Load data into Neo4j, with support the following input formats: sas7bdat, xpt, rda, xls, xlsx, csv See [details](data_loaders/README.md)   
 
