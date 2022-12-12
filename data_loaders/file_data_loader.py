@@ -160,7 +160,13 @@ class FileDataLoader(neointerface.NeoInterface):
                                     test_run=test_run, colcharsbl=colcharsbl)
 
         fn = ".".join(filename.split(".")[:-1])     # The filename excluding the dot and the extension suffix
-        domain = fn.upper()
+        ext = filename.split(".")[-1]
+
+        if ext in ["xls", "xlsx"] and isinstance(sheet_name, str):
+            domain = f"{fn}.{sheet_name}".upper()
+        else:
+            domain = fn.upper()
+            
         if self.domain_dict:
             if filename in self.domain_dict.keys():
                 domain = self.domain_dict[filename]
