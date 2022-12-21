@@ -1,5 +1,6 @@
 # tab2neo- backend classes
-High-level Python classes to load, model and reshape tabular data imported into Neo4j database
+High-level Python classes to load, model and reshape tabular data imported into Neo4j database  
+IMPORTANT NOTE: tested on **versions 4.3.6 and 4.4.11 of Neo4j**
 
 ## Installation
 
