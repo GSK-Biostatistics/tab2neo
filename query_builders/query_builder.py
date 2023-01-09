@@ -394,7 +394,31 @@ class QueryBuilder():
             df_l_rels['n_to_mand'] = df_n_to_mand
             df_l_rels = df_l_rels.sort_values(by=['optional', 'n_to_mand'], ascending=[True, False])
             g_dict = OrderedDict({0: []})
+            # ordered dict of relationships for each label e.g.
+            # OrderedDict([
+            #   (0,
+            #       [{
+            #           'Subject': [
+            #               {'from': 'Vital Signs', 'to': 'Subject', 'type': 'Subject'},
+            #               {'from': 'Subject', 'to': 'Baseline Value', 'type': 'Baseline Value'},
+            #               {...}, ...
+            #               ],
+            #           '...': [...]
+            #       }]
+            #   ),
+            #   (1,
+            #       [{
+            #           'Analysis Age': [
+            #               {'from': 'Subject', 'to': 'Analysis Age', 'type': 'Analysis Age', 'optional': 'true'}
+            #           ]
+            #       }]
+            #   )
+            # ])
+            # where 1 is optional and 0 is mandatory
             g_lookup = {}
+            # dictionary of labels
+            # e.g. {'Subject': 0, 'Analysis Age': 1}
+            # where 1 is optional and 0 is mandatory
             g = 0
             for i, row in df_l_rels.iterrows():
                 # helper list:
@@ -405,7 +429,7 @@ class QueryBuilder():
                     elif rel.get('to') in g_lookup.keys():
                         label_related_to_processed.append(rel.get('to'))
                 # processing row:
-                if not row['optional']:  # if mandatory
+                if not row['optional']:  # if mandatory on both classes and rel is not optional
                     g_dict[0].append({row['label']: row['rels']})
                     g_lookup[row['label']] = 0
                 elif row['n_to_mand'] == 0 and label_related_to_processed:  # no relationships to mandatory labels
@@ -444,9 +468,22 @@ class QueryBuilder():
     ):
         assert match in ["MATCH", "OPTIONAL MATCH"]
         q_match = f"{match} " + ",\n".join(
-            [self.generate_1match(label=label) for label in labels] +
-            [self.generate_1rel(rel) for rel in rels]
+            [self.generate_1match(label=label) for label in labels]
         )
+        rel_text_list = []
+        optional_rel_text_list = []
+        for rel in rels:
+            if rel.get('optional') == 'true':
+                optional_rel_text_list.append(self.generate_1rel(rel))
+            else:
+                rel_text_list.append(self.generate_1rel(rel))
+        q_rel_match = ''
+        if rel_text_list:
+            q_rel_match += f'\nMATCH ' + ',\n'.join(rel_text_list)
+        if optional_rel_text_list:
+            q_rel_match += f'\nOPTIONAL MATCH ' + ',\n'.join(optional_rel_text_list)
+        q_match += q_rel_match
+
         q_where = ""
         q_where_list, q_where_dict = [], {}
         q_where_rel_list, q_where_rel_dict = [], {}
