@@ -178,6 +178,7 @@ class ModelManager(NeoInterface):
                                 [{'prop1': 'value', 'prop2': 'value'}, ...]
         """
         assert len(props) > 0, 'Must specify at least one property to return!'
+        assert len(props) == len(set(props)), 'Specified props must not contain duplicates!'
 
         q_return = f"RETURN c.`{props[0]}` as `{props[0]}`"
         if len(props) != 1:
