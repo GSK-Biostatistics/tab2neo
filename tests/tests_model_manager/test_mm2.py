@@ -68,6 +68,9 @@ def test_get_all_classes_props(mm):
 
     assert short_labels == expected_short_labels
 
+    with pytest.raises(AssertionError):
+        mm.get_all_classes_props(['short_label', 'short_label'])
+
 
 def test_get_rels_btw2(mm:ModelManager):
     mm.clean_slate()
