@@ -477,9 +477,9 @@ class QueryBuilder():
                 optional_rel_text_list.append(self.generate_1rel(rel))
             else:
                 rel_text_list.append(self.generate_1rel(rel))
-        q_rel_match = ''
+        q_rel_match = ',\n' if labels else ''  # if no labels then we dont want `,` before rel match in query
         if rel_text_list:
-            q_rel_match += f'\nMATCH ' + ',\n'.join(rel_text_list)
+            q_rel_match += f',\n'.join(rel_text_list)
         if optional_rel_text_list:
             q_rel_match += f'\nOPTIONAL MATCH ' + ',\n'.join(optional_rel_text_list)
         q_match += q_rel_match
