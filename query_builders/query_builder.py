@@ -96,6 +96,24 @@ class QueryBuilder():
             where_map = {type_tag: {'type': rel.get('type')}}
         return q, where_map
 
+    def generate_all_rel_match(self, match: str, labels: list, rels:list):
+        rel_text_list = []
+        optional_rel_text_list = []
+        for rel in rels:
+            if rel.get('optional') == 'true':
+                optional_rel_text_list.append(self.generate_1rel(rel))
+            else:
+                rel_text_list.append(self.generate_1rel(rel))
+        q_rel_match = ',\n' if labels and match == 'MATCH' else ''
+        # if no labels then we don't want `,` before rel match in query, similarly for OPTIONAL MATCH case.
+        if rel_text_list:
+            q_rel_match += f',\n'.join(rel_text_list)
+        if optional_rel_text_list:
+            opt_rel_match_text = ',\n' if match == 'OPTIONAL MATCH' else f'\nOPTIONAL MATCH '
+            # if already optional match from labels, then don't include one here.
+            q_rel_match += f'{opt_rel_match_text}' + ',\n'.join(optional_rel_text_list)
+        return q_rel_match
+
     @staticmethod
     def list_where_conditions_per_dict(mp: dict) -> ([], {}):
         """
@@ -470,19 +488,9 @@ class QueryBuilder():
         q_match = f"{match} " + ",\n".join(
             [self.generate_1match(label=label) for label in labels]
         )
-        rel_text_list = []
-        optional_rel_text_list = []
-        for rel in rels:
-            if rel.get('optional') == 'true':
-                optional_rel_text_list.append(self.generate_1rel(rel))
-            else:
-                rel_text_list.append(self.generate_1rel(rel))
-        q_rel_match = ',\n' if labels else ''  # if no labels then we dont want `,` before rel match in query
-        if rel_text_list:
-            q_rel_match += f',\n'.join(rel_text_list)
-        if optional_rel_text_list:
-            q_rel_match += f'\nOPTIONAL MATCH ' + ',\n'.join(optional_rel_text_list)
-        q_match += q_rel_match
+        if rels:
+            q_rel_match = self.generate_all_rel_match(match, labels, rels)
+            q_match += q_rel_match
 
         q_where = ""
         q_where_list, q_where_dict = [], {}
