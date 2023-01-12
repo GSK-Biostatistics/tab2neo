@@ -17,24 +17,80 @@ def test_generate_1match(qbr: QueryBuilder):
     assert res == "(`n1`:`Study Subject`)"
 
 
-def test_generate_query_body1(qbr: QueryBuilder):
-    q, params = qbr.generate_query_body(
-        labels=[],
-        rels=[{'to': 'Exposure', 'from': 'Subject', 'type': 'HAS'}],
-        where_map={'Subject': {'id': '001', 'name': 'Bob'}}
-    )
-    assert q == "MATCH (`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`)\nWHERE `Subject`.`id` = $par_1 AND `Subject`.`name` = $par_2"
-    assert params == {'par_1': '001', 'par_2': 'Bob'}
+class TestGenerateQueryBody:
 
+    def test_rel(self, qbr: QueryBuilder):
+        q, params = qbr.generate_query_body(
+            labels=[],
+            rels=[{'to': 'Exposure', 'from': 'Subject', 'type': 'HAS'}],
+            where_map={'Subject': {'id': '001', 'name': 'Bob'}}
+        )
+        assert q == "MATCH (`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`)\nWHERE `Subject`.`id` = $par_1 AND `Subject`.`name` = $par_2"
+        assert params == {'par_1': '001', 'par_2': 'Bob'}
 
-def test_generate_query_body2(qbr: QueryBuilder):
-    q, params = qbr.generate_query_body(
-        labels=['Subject', 'Exposure'],
-        rels=[{'to': 'Exposure', 'from': 'Subject', 'type': 'HAS'}],
-        where_map={'Subject': {'id': '001', 'name': 'Bob'}}
-    )
-    assert q == "MATCH (`Subject`:`Subject`),\n(`Exposure`:`Exposure`),\n(`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`)\nWHERE `Subject`.`id` = $par_1 AND `Subject`.`name` = $par_2"
-    assert params == {'par_1': '001', 'par_2': 'Bob'}
+    def test_multi_rel(self, qbr: QueryBuilder):
+        q, params = qbr.generate_query_body(
+            labels=[],
+            rels=[{'to': 'Exposure', 'from': 'Subject', 'type': 'HAS'}, {'from': 'Exposure', 'to': 'Parameter', 'type': 'HAS'}],
+            where_map={'Subject': {'id': '001', 'name': 'Bob'}}
+        )
+        assert q == "MATCH (`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`),\n(`Exposure`)-[`Exposure_HAS_Parameter`:`HAS`]->(`Parameter`)\nWHERE `Subject`.`id` = $par_1 AND `Subject`.`name` = $par_2"
+        assert params == {'par_1': '001', 'par_2': 'Bob'}
+
+    def test_multi_label_and_rel(self, qbr: QueryBuilder):
+        q, params = qbr.generate_query_body(
+            labels=['Subject', 'Exposure', 'Parameter'],
+            rels=[{'to': 'Exposure', 'from': 'Subject', 'type': 'HAS'}, {'from': 'Exposure', 'to': 'Parameter', 'type': 'HAS'}],
+            where_map={'Subject': {'id': '001', 'name': 'Bob'}}
+        )
+        assert q == "MATCH (`Subject`:`Subject`),\n(`Exposure`:`Exposure`),\n(`Parameter`:`Parameter`),\n(`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`),\n(`Exposure`)-[`Exposure_HAS_Parameter`:`HAS`]->(`Parameter`)\nWHERE `Subject`.`id` = $par_1 AND `Subject`.`name` = $par_2"
+        assert params == {'par_1': '001', 'par_2': 'Bob'}
+
+    def test_label_and_rel(self, qbr: QueryBuilder):
+        q, params = qbr.generate_query_body(
+            labels=['Subject', 'Exposure'],
+            rels=[{'to': 'Exposure', 'from': 'Subject', 'type': 'HAS'}],
+            where_map={'Subject': {'id': '001', 'name': 'Bob'}}
+        )
+        assert q == "MATCH (`Subject`:`Subject`),\n(`Exposure`:`Exposure`),\n(`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`)\nWHERE `Subject`.`id` = $par_1 AND `Subject`.`name` = $par_2"
+        assert params == {'par_1': '001', 'par_2': 'Bob'}
+
+    def test_label_and_optional_rel(self, qbr: QueryBuilder):
+        q, params = qbr.generate_query_body(
+            labels=['Subject', 'Exposure'],
+            rels=[{'to': 'Exposure', 'from': 'Subject', 'type': 'HAS', 'optional': 'true'}],
+            where_map={'Subject': {'id': '001', 'name': 'Bob'}}
+        )
+        assert q == "MATCH (`Subject`:`Subject`),\n(`Exposure`:`Exposure`),\n\nOPTIONAL MATCH (`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`)\nWHERE `Subject`.`id` = $par_1 AND `Subject`.`name` = $par_2"
+        assert params == {'par_1': '001', 'par_2': 'Bob'}
+
+    def test_multi_label_and_one_optional_rel(self, qbr: QueryBuilder):
+        q, params = qbr.generate_query_body(
+            labels=['Subject', 'Exposure', 'Parameter'],
+            rels=[{'to': 'Exposure', 'from': 'Subject', 'type': 'HAS', 'optional': 'true'}, {'from': 'Exposure', 'to': 'Parameter', 'type': 'HAS'}],
+            where_map={'Subject': {'id': '001', 'name': 'Bob'}}
+        )
+        assert q == "MATCH (`Subject`:`Subject`),\n(`Exposure`:`Exposure`),\n(`Parameter`:`Parameter`),\n(`Exposure`)-[`Exposure_HAS_Parameter`:`HAS`]->(`Parameter`)\nOPTIONAL MATCH (`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`)\nWHERE `Subject`.`id` = $par_1 AND `Subject`.`name` = $par_2"
+        assert params == {'par_1': '001', 'par_2': 'Bob'}
+
+    def test_multi_label_and_all_optional_rel(self, qbr: QueryBuilder):
+        q, params = qbr.generate_query_body(
+            labels=['Subject', 'Exposure', 'Parameter'],
+            rels=[{'to': 'Exposure', 'from': 'Subject', 'type': 'HAS', 'optional': 'true'}, {'from': 'Exposure', 'to': 'Parameter', 'type': 'HAS', 'optional': 'true'}],
+            where_map={'Subject': {'id': '001', 'name': 'Bob'}}
+        )
+        assert q == "MATCH (`Subject`:`Subject`),\n(`Exposure`:`Exposure`),\n(`Parameter`:`Parameter`),\n\nOPTIONAL MATCH (`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`),\n(`Exposure`)-[`Exposure_HAS_Parameter`:`HAS`]->(`Parameter`)\nWHERE `Subject`.`id` = $par_1 AND `Subject`.`name` = $par_2"
+        assert params == {'par_1': '001', 'par_2': 'Bob'}
+
+    def test_optional_label_and_optional_rel(self, qbr: QueryBuilder):
+        q, params = qbr.generate_query_body(
+            labels=['Subject', 'Exposure'],
+            rels=[{'to': 'Exposure', 'from': 'Subject', 'type': 'HAS', 'optional': 'true'}],
+            match='OPTIONAL MATCH',
+            where_map={'Subject': {'id': '001', 'name': 'Bob'}}
+        )
+        assert q == "OPTIONAL MATCH (`Subject`:`Subject`),\n(`Exposure`:`Exposure`),\n(`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`)\nWHERE `Subject`.`id` = $par_1 AND `Subject`.`name` = $par_2"
+        assert params == {'par_1': '001', 'par_2': 'Bob'}
 
 
 # def test_generate_schema_check_query_body(qbr: QueryBuilder):
