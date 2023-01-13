@@ -69,6 +69,37 @@ def test_create_class_dict(mm):
     ])
 
 
+def test_delete_class(mm):
+    mm.clean_slate()
+
+    with open(os.path.join(filepath, 'data', 'test_delete_classes.json')) as jsonfile:
+        dct = json.load(jsonfile)
+    mm.load_arrows_dict(dct)
+
+    # Delete single
+    mm.delete_class(['Delete 1'])
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [
+        {'short_label': 'RM1', 'label': 'Remain 1'},
+        {'short_label': 'RM2', 'label': 'Remain 2'},
+        {'relationship_type': 'Remain'},
+        {'rdfs:label': 'Remaining term 1', 'Term Code': 'Term R1', 'Codelist Code': 'Codelist R1'},
+        {'short_label': 'D3', 'label': 'Delete 3'},
+        {'short_label': 'D2', 'label': 'Delete 2'},
+        {'relationship_type': 'Delete 2'}
+    ])
+
+    # Delete multiple with identifier
+    mm.delete_class(['D2', 'D3'], identifier='short_label')
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [
+        {'short_label': 'RM1', 'label': 'Remain 1'},
+        {'short_label': 'RM2', 'label': 'Remain 2'},
+        {'relationship_type': 'Remain'},
+        {'rdfs:label': 'Remaining term 1', 'Term Code': 'Term R1', 'Codelist Code': 'Codelist R1'}
+    ])
+
+
 def test_get_all_classes(mm):
     mm.clean_slate()
 

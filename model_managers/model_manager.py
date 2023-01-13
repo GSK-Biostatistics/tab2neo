@@ -50,6 +50,7 @@ class ModelManager(NeoInterface):
                         Will both result in the creation of two new classes with labels class1 and class2 respectively.
         :param merge:   boolean - if True use MERGE statement to create nodes to avoid duplicate classes
                             TODO: address question "would we want to ever allow multiple classes with the same name??"
+                            TODO: update return format
         :return:        A list of lists that contain a single dictionary with keys 'label', 'neo4j_id' and 'neo4j_labels'
                         EXAMPLE: [ [{'label': 'A', 'neo4j_id': 0, 'neo4j_labels': ['Class']}],
                                    [{'label': 'B', 'neo4j_id': 1, 'neo4j_labels': ['Class']}]
@@ -93,6 +94,24 @@ class ModelManager(NeoInterface):
             query: {q}
             parameters: {params}
             """)
+
+        return self.query(q, params, return_type='neo4j.Result')
+
+    def delete_class(self, values: list, identifier='label'):
+        """
+        Deletes a class and any associated relationships or controlled terminology
+        :param values: list of class labels or property values (if identifier is changed) to match classes for removal
+        :param identifier: Class property to use in combination with values for identification.
+        :return:
+        """
+        q = f"""
+        MATCH (class:Class)
+        WHERE class.`{identifier}` in $values
+        OPTIONAL MATCH (class)-[:HAS_CONTROLLED_TERM]->(term:Term)
+        OPTIONAL MATCH (class)-[:TO|FROM]-(rel:Relationship)
+        DETACH DELETE class, term, rel
+        """
+        params = {'values': values}
 
         return self.query(q, params, return_type='neo4j.Result')
 
