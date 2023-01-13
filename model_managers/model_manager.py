@@ -192,6 +192,27 @@ class ModelManager(NeoInterface):
 
         return self.query(q)
 
+    def get_rels_where(self, where_clause=None, return_prop="label") -> [{}]:
+        """
+        Returns a list of dictionaries representing relationships between all classes or a subset of classes and/or
+        relationships if filtered with a cypher where clause.
+        :param where_clause: Optional string cypher where clause, For example:
+                             `WHERE from_class.short_label IS NOT NULL` - Only relationships from_classes with a short_label
+        :param return_prop: Property to identify class in returned relationships. For example with
+                            return prop = "label", relationships will be in the format:
+                            {from: from_class.label, to: to_class.label, type: rel.relationship_type}
+        :return: A list of dicts representing relationships eg:
+                            [{from: from_class.label, to: to_class.label, type: rel.relationship_type}, ...]
+        """
+
+        q = f"""
+        MATCH (from_class:Class)<-[:FROM]-(rel:Relationship)-[:TO]->(to_class:Class)
+        {where_clause if where_clause else ""}
+        RETURN {{from: from_class.`{return_prop}`, to: to_class.`{return_prop}`, type: rel.relationship_type}} as rel   
+        """
+        res = self.query(q)
+        return [x['rel'] for x in res]
+
     def get_rels_from_labels(self, labels: list) -> [{}]:
         """
         Returns all the relationships (according to the schema) from the nodes with specified labels
