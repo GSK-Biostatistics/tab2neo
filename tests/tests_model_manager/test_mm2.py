@@ -11,11 +11,11 @@ from utils.utils import compare_recordsets
 # that can be used by the various tests that need it
 @pytest.fixture(scope="module")
 def mm():
-    mm = ModelManager(verbose=False)
+    mm = ModelManager(verbose=False, debug=True)
     yield mm
 
 
-def test_create_class(mm):
+def test_create_class_list(mm):
     mm.clean_slate()
 
     mm.create_class("My First Class")
@@ -34,9 +34,39 @@ def test_create_class(mm):
     result = mm.get_nodes()
     assert compare_recordsets(result, [{'label': 'My First Class'}, {'label': 'A'}, {'label': 'A'}, {'label': 'B'}])
 
-    mm.create_class(["B", "X"], merge=True) # Only class "X" gets created, because "B" already exists
+    mm.create_class(["B", "X"], merge=True)  # Only class "X" gets created, because "B" already exists
     result = mm.get_nodes()
     assert compare_recordsets(result, [{'label': 'My First Class'}, {'label': 'A'}, {'label': 'A'}, {'label': 'B'}, {'label': 'X'}])
+
+    with pytest.raises(AssertionError):  # Invalid merge format
+        mm.create_class(["B", "X"], merge='true')
+
+
+def test_create_class_dict(mm):
+    mm.clean_slate()
+
+    # Dictionary format
+    mm.create_class([{"label": "A"}])
+    result = mm.get_nodes()
+    assert result == [{'label': 'A'}]
+
+    # Verifying create
+    mm.create_class([{"label": "A"}], merge=False)
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [{'label': 'A'}, {'label': 'A'}])
+
+    # Merge multiple
+    mm.create_class([{"label": "A"}, {"label": "B"}])
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [{'label': 'A'}, {'label': 'A'}, {"label": "B"}])
+
+    # Setting multiple properties
+    mm.create_class([{"label": "Bravo", "short_label": "B"}])
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [
+        {'label': 'A'}, {'label': 'A'}, {"label": "B"},
+        {"label": "Bravo", "short_label": "B"}
+    ])
 
 
 def test_get_all_classes(mm):

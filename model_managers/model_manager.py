@@ -44,7 +44,10 @@ class ModelManager(NeoInterface):
 
     def create_class(self, classes, merge=True) -> [list]:
         """
-        :param classes: Name, or list of names, to give to the new class(es) created
+        :param classes: List of string labels or a list of property dictionaries to give to the new class(es)
+                        created. For example:
+                        classes = ['class1', 'class2' ...] OR classes = [{"label": 'class1'}, {"label": 'class2'] ...]
+                        Will both result in the creation of two new classes with labels class1 and class2 respectively.
         :param merge:   boolean - if True use MERGE statement to create nodes to avoid duplicate classes
                             TODO: address question "would we want to ever allow multiple classes with the same name??"
         :return:        A list of lists that contain a single dictionary with keys 'label', 'neo4j_id' and 'neo4j_labels'
@@ -52,28 +55,36 @@ class ModelManager(NeoInterface):
                                    [{'label': 'B', 'neo4j_id': 1, 'neo4j_labels': ['Class']}]
                                  ]
         """
-        assert type(merge) == bool
+        assert type(merge) == bool, "Merge must be a bool"
 
-        if not type(classes) == list:
+        # Maintain backwards compatibility:
+        if type(classes) == str:
             classes = [classes]
 
-        if merge:
-            q = """
-            WITH $classes as classes 
-            UNWIND classes as class_name 
-            CALL apoc.merge.node(['Class'], {label: class_name}, {}, {}) 
-            YIELD node 
-            RETURN node as class
-            ORDER by node
+        assert type(classes) == list, "Classes must be a list"
+
+        if type(classes[0]) == str:
+            apoc_action = f"""
+                CALL apoc.{'merge' if merge else 'create'}.node(
+                    ['Class'], {{label: class_item}}{', {}, {}' if merge else ''}
+                ) YIELD node
+            """
+        elif type(classes[0]) == dict:
+            apoc_action = f"""
+                CALL apoc.{'merge' if merge else 'create'}.node(
+                    ['Class'], class_item{', {}, {}' if merge else ''}
+                ) YIELD node
             """
         else:
-            q = """
-            WITH $classes as classes 
-            UNWIND classes as class_name 
-            CALL apoc.create.node(['Class'], {label: class_name}) YIELD node 
-            RETURN node as class
-            ORDER by node
-            """
+            raise AssertionError('Classes must be a list of strings or dict')
+
+        q = f"""
+        WITH $classes as classes 
+        UNWIND classes as class_item 
+        {apoc_action}
+        RETURN node as class
+        ORDER by node
+        """
 
         params = {'classes': classes}
 
@@ -83,7 +94,7 @@ class ModelManager(NeoInterface):
             parameters: {params}
             """)
 
-        return self.query_expanded(q, params)
+        return self.query(q, params, return_type='neo4j.Result')
 
     def set_short_label(self, label: str, short_label: str) -> None:
         "One the class with :Class{label:{label}} - sets property 'short_label value to the provided"
