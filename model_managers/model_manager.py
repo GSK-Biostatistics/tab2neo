@@ -541,7 +541,6 @@ class ModelManager(NeoInterface):
 
     def create_ct(self, controlled_terminology: dict, identifier='label'):
         """
-
         :param controlled_terminology: {'class1': [{prop1: value, prop2: value}, {}]}
         :param identifier:
         :return:
@@ -554,30 +553,30 @@ class ModelManager(NeoInterface):
         # Order terms
         for term_class in controlled_terminology:
             count = 0
-            for term in term_class:
+            for term in controlled_terminology[term_class]:
                 term['Order'] = count
                 count += 1
 
         # Create terms
         q1 = f"""
-        UNWIND $terminology as ct_map
-        MATCH (class:Class {{{identifier}: ct_map.class}})
+        UNWIND KEYS($terminology) as class_label
+        MATCH (class:Class {{{identifier}: class_label}})
         OPTIONAL MATCH (class)-[:HAS_CONTROLLED_TERM]->(term:Term)
 
-        WITH class, MAX(term.Order) as term_order, ct_map
-        WITH class, CASE WHEN term_order IS NULL THEN 1 ELSE term_order END as term_order, ct_map
+        WITH class, MAX(term.Order) as term_order, class_label
+        WITH class, CASE WHEN term_order IS NULL THEN 1 ELSE term_order END as term_order, class_label
         
-        UNWIND ct_map.terms as term_props
+        UNWIND $terminology[class_label] as term_props
         CALL apoc.merge.node(['Term'], term_props) YIELD node as term
-        MERGE (class)-[:HAS_CONTROLLED_TERM]-(term)
+        MERGE (class)-[:HAS_CONTROLLED_TERM]->(term)
         SET term.Order = term.Order + term_order
         """
-        self.query(q1, {'terminology': controlled_terminology})
+        res1 = self.query(q1, {'terminology': controlled_terminology}, return_type='neo4j.Result')
 
         # Create "next" rel along term order
         q2 = f"""
-        UNWIND $terminology as ct_map
-        MATCH (c:Class{{{identifier}: ct_map.class}})-[:HAS_CONTROLLED_TERM]->(t:Term)
+        UNWIND KEYS($terminology) as class_label
+        MATCH (c:Class{{{identifier}: class_label}})-[:HAS_CONTROLLED_TERM]->(t:Term)
         WITH c,t ORDER BY c.label, t.Order ASC
         WITH c, COLLECT(t) AS terms
         FOREACH (n IN RANGE(0, SIZE(terms)-2) |
@@ -585,7 +584,9 @@ class ModelManager(NeoInterface):
                 FOREACH (next IN [terms[n+1]] |
                     MERGE (prev)-[:NEXT]->(next))))
         """
-        self.query(q2, {'terminology': controlled_terminology})
+        res2 = self.query(q2, {'terminology': controlled_terminology})
+
+        return res1
 
     def get_class_ct(self, classes: list, ct_props: list = None, identifier='label'):
         """
