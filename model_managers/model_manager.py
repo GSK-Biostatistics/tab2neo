@@ -115,6 +115,25 @@ class ModelManager(NeoInterface):
 
         return self.query(q, params, return_type='neo4j.Result')
 
+    def class_exists(self, values: list, identifier='label'):
+        """
+        Samples a list of class property values to determine if a set of classes currently exist in neo4j.
+        :param values: List of property values eg: [class1, class2]
+        :param identifier: Property name to be used when identifying classes eg: 'label'
+        :return: A list of any values not found in neo4j.
+        """
+
+        q = f"""
+        MATCH (c:Class)
+        WHERE c.{identifier} in $values
+        RETURN collect(c.{identifier}) as existing
+        """
+        params = {'values': values}
+        existing_classes = self.query(q, params)[0].get('existing')
+
+        missing_classes = set(values) - set(existing_classes)
+        return missing_classes
+
     def set_short_label(self, label: str, short_label: str) -> None:
         "One the class with :Class{label:{label}} - sets property 'short_label value to the provided"
         q = """
