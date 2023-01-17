@@ -630,6 +630,29 @@ class ModelManager(NeoInterface):
                 data.update(term_dict.get('ct'))
             return data
 
+    def delete_ct(self, controlled_terminology: dict, term_props: list, identifier='label'):
+        """
+        :param controlled_terminology: {'class1':[['code1'], ['code2']]}
+        :param term_props: eg ['Codelist Code']
+        :param identifier:
+        :return:
+        """
+
+        where_clause = f't.`{term_props[0]}` = term_props[0]'
+        for count, prop in enumerate(term_props[1:], start=1):
+            where_clause += f' AND t.`{prop}` = term_props[{count}]'
+
+        q = f"""
+        UNWIND KEYS($terminology) as class_label
+        MATCH (c:Class)
+        WHERE c.`{identifier}` = class_label
+        UNWIND $terminology[class_label] as term_props
+        MATCH (c)-[:HAS_CONTROLLED_TERM]-(t:Term)
+        WHERE {where_clause}
+        DETACH DELETE t
+        """
+
+        return self.query(q, {'terminology': controlled_terminology}, return_type='neo4j.Result')
 
     def propagate_rels_to_parent_class(self):
         if self.verbose:
