@@ -190,6 +190,22 @@ class ModelManager(NeoInterface):
 
         return class_list
 
+    def delete_relationship(self, rel_list: [[str, str, str]], identifier='label'):
+        """
+        :param rel_list:
+        :param identifier:
+        :return:
+        """
+
+        q = f"""
+        UNWIND $rels as rel
+        WITH rel[0] as from, rel[1] as to, rel[2] as type
+        MATCH (:Class{{{identifier}:from}})<-[:FROM]-(rel:Relationship {{relationship_type:type}})-[:TO]->(:Class{{{identifier}:to}})
+        DETACH DELETE rel
+        """
+        params = {"rels": rel_list}
+        return self.query(q, params, return_type='neo4j.Result')
+
     def get_all_classes(self) -> [str]:
         ""
         return [c['Class'] for c in self.get_all_classes_with_nodeids()]
