@@ -539,19 +539,97 @@ class ModelManager(NeoInterface):
                     merge_on[key].append(_gen_new_prop_name(n))
         return dct, merge_on
 
-    def get_class_ct(self, class_: str, ct_prop_name='rdfs:label'):
-        q = """
-        MATCH (c:Class) 
-        WHERE c.label = $class_
-        OPTIONAL MATCH (c)-[:HAS_CONTROLLED_TERM]->(t:Term)
-        RETURN collect(DISTINCT t[$ct_prop_name]) as coll
+    def create_ct(self, controlled_terminology: dict, identifier='label'):
+        """
+
+        :param controlled_terminology: {'class1': [{prop1: value, prop2: value}, {}]}
+        :param identifier:
+        :return:
+        """
+        missing = self.class_exists(list(controlled_terminology.keys()), 'short_label')
+        assert not missing, f'Cannot create controlled terminology for nonexistent classes: {missing}'
+
+        # TODO: make order optional?
+        # TODO: check if term exists already?
+        # Order terms
+        for term_class in controlled_terminology:
+            count = 0
+            for term in term_class:
+                term['Order'] = count
+                count += 1
+
+        # Create terms
+        q1 = f"""
+        UNWIND $terminology as ct_map
+        MATCH (class:Class {{{identifier}: ct_map.class}})
+        OPTIONAL MATCH (class)-[:HAS_CONTROLLED_TERM]->(term:Term)
+
+        WITH class, MAX(term.Order) as term_order, ct_map
+        WITH class, CASE WHEN term_order IS NULL THEN 1 ELSE term_order END as term_order, ct_map
+        
+        UNWIND ct_map.terms as term_props
+        CALL apoc.merge.node(['Term'], term_props) YIELD node as term
+        MERGE (class)-[:HAS_CONTROLLED_TERM]-(term)
+        SET term.Order = term.Order + term_order
+        """
+        self.query(q1, {'terminology': controlled_terminology})
+
+        # Create "next" rel along term order
+        q2 = f"""
+        UNWIND $terminology as ct_map
+        MATCH (c:Class{{{identifier}: ct_map.class}})-[:HAS_CONTROLLED_TERM]->(t:Term)
+        WITH c,t ORDER BY c.label, t.Order ASC
+        WITH c, COLLECT(t) AS terms
+        FOREACH (n IN RANGE(0, SIZE(terms)-2) |
+            FOREACH (prev IN [terms[n]] |
+                FOREACH (next IN [terms[n+1]] |
+                    MERGE (prev)-[:NEXT]->(next))))
+        """
+        self.query(q2, {'terminology': controlled_terminology})
+
+    def get_class_ct(self, classes: list, ct_props: list = None, identifier='label'):
+        """
+        :param classes:
+        :param ct_props:
+        :param identifier:
+        :return:
+        """
+
+        # Maintain backwards compatibility
+        if type(classes) == str:
+            classes = list(classes)
+
+        if ct_props is None:
+            ct_props = ['rdfs:label']
+        elif type(ct_props) == str:
+            ct_props = [ct_props]
+
+        prop_collection = f'term.`{ct_props[0]}`'
+        if len(ct_props) != 1:
+            for prop in ct_props[1:]:
+                prop_collection += f", term.`{prop}`"
+
+        q = f"""
+        UNWIND $classes as class
+        MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
+        WHERE c.`{identifier}` = class
+        WITH c, collect([{prop_collection}]) as terms
+        RETURN apoc.map.setKey({{}}, c.`{identifier}`, terms) as ct
         """
         params = {'class_': class_, 'ct_prop_name': ct_prop_name}
+
+        params = {'classes': classes}
         res = self.query(q, params)
+
         if res:
             return res[0]['coll']
         else:
             return []
+            data = {}  # Flattened result {class.identifer:[[term.ct_props[0], ...], [term.ct_props[0], ...]]}
+            for term_dict in res:
+                data.update(term_dict.get('ct'))
+            return data
+
 
     def propagate_rels_to_parent_class(self):
         if self.verbose:
