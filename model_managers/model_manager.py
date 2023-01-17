@@ -144,7 +144,7 @@ class ModelManager(NeoInterface):
         params = {'label': label, 'short_label': short_label}
         self.query(q, params)
 
-    def create_related_classes_from_list(self, rel_list: [[str, str, str]]) -> [str]:
+    def create_related_classes_from_list(self, rel_list: [[str, str, str]], identifier='label') -> [str]:
         """
         Create `Class` and `Relationship` nodes between them, as specified by rel_list
 
@@ -181,8 +181,8 @@ class ModelManager(NeoInterface):
         UNWIND $rels as rel
         WITH rel[0] as left, rel[1] as right, rel[2] as type    
         WHERE apoc.meta.type(left) = apoc.meta.type(right) = 'STRING'  
-        MERGE (ln:Class {{label:left}})
-        MERGE (rn:Class {{label:right}})   
+        MERGE (ln:Class {{{identifier}:left}})
+        MERGE (rn:Class {{{identifier}:right}})   
         MERGE (ln)<-[:FROM]-(:Relationship{{relationship_type:type}})-[:TO]->(rn)   
         """
         params = {"rels": [(r if len(r) == 3 else r + [self.gen_default_reltype(to_label=r[1])]) for r in rel_list]}
