@@ -104,13 +104,13 @@ class QueryBuilder():
                 optional_rel_text_list.append(self.generate_1rel(rel))
             else:
                 rel_text_list.append(self.generate_1rel(rel))
-        q_rel_match = ',\n' if labels and match == 'MATCH' else ''
-        # if no labels then we don't want `,` before rel match in query, similarly for OPTIONAL MATCH case.
+        q_rel_match = ',\n' if labels and rel_text_list else ''
+        # if labels and mandatory rels then we want `,` before rel match in query
         if rel_text_list:
             q_rel_match += f',\n'.join(rel_text_list)
         if optional_rel_text_list:
-            opt_rel_match_text = ',\n' if match == 'OPTIONAL MATCH' else f'\nOPTIONAL MATCH '
-            # if already optional match from labels, then don't include one here.
+            opt_rel_match_text = ',\n' if match == 'OPTIONAL MATCH' and labels else f'\nOPTIONAL MATCH '
+            # if already optional match from labels (and labels exists), then don't include one here.
             q_rel_match += f'{opt_rel_match_text}' + ',\n'.join(optional_rel_text_list)
         return q_rel_match
 

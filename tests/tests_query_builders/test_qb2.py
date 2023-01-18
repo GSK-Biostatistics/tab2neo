@@ -61,7 +61,7 @@ class TestGenerateQueryBody:
             rels=[{'to': 'Exposure', 'from': 'Subject', 'type': 'HAS', 'optional': 'true'}],
             where_map={'Subject': {'id': '001', 'name': 'Bob'}}
         )
-        assert q == "MATCH (`Subject`:`Subject`),\n(`Exposure`:`Exposure`),\n\nOPTIONAL MATCH (`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`)\nWHERE `Subject`.`id` = $par_1 AND `Subject`.`name` = $par_2"
+        assert q == "MATCH (`Subject`:`Subject`),\n(`Exposure`:`Exposure`)\nOPTIONAL MATCH (`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`)\nWHERE `Subject`.`id` = $par_1 AND `Subject`.`name` = $par_2"
         assert params == {'par_1': '001', 'par_2': 'Bob'}
 
     def test_multi_label_and_one_optional_rel(self, qbr: QueryBuilder):
@@ -79,7 +79,7 @@ class TestGenerateQueryBody:
             rels=[{'to': 'Exposure', 'from': 'Subject', 'type': 'HAS', 'optional': 'true'}, {'from': 'Exposure', 'to': 'Parameter', 'type': 'HAS', 'optional': 'true'}],
             where_map={'Subject': {'id': '001', 'name': 'Bob'}}
         )
-        assert q == "MATCH (`Subject`:`Subject`),\n(`Exposure`:`Exposure`),\n(`Parameter`:`Parameter`),\n\nOPTIONAL MATCH (`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`),\n(`Exposure`)-[`Exposure_HAS_Parameter`:`HAS`]->(`Parameter`)\nWHERE `Subject`.`id` = $par_1 AND `Subject`.`name` = $par_2"
+        assert q == "MATCH (`Subject`:`Subject`),\n(`Exposure`:`Exposure`),\n(`Parameter`:`Parameter`)\nOPTIONAL MATCH (`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`),\n(`Exposure`)-[`Exposure_HAS_Parameter`:`HAS`]->(`Parameter`)\nWHERE `Subject`.`id` = $par_1 AND `Subject`.`name` = $par_2"
         assert params == {'par_1': '001', 'par_2': 'Bob'}
 
     def test_optional_label_and_optional_rel(self, qbr: QueryBuilder):
