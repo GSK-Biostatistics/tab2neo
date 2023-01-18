@@ -72,6 +72,29 @@ def test_get_all_classes_props(mm):
         mm.get_all_classes_props(['short_label', 'short_label'])
 
 
+def test_get_rels_where(mm: ModelManager):
+    mm.clean_slate()
+
+    with open(os.path.join(filepath, 'data', 'test_infer_rels.json')) as jsonfile:
+        dct = json.load(jsonfile)
+    mm.load_arrows_dict(dct)
+
+    # Test without where clause (all rels)
+    res1 = mm.get_rels_where()
+    assert res1 == [
+        {'from': 'Person', 'to': 'Name of Treatment', 'type': 'HAS'},
+        {'from': 'Subject', 'to': 'Exposure Name of Treatment', 'type': None}
+    ]
+
+    # Test with where clause
+    res2 = mm.get_rels_where('WHERE from_class.label = "Person"')
+    assert res2 == [{'from': 'Person', 'to': 'Name of Treatment', 'type': 'HAS'}]
+
+    # Test with custom return prop
+    res3 = mm.get_rels_where('WHERE from_class.short_label = "PERSON"', 'short_label')
+    assert res3 == [{'from': 'PERSON', 'to': '--TRT', 'type': 'HAS'}]
+
+
 def test_get_rels_btw2(mm:ModelManager):
     mm.clean_slate()
     # loading metadata (Class from json created in arrows.app)
