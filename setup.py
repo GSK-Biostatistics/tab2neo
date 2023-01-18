@@ -29,7 +29,7 @@ for line in requirements:
         required.append(line)
 
 setuptools.setup(
-    name="tab2neo",                           # This is the name of the package
+    name="tab2neo",                         # This is the name of the package
     version="1.1.2.0",                      # Release.Major Feature.Minor Feature.Bug Fix
     author="Alexey Kuznetsov",              # Full name of the author
     description="Clinical Linked Data: High-level Python classes to load, model and reshape tabular data imported into Neo4j database",
