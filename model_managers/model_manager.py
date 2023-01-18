@@ -651,6 +651,26 @@ class ModelManager(NeoInterface):
 
         return self.query(q, {'terminology': controlled_terminology}, return_type='neo4j.Result')
 
+    def get_all_ct(self, term_props: list, class_prop='label', derived_only=False):
+        """
+        :param term_props:
+        :param class_prop:
+        :param derived_only:
+        :return:
+        """
+        assert len(term_props) >= 1, 'Must include at least 1 term_prop'
+
+        term_return = f'term.`{term_props[0]}` as `{term_props[0]}`'
+        for prop in term_props[1:]:
+            term_return += f', term.`{prop}` as `{prop}`'
+
+        q = f"""
+        MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
+        {'WHERE c.derived = "true"' if derived_only else ''}
+        RETURN c.`{class_prop}` as `{class_prop}`, {term_return}
+        """
+        return self.query(q)
+
     def propagate_rels_to_parent_class(self):
         if self.verbose:
             print("Copying Relationships to 'parent' Classes where (child)-[:SUBCLASS_OF]->(parent)")
