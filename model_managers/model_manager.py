@@ -169,6 +169,29 @@ class ModelManager(NeoInterface):
 
         return self.query(q)
 
+    def get_all_classes_props(self, props: [str]) -> [dict]:
+        """
+        Retrieve a list of property values for all classes.
+        :param props: List of properties ro retrieve ie ['label', ...]
+        :return: A list of dictionaries, with keys equal to the specified property name
+                            EXAMPLE, with props=['prop1', 'prop2]:
+                                [{'prop1': 'value', 'prop2': 'value'}, ...]
+        """
+        assert len(props) > 0, 'Must specify at least one property to return!'
+        assert len(props) == len(set(props)), 'Specified props must not contain duplicates!'
+
+        q_return = f"RETURN c.`{props[0]}` as `{props[0]}`"
+        if len(props) != 1:
+            for prop in props[1:]:
+                q_return += f", c.`{prop}` as `{prop}`"
+
+        q = f"""
+        MATCH (c:Class)
+        {q_return}
+        """
+
+        return self.query(q)
+
     def get_rels_from_labels(self, labels: list) -> [{}]:
         """
         Returns all the relationships (according to the schema) from the nodes with specified labels

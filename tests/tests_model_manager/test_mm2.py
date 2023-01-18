@@ -54,6 +54,24 @@ def test_get_all_classes(mm):
         assert entry["Class"] in class_list
 
 
+def test_get_all_classes_props(mm):
+    mm.clean_slate()
+
+    class_list = ["A", "B", "C"]
+    mm.create_class(class_list)
+
+    for class_label in class_list:
+        mm.set_short_label(class_label, class_label.lower())
+
+    short_labels = mm.get_all_classes_props(['short_label'])
+    expected_short_labels = [{"short_label": label.lower()} for label in class_list]
+
+    assert short_labels == expected_short_labels
+
+    with pytest.raises(AssertionError):
+        mm.get_all_classes_props(['short_label', 'short_label'])
+
+
 def test_get_rels_btw2(mm:ModelManager):
     mm.clean_slate()
     # loading metadata (Class from json created in arrows.app)
