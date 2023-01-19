@@ -166,7 +166,8 @@ class ModelManager(NeoInterface):
                                         ["Study", "Subject", "Subject"],
                                         ["Subject", "Race", "Race"]
                                     ]
-        :return:         List of all the class names; repeated ones are taken out
+        :param identifier: String class property used to identify to & from classes
+        :return: List of all the class names; repeated ones are taken out
         """
 
         # Identify all the unique class names in inner elements of rel_list
@@ -200,7 +201,7 @@ class ModelManager(NeoInterface):
         q = f"""
         UNWIND $rels as rel
         WITH rel[0] as from, rel[1] as to, rel[2] as type
-        MATCH (:Class{{{identifier}:from}})<-[:FROM]-(rel:Relationship {{relationship_type:type}})-[:TO]->(:Class{{{identifier}:to}})
+        MATCH (:Class{{`{identifier}`:from}})<-[:FROM]-(rel:Relationship {{relationship_type:type}})-[:TO]->(:Class{{`{identifier}`:to}})
         DETACH DELETE rel
         """
         params = {"rels": rel_list}
@@ -314,17 +315,17 @@ class ModelManager(NeoInterface):
                     labels.append(rel.get(key))
         return labels
 
-    def get_rels_btw2(self, label1: str, label2: str):
+    def get_rels_btw2(self, label1: str, label2: str, identifier='label'):
         """
-        Returns all the relationships (according to the schema) between nodes with sprcified labels {label1} and {label2}
-        including the relationships of parent and child classes
+        Returns all the relationships (according to the schema) between classes with identifier properties equal to
+        {label1} and {label2} including the relationships of parent and child classes.
         """
         q = f"""
         MATCH 
             (c1:Class)<-[:SUBCLASS_OF*0..{str(self.SCD)}]-(c1low:Class),
             (c2:Class)<-[:SUBCLASS_OF*0..{str(self.SCD)}]-(c2low:Class)
         WHERE 
-            c1.label = $label1 AND c2.label = $label2 AND
+            c1.`{identifier}` = $label1 AND c2.`{identifier}` = $label2 AND
             NOT EXISTS ( (c1low)<-[:SUBCLASS_OF]-(:Class) ) AND
             NOT EXISTS ( (c2low)<-[:SUBCLASS_OF]-(:Class) ) 
         WITH c1low, c2low
@@ -340,7 +341,7 @@ class ModelManager(NeoInterface):
         WITH c1, c2
         MATCH (x)<-[f:FROM]-(rr:Relationship)-[t:TO]->(y)
         WHERE (x = c1 and y = c2) or (y = c1 and x = c2) 
-        RETURN {{from: x.label, to: y.label, type: rr.relationship_type}} as rel            
+        RETURN {{from: x.`{identifier}`, to: y.`{identifier}`, type: rr.relationship_type}} as rel            
         ORDER BY rel['from'], rel['to'], rel['type']
         """
         params = {'label1': label1, 'label2': label2}
