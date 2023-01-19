@@ -610,17 +610,34 @@ class ModelManager(NeoInterface):
 
         return res1
 
-    def get_class_ct(self, classes: list, ct_props: list = None, identifier='label'):
+    def get_class_ct(self, class_: str, ct_prop_name='rdfs:label'):
+        q = """
+        MATCH (c:Class) 
+        WHERE c.label = $class_
+        OPTIONAL MATCH (c)-[:HAS_CONTROLLED_TERM]->(t:Term)
+        RETURN collect(DISTINCT t[$ct_prop_name]) as coll
         """
-        :param classes:
-        :param ct_props:
-        :param identifier:
-        :return:
-        """
+        params = {'class_': class_, 'ct_prop_name': ct_prop_name}
+        res = self.query(q, params)
+        if res:
+            return res[0]['coll']
+        else:
+            return []
 
-        # Maintain backwards compatibility
-        if type(classes) == str:
-            classes = list(classes)
+    def get_class_ct_map(self, classes: list, ct_props: list = None, identifier='label'):
+        """
+        Return controlled terminology for a given list of classes.
+        :param classes: list of class labels of class.identifier property values if using custom identifier
+                        for example: with identifier = 'short_label', classes = ['shortlabel1', 'shortlabel2']
+        :param ct_props: list of controlled terminology props to collect eg:
+                         ['label', 'Codelist Code', 'Order']
+                         defaults to ['rdfs:label']
+        :param identifier: string used when identifying classes
+        :return: Dictionary of classes and found controlled terminology for example:
+                 with classes = ['class1', 'class2'] and ct_props = ['label'] a typical result might be:
+                {'class1': [{'label': 'term1'}, {'label': 'term2'}], 'class2': [{{'label': 'term3'}}]}
+                Where 'class1' has two terms labeled 'term1' and 'term2' and 'class2' has one term labeled 'term3'
+        """
 
         if ct_props is None:
             ct_props = ['rdfs:label']

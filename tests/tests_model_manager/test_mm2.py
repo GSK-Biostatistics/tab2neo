@@ -257,7 +257,7 @@ def test_create_ct(mm):
         'S': [{'label': 'term3'}]
     })
 
-    res = mm.get_class_ct(classes=['G', 'S', 'K'], ct_props=['label', 'Order'])
+    res = mm.get_class_ct_map(classes=['G', 'S', 'K'], ct_props=['label', 'Order'])
 
     assert sorted(res.get('G'), key=lambda d: d['label']) == [{'Order': 1, 'label': 'term1'},
                                                               {'Order': 2, 'label': 'term2'}]
@@ -268,7 +268,7 @@ def test_create_ct(mm):
         'S': [{'label': 'term4'}]
     })
 
-    res = mm.get_class_ct(classes=['S'], ct_props=['label', 'Order'])
+    res = mm.get_class_ct_map(classes=['S'], ct_props=['label', 'Order'])
 
     assert sorted(res.get('S'), key=lambda d: d['label']) == [{'Order': 1, 'label': 'term3'},
                                                               {'Order': 2, 'label': 'term4'}]
@@ -287,7 +287,7 @@ def test_create_ct(mm):
         'K': [{'label': 'term5'}, {'label': 'term6'}]
     }, order_terms=False)
 
-    res = mm.get_class_ct(classes=['K'], ct_props=['label', 'Order'])
+    res = mm.get_class_ct_map(classes=['K'], ct_props=['label', 'Order'])
     assert sorted(res.get('K'), key=lambda d: d['label']) == [{'Order': None, 'label': 'term5'},
                                                               {'Order': None, 'label': 'term6'}]
 
@@ -310,7 +310,7 @@ def test_create_ct(mm):
         'A': [{'label': 'term7'}]
     }, 'short_label')
 
-    res = mm.get_class_ct(classes=['A'], ct_props=['label', 'Order'], identifier='short_label')
+    res = mm.get_class_ct_map(classes=['A'], ct_props=['label', 'Order'], identifier='short_label')
     assert res.get('A') == [{'Order': 1, 'label': 'term7'}]
 
 
