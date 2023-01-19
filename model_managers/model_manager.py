@@ -546,23 +546,37 @@ class ModelManager(NeoInterface):
                     merge_on[key].append(_gen_new_prop_name(n))
         return dct, merge_on
 
-    def create_ct(self, controlled_terminology: dict, identifier='label'):
+    def create_ct(self, controlled_terminology: dict, identifier='label', order_terms=True):
         """
-        :param controlled_terminology: {'class1': [{prop1: value, prop2: value}, {}]}
-        :param identifier:
-        :return:
+        Creates :Term nodes and links them to a specified class with a [:HAS_CONTROLLED_TERM] relationship.
+        If order terms is True, an ascending Order property will be assigned to terms in the order they are created
+        accounting for the order of existing terms (if any) and [:NEXT] relationships between terms following this order.
+        For example:
+            With identifier = 'label' and controlled_terminology =
+            {
+                'class1': [{'term_label': 'term1'}, {'term_label': 'term2'}],
+                'class2': [{'term_label': 'term3'}]
+            }
+            3 new term nodes with 'term_label' properties equal to 'term1', 'term2' and 'term3' would be
+            created. The class with 'label' = 'class1' would then be linked by [:HAS_CONTROLLED_TERM]
+            relationships to 'term1' and 'term2' and similarly 'class2' would be linked to 'term3'
+
+        :param controlled_terminology: A dictionary of classes and terms eg: {'class1': [{prop1: value, prop2: value}, ...]}
+        :param identifier: String, property used when identifying classes to assign terms.
+        :param order_terms: Bool, if true order properties and next relationships will be created between terms.
+        :return: neo4j result object.
         """
-        missing = self.class_exists(list(controlled_terminology.keys()), 'short_label')
+        missing = self.class_exists(list(controlled_terminology.keys()), identifier)
         assert not missing, f'Cannot create controlled terminology for nonexistent classes: {missing}'
 
         # TODO: make order optional?
         # TODO: check if term exists already?
-        # Order terms
-        for term_class in controlled_terminology:
-            count = 0
-            for term in controlled_terminology[term_class]:
-                term['Order'] = count
-                count += 1
+        if order_terms:
+            for term_class in controlled_terminology:
+                count = 1
+                for term in controlled_terminology[term_class]:
+                    term['Order'] = count
+                    count += 1
 
         # Create terms
         q1 = f"""
@@ -571,27 +585,28 @@ class ModelManager(NeoInterface):
         OPTIONAL MATCH (class)-[:HAS_CONTROLLED_TERM]->(term:Term)
 
         WITH class, MAX(term.Order) as term_order, class_label
-        WITH class, CASE WHEN term_order IS NULL THEN 1 ELSE term_order END as term_order, class_label
+        WITH class, CASE WHEN term_order IS NULL THEN 0 ELSE term_order END as term_order, class_label
         
         UNWIND $terminology[class_label] as term_props
         CALL apoc.merge.node(['Term'], term_props) YIELD node as term
         MERGE (class)-[:HAS_CONTROLLED_TERM]->(term)
-        SET term.Order = term.Order + term_order
+        {"SET term.Order = term.Order + term_order" if order_terms else ""}
         """
         res1 = self.query(q1, {'terminology': controlled_terminology}, return_type='neo4j.Result')
 
         # Create "next" rel along term order
-        q2 = f"""
-        UNWIND KEYS($terminology) as class_label
-        MATCH (c:Class{{{identifier}: class_label}})-[:HAS_CONTROLLED_TERM]->(t:Term)
-        WITH c,t ORDER BY c.label, t.Order ASC
-        WITH c, COLLECT(t) AS terms
-        FOREACH (n IN RANGE(0, SIZE(terms)-2) |
-            FOREACH (prev IN [terms[n]] |
-                FOREACH (next IN [terms[n+1]] |
-                    MERGE (prev)-[:NEXT]->(next))))
-        """
-        res2 = self.query(q2, {'terminology': controlled_terminology})
+        if order_terms:
+            q2 = f"""
+            UNWIND KEYS($terminology) as class_label
+            MATCH (c:Class{{{identifier}: class_label}})-[:HAS_CONTROLLED_TERM]->(t:Term)
+            WITH c,t ORDER BY c.label, t.Order ASC
+            WITH c, COLLECT(t) AS terms
+            FOREACH (n IN RANGE(0, SIZE(terms)-2) |
+                FOREACH (prev IN [terms[n]] |
+                    FOREACH (next IN [terms[n+1]] |
+                        MERGE (prev)-[:NEXT]->(next))))
+            """
+            res2 = self.query(q2, {'terminology': controlled_terminology})
 
         return res1
 
