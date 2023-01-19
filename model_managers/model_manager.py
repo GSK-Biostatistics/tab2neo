@@ -627,16 +627,16 @@ class ModelManager(NeoInterface):
         elif type(ct_props) == str:
             ct_props = [ct_props]
 
-        prop_collection = f'term.`{ct_props[0]}`'
+        prop_collection = f'["{ct_props[0]}", term.`{ct_props[0]}`]'
         if len(ct_props) != 1:
             for prop in ct_props[1:]:
-                prop_collection += f", term.`{prop}`"
+                prop_collection += f', ["{prop}", term.`{prop}`]'
 
         q = f"""
         UNWIND $classes as class
         MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
         WHERE c.`{identifier}` = class
-        WITH c, collect([{prop_collection}]) as terms
+        WITH c, collect(apoc.map.fromPairs([{prop_collection}])) as terms
         RETURN apoc.map.setKey({{}}, c.`{identifier}`, terms) as ct
         """
 
