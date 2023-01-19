@@ -314,6 +314,28 @@ def test_create_ct(mm):
     assert res.get('A') == [{'Order': 1, 'label': 'term7'}]
 
 
+def test_delete_ct(mm):
+    mm.clean_slate()
+
+    with open(os.path.join(filepath, 'data', 'test_delete_ct.json')) as jsonfile:
+        dct = json.load(jsonfile)
+    mm.load_arrows_dict(dct)
+
+    mm.delete_ct({'Subject': [['Codelist2']]}, ['Codelist Code'])
+
+    res = mm.get_class_ct_map(['Subject', 'Exposure Name of Treatment'], ct_props=['Codelist Code', 'Term Code', 'rdfs:label'])
+    assert res == {
+        'Subject': [{'Term Code': 'Termcode3', 'rdfs:label': 'Term3', 'Codelist Code': 'Codelist3'}],
+        'Exposure Name of Treatment': [{'Term Code': 'Termcode1', 'rdfs:label': 'Term1', 'Codelist Code': 'Codelist1'}]
+    }
+
+    mm.delete_ct({'EXTRT': [['Codelist1']]}, ['Codelist Code'], identifier='short_label')
+
+    res = mm.get_class_ct_map(['Subject', 'Exposure Name of Treatment'],
+                              ct_props=['Codelist Code', 'Term Code', 'rdfs:label'])
+    assert res == {
+        'Subject': [{'Term Code': 'Termcode3', 'rdfs:label': 'Term3', 'Codelist Code': 'Codelist3'}]
+    }
 def test_create_related_classes_from_list(mm):
     mm.clean_slate()
 

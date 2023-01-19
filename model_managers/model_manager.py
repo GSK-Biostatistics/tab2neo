@@ -668,10 +668,15 @@ class ModelManager(NeoInterface):
 
     def delete_ct(self, controlled_terminology: dict, term_props: list, identifier='label'):
         """
-        :param controlled_terminology: {'class1':[['code1'], ['code2']]}
-        :param term_props: eg ['Codelist Code']
-        :param identifier:
-        :return:
+        Deletes class specific controlled terminology.
+        :param controlled_terminology: Dictionary of key: class identity - value: list of class specific term property
+                                       values to delete. For example:
+                                       with term_props = ['Codelist Code'] controlled terminology might be:
+                                      {'class1':[['code1'], ['code2']], class1':[['code2']]}
+                                      Note these property values must align with the keys defined in term_props!
+        :param term_props: List of property names to define controlled terminology term property values
+        :param identifier: string, property used to identify class
+        :return: neo4j result object.
         """
 
         where_clause = f't.`{term_props[0]}` = term_props[0]'
