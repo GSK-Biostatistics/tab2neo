@@ -193,8 +193,14 @@ class ModelManager(NeoInterface):
 
     def delete_relationship(self, rel_list: [[str, str, str]], identifier='label'):
         """
-        :param rel_list:
-        :param identifier:
+        Deletes specified relationships between classes.
+        :param rel_list: List of relationships to be deleted in the following format:
+                         [from class prop value, to class prop value, relationship type]
+                         For example: With identifier = 'label' and
+                         rel_list = [['class1', 'class2', 'Example'], ...]
+                         Relationships of type "Example" between classes with labels = 'class1' and 'class2'
+                         would be deleted.
+        :param identifier: String class property to be used when identifying classes.
         :return:
         """
 
