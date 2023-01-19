@@ -100,6 +100,28 @@ def test_delete_class(mm):
     ])
 
 
+def test_class_exists(mm):
+    mm.clean_slate()
+
+    class_list = ["A", "B", "C"]
+    mm.create_class(class_list)
+
+    res = mm.class_exists(["A", "B", "C"])
+    assert not res
+
+    res = mm.class_exists(["D"])
+    assert res == set("D")
+
+    class_list = [{"short_label": 'A'}, {"short_label": 'B'}]
+    mm.create_class(class_list)
+
+    res = mm.class_exists(["A", "B"], 'short_label')
+    assert not res
+
+    res = mm.class_exists(["D"], 'short_label')
+    assert res == set("D")
+
+
 def test_get_all_classes(mm):
     mm.clean_slate()
 
@@ -128,6 +150,9 @@ def test_get_all_classes_props(mm):
     expected_short_labels = [{"short_label": label.lower()} for label in class_list]
 
     assert short_labels == expected_short_labels
+
+    with pytest.raises(AssertionError):
+        mm.get_all_classes_props([])
 
     with pytest.raises(AssertionError):
         mm.get_all_classes_props(['short_label', 'short_label'])
@@ -167,8 +192,6 @@ def test_get_rels_btw2(mm:ModelManager):
         {'from': 'Person', 'to': 'Name of Treatment', 'type': 'HAS'},
         {'from': 'Subject', 'to': 'Exposure Name of Treatment', 'type': None}
     ]
-    # print(res)
-    # print(expected_res)
     assert res == expected_res
 
     res = mm.get_rels_btw2('Subject', 'Name of Treatment')
@@ -192,6 +215,104 @@ def test_get_rels_btw2(mm:ModelManager):
     ]
     assert res == expected_res
 
+    res = mm.get_rels_btw2('USUBJID', 'EXTRT', identifier='short_label')
+    expected_res = [
+        {'from': 'PERSON', 'to': '--TRT', 'type': 'HAS'},
+        {'from': 'USUBJID', 'to': 'EXTRT', 'type': None}
+    ]
+    assert res == expected_res
+
+
+def test_delete_relationship(mm):
+    mm.clean_slate()
+
+    with open(os.path.join(filepath, 'data', 'test_infer_rels.json')) as jsonfile:
+        dct = json.load(jsonfile)
+    mm.load_arrows_dict(dct)
+
+    mm.delete_relationship([['Person', 'Name of Treatment', 'HAS']])
+
+    res = mm.get_rels_btw2('Person', 'Name of Treatment')
+    expected_res = [
+        {'from': 'Subject', 'to': 'Exposure Name of Treatment', 'type': None}
+    ]
+    assert res == expected_res
+
+
+def test_create_ct(mm):
+    # Prepare test
+    mm.clean_slate()
+
+    q = """
+    MERGE (:Class {label: 'G'})
+    MERGE (:Class {label: 'S'})
+    MERGE (:Class {label: 'K'})
+    MERGE (:Class {short_label: 'A'})
+    """
+    mm.query(q)
+
+    # Create ct with existing terms
+    mm.create_ct({
+        'G': [{'label': 'term1'}, {'label': 'term2'}],
+        'S': [{'label': 'term3'}]
+    })
+
+    res = mm.get_class_ct(classes=['G', 'S', 'K'], ct_props=['label', 'Order'])
+
+    assert sorted(res.get('G'), key=lambda d: d['label']) == [{'Order': 1, 'label': 'term1'},
+                                                              {'Order': 2, 'label': 'term2'}]
+    assert res.get('S') == [{'Order': 1, 'label': 'term3'}]
+
+    # Test order increment
+    mm.create_ct({
+        'S': [{'label': 'term4'}]
+    })
+
+    res = mm.get_class_ct(classes=['S'], ct_props=['label', 'Order'])
+
+    assert sorted(res.get('S'), key=lambda d: d['label']) == [{'Order': 1, 'label': 'term3'},
+                                                              {'Order': 2, 'label': 'term4'}]
+
+    # Test NEXT relationship creation
+    q = """
+    MATCH (t1:Term)-[:NEXT]->(t2:Term)
+    WHERE t1.label = 'term3'
+    RETURN t2.label as label
+    """
+    res = mm.query(q)[0]
+    assert res == {'label': 'term4'}
+
+    # Test without order
+    mm.create_ct({
+        'K': [{'label': 'term5'}, {'label': 'term6'}]
+    }, order_terms=False)
+
+    res = mm.get_class_ct(classes=['K'], ct_props=['label', 'Order'])
+    assert sorted(res.get('K'), key=lambda d: d['label']) == [{'Order': None, 'label': 'term5'},
+                                                              {'Order': None, 'label': 'term6'}]
+
+    q = """
+    MATCH (t1:Term)-[:NEXT]->(t2:Term)
+    WHERE t1.label = 'term5'
+    RETURN t2.label as label
+    """
+    res = mm.query(q)
+    assert not res
+
+    # Term for undefined class assertion error
+    with pytest.raises(AssertionError):
+        mm.create_ct({
+            'X': [{'label': 'term7'}]
+        })
+
+    # Short_label identifier
+    mm.create_ct({
+        'A': [{'label': 'term7'}]
+    }, 'short_label')
+
+    res = mm.get_class_ct(classes=['A'], ct_props=['label', 'Order'], identifier='short_label')
+    assert res.get('A') == [{'Order': 1, 'label': 'term7'}]
+
 
 def test_create_related_classes_from_list(mm):
     mm.clean_slate()
@@ -211,6 +332,13 @@ def test_create_related_classes_from_list(mm):
     assert res4 == []
     res4 = mm.get_rels_btw2("C", "D")
     assert res4 == []
+
+    res5 = mm.create_related_classes_from_list(rel_list=[["F", "G", "type4"], ["G", "H", "type5"]],
+                                               identifier='short_label')
+    assert res5 == ['F', 'G', 'H']
+
+    res6 = mm.get_rels_btw2("F", "G", identifier='short_label')
+    assert res6 == [{'from': 'F', 'to': 'G', 'type': 'type4'}]
 
 
 def test_get_rels_from_labels(mm):
