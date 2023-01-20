@@ -697,12 +697,21 @@ class ModelManager(NeoInterface):
 
     def get_all_ct(self, term_props: list, class_prop='label', derived_only=False):
         """
-        :param term_props:
-        :param class_prop:
-        :param derived_only:
-        :return:
+        Returns a list of dictionaries containing specified props for all controlled terminology.
+        Example:
+            With term_props = ['rdfs:label'] and class_prop = ['label'] the return format would be:
+            [{'label': class1, 'rdfs:label': 'term1'}, {'label': class1, 'rdfs:label': 'term2'},
+            {'label': class2, 'rdfs:label': 'term1'} ...]
+            Repeated for all CT.
+        :param term_props: Term properties to return eg: ['rdfs:label', 'Codelist Code']
+        :param class_prop: Class property used to identify controlled terminology class
+                            :param derived_only:
+        :param derived_only: Bool, optional filter for classes where class.derived = 'true'.
+        :return: List of dictionaries, see example above.
         """
+        # TODO: consider converting to format similar to get_class_ct_map? ie {'class.label': [{'rdfs:label': 'term1'}]}
         assert len(term_props) >= 1, 'Must include at least 1 term_prop'
+        assert class_prop not in term_props, 'Class prop cannot be in term props'
 
         term_return = f'term.`{term_props[0]}` as `{term_props[0]}`'
         for prop in term_props[1:]:
