@@ -30,7 +30,8 @@
       ],
       "properties": {
         "label": "Exposure Name of Treatment",
-        "short_label": "EXTRT"
+        "short_label": "EXTRT",
+        "derived": "true"
       },
       "style": {
         "node-color": "#fcdc00"
@@ -43,9 +44,6 @@
         "y": 139.40507814676073
       },
       "caption": "",
-      "style": {
-        "node-color": "#f44e3b"
-      },
       "labels": [
         "Term"
       ],
@@ -53,6 +51,9 @@
         "Codelist Code": "Codelist3",
         "Term Code": "Termcode3",
         "rdfs:label": "Term3"
+      },
+      "style": {
+        "node-color": "#f44e3b"
       }
     },
     {
@@ -81,9 +82,6 @@
         "y": 139.40507814676076
       },
       "caption": "",
-      "style": {
-        "node-color": "#f44e3b"
-      },
       "labels": [
         "Term"
       ],
@@ -91,33 +89,36 @@
         "Codelist Code": "Codelist1",
         "Term Code": "Termcode1",
         "rdfs:label": "Term1"
+      },
+      "style": {
+        "node-color": "#f44e3b"
       }
     }
   ],
   "relationships": [
     {
       "id": "n0",
-      "type": "HAS_CONTROLLED_TERM",
-      "style": {},
-      "properties": {},
       "fromId": "n0",
-      "toId": "n2"
+      "toId": "n2",
+      "type": "HAS_CONTROLLED_TERM",
+      "properties": {},
+      "style": {}
     },
     {
       "id": "n1",
-      "type": "HAS_CONTROLLED_TERM",
-      "style": {},
-      "properties": {},
       "fromId": "n0",
-      "toId": "n3"
+      "toId": "n3",
+      "type": "HAS_CONTROLLED_TERM",
+      "properties": {},
+      "style": {}
     },
     {
       "id": "n2",
-      "type": "HAS_CONTROLLED_TERM",
-      "style": {},
-      "properties": {},
       "fromId": "n1",
-      "toId": "n4"
+      "toId": "n4",
+      "type": "HAS_CONTROLLED_TERM",
+      "properties": {},
+      "style": {}
     }
   ],
   "style": {

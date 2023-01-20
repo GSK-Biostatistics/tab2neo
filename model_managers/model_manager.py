@@ -182,8 +182,8 @@ class ModelManager(NeoInterface):
         UNWIND $rels as rel
         WITH rel[0] as left, rel[1] as right, rel[2] as type    
         WHERE apoc.meta.type(left) = apoc.meta.type(right) = 'STRING'  
-        MERGE (ln:Class {{{identifier}:left}})
-        MERGE (rn:Class {{{identifier}:right}})   
+        MERGE (ln:Class {{`{identifier}`:left}})
+        MERGE (rn:Class {{`{identifier}`:right}})   
         MERGE (ln)<-[:FROM]-(:Relationship{{relationship_type:type}})-[:TO]->(rn)   
         """
         params = {"rels": [(r if len(r) == 3 else r + [self.gen_default_reltype(to_label=r[1])]) for r in rel_list]}
@@ -569,7 +569,6 @@ class ModelManager(NeoInterface):
         missing = self.class_exists(list(controlled_terminology.keys()), identifier)
         assert not missing, f'Cannot create controlled terminology for nonexistent classes: {missing}'
 
-        # TODO: make order optional?
         # TODO: check if term exists already?
         if order_terms:
             for term_class in controlled_terminology:
@@ -660,11 +659,12 @@ class ModelManager(NeoInterface):
         params = {'classes': classes}
         res = self.query(q, params)
 
+        data = {}
         if res:
-            data = {}  # Flattened result {class.identifer:[[term.ct_props[0], ...], [term.ct_props[0], ...]]}
             for term_dict in res:
+                # Flattened result {class.identifer:[[term.ct_props[0], ...], [term.ct_props[0], ...]]}
                 data.update(term_dict.get('ct'))
-            return data
+        return data
 
     def delete_ct(self, controlled_terminology: dict, term_props: list, identifier='label'):
         """
@@ -678,7 +678,6 @@ class ModelManager(NeoInterface):
         :param identifier: string, property used to identify class
         :return: neo4j result object.
         """
-
         where_clause = f't.`{term_props[0]}` = term_props[0]'
         for count, prop in enumerate(term_props[1:], start=1):
             where_clause += f' AND t.`{prop}` = term_props[{count}]'

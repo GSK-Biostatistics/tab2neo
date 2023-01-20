@@ -336,6 +336,63 @@ def test_delete_ct(mm):
     assert res == {
         'Subject': [{'Term Code': 'Termcode3', 'rdfs:label': 'Term3', 'Codelist Code': 'Codelist3'}]
     }
+
+
+def test_get_class_ct_map(mm):
+    mm.clean_slate()
+
+    with open(os.path.join(filepath, 'data', 'test_delete_ct.json')) as jsonfile:
+        dct = json.load(jsonfile)
+    mm.load_arrows_dict(dct)
+
+    res = mm.get_class_ct_map('Exposure Name of Treatment')
+    print(res)
+    assert res == {'Exposure Name of Treatment': [{'rdfs:label': 'Term1'}]}
+
+    res = mm.get_class_ct_map('Exposure Name of Treatment', 'Codelist Code')
+    print(res)
+    assert res == {'Exposure Name of Treatment': [{'Codelist Code': 'Codelist1'}]}
+
+    res = mm.get_class_ct_map(['USUBJID'], ct_props=['rdfs:label', 'Codelist Code'], identifier='short_label')
+    print(res)
+    assert sorted(res.get('USUBJID'), key=lambda d: d['rdfs:label']) == [
+        {'rdfs:label': 'Term2', 'Codelist Code': 'Codelist2'}, {'rdfs:label': 'Term3', 'Codelist Code': 'Codelist3'}
+    ]
+
+    res = mm.get_class_ct_map(['Undefined Class'])
+    print(res)
+    assert res == {}
+
+
+def test_get_all_ct(mm):
+    mm.clean_slate()
+
+    with open(os.path.join(filepath, 'data', 'test_delete_ct.json')) as jsonfile:
+        dct = json.load(jsonfile)
+    mm.load_arrows_dict(dct)
+
+    res = mm.get_all_ct(['Codelist Code', 'Term Code', 'rdfs:label'], derived_only=True)
+    assert res == [{'label': 'Exposure Name of Treatment',
+                    'Codelist Code': 'Codelist1', 'Term Code': 'Termcode1',
+                    'rdfs:label': 'Term1'}]
+
+    res = mm.get_all_ct(['Codelist Code', 'Term Code', 'rdfs:label'], class_prop='short_label', derived_only=False)
+    assert sorted(res, key=lambda d: d['Codelist Code']) == [
+        {'short_label': 'EXTRT', 'Codelist Code': 'Codelist1',
+         'Term Code': 'Termcode1', 'rdfs:label': 'Term1'},
+        {'short_label': 'USUBJID', 'Codelist Code': 'Codelist2',
+         'Term Code': 'Termcode2', 'rdfs:label': 'Term2'},
+        {'short_label': 'USUBJID', 'Codelist Code': 'Codelist3',
+         'Term Code': 'Termcode3', 'rdfs:label': 'Term3'},
+    ]
+
+    with pytest.raises(AssertionError):
+        mm.get_all_ct([], class_prop='short_label', derived_only=False)
+
+    with pytest.raises(AssertionError):
+        mm.get_all_ct(['short_label'], class_prop='short_label')
+
+
 def test_create_related_classes_from_list(mm):
     mm.clean_slate()
 
