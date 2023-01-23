@@ -393,6 +393,26 @@ def test_get_all_ct(mm):
         mm.get_all_ct(['short_label'], class_prop='short_label')
 
 
+def test_create_relationship(mm):
+    mm.clean_slate()
+
+    q = """
+    MERGE (a:Class{label:"class1", short_label:"C1"})-[:SUBCLASS_OF]->(b:Class{label:"class2", short_label:"C2"})
+    MERGE (c:Class{label:"class3", short_label:"C3"})
+    MERGE (d:Class{label:"class4", short_label:"C4"})
+    """
+    mm.query(q)
+
+    res1 = mm.create_relationship([['class1', 'class3', 'rel1']])
+    assert res1 == [['class1', 'class3', 'rel1']]
+
+    res2 = mm.get_rels_btw2("class1", "class3")
+    assert res2 == [{'from': 'class1', 'to': 'class3', 'type': 'rel1'}]
+
+    res1 = mm.create_relationship([['class1', 'MISSING CLASS', 'rel1']])
+    assert res1 == []
+
+
 def test_create_related_classes_from_list(mm):
     mm.clean_slate()
 

@@ -1,5 +1,6 @@
 import os
 from neointerface import NeoInterface
+from typing import List
 import pandas as pd
 
 
@@ -190,6 +191,37 @@ class ModelManager(NeoInterface):
         self.query(q, params)
 
         return class_list
+
+    def create_relationship(self, rel_list: List[List[str]], identifier='label'):
+        """
+        Create relationship nodes between two specified classes as defined in rel_list.
+        For example:
+            With rel_list = [ ['class1', 'class2', 'example'] ]
+            A new relationship node will be created between nodes with "label", as specified by the
+            identifier, 'class1' and 'class2' with a relationship_type property = 'example'.
+            This relationship node also includes 'FROM.Class.label' and 'TO.Class.label' properties
+            regardless of the class identifier.
+        :param rel_list: A list of relationships represented as lists
+        :param identifier: String class property used to identify to & from classes
+        :return: A list of created relationships = rel_list if all relationships were created successfully
+        """
+
+        q = f"""
+        UNWIND $rels as rel
+        WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type
+        MATCH (from:Class {{`{identifier}`:from_identity}})
+        MATCH (to:Class {{`{identifier}`:to_identity}})   
+        MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type}})-[:TO]->(to)
+        SET rel_node.`FROM.Class.label` = from.label
+        SET rel_node.`TO.Class.label` = to.label
+        RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type]) as rels
+        """
+
+        res = self.query(q, {"rels": rel_list})
+        if res:
+            return res[0].get('rels')
+        else:
+            return []
 
     def delete_relationship(self, rel_list: [[str, str, str]], identifier='label'):
         """
