@@ -619,7 +619,7 @@ class ModelManager(NeoInterface):
         WITH class, CASE WHEN term_order IS NULL THEN 0 ELSE term_order END as term_order, class_label
         
         UNWIND $terminology[class_label] as term_props
-        CALL apoc.merge.node(['Term'], term_props) YIELD node as term
+        CALL apoc.merge.node(['Term', class.label], term_props) YIELD node as term
         MERGE (class)-[:HAS_CONTROLLED_TERM]->(term)
         {"SET term.Order = term.Order + term_order" if order_terms else ""}
         """
