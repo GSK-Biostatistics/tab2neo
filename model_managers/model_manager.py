@@ -755,6 +755,68 @@ class ModelManager(NeoInterface):
         """
         return self.query(q)
 
+    def create_same_as_ct(self, same_as_terms: List[dict], term_identifiers: List[str], identifier='label'):
+        """
+        Creates a [:SAME_AS] relationship between two terms. For example:
+            With term_identifiers = ['Codelist Code', 'Term Code']
+            and same_as_terms = [
+                {'from_class': 'class1', 'to_class': 'class2', # Class identifiers
+                 'from_codelist_code': 'code_1', 'from_term_code': 'code_2', # Term 1 identifier
+                 'to_codelist_code: 'code_3', 'to_term_code': 'code_4' # Term 2 identifier
+                }
+            ]
+            A same as relationship would be created from a term of 'class1' with properties:
+            `Codelist Code` = code_1 and `Term Code` = 'code_2' to the corresponding term for 'class2'.
+
+            Note term identifiers in a same_as_terms dictionaries must be lowercase and prefixed with from_ or to_ accordingly
+            to a property listed in term_identifiers.
+
+        :param same_as_terms: List of dictionaries defining same as terms between classes.
+        :param term_identifiers: List of strings with term properties that guarantee uniqueness
+        :param identifier: string class property used when matching classes
+        :return: neo4j result object
+        """
+
+        where_clause = f"WHERE c1.`{identifier}` = new_term['from_class'] AND c2.`{identifier}` = new_term['to_class']"
+        for term_prop in term_identifiers:
+            clean_prop = term_prop.lower().replace(' ', '_')
+            where_clause += f"AND t1.`{term_prop}` = new_term['from_{clean_prop}']"
+            where_clause += f"AND t2.`{term_prop}` = new_term['to_{clean_prop}']"
+
+        q = f"""
+        UNWIND $same_as_terms as new_term
+        MATCH (c1:Class)-[:HAS_CONTROLLED_TERM]-(t1:Term)
+        MATCH (c2:Class)-[:HAS_CONTROLLED_TERM]-(t2:Term)
+        {where_clause}
+        MERGE (t1)-[:SAME_AS]->(t2)
+        """
+        return self.query(q, {'same_as_terms': same_as_terms}, return_type='neo4j.Result')
+
+    def remove_same_as_ct(self, same_as_terms: List[dict], term_identifiers: List[str], identifier='label'):
+        """
+        Removes a [:SAME_AS] relationship between two terms, see "create_same_as_ct()" for format information.
+
+        :param same_as_terms: List of dictionaries defining same as terms between classes.
+        :param term_identifiers: List of strings with term properties that guarantee uniqueness
+        :param identifier: string class property used when matching classes
+        :return: neo4j result object
+        """
+
+        where_clause = f"WHERE c1.`{identifier}` = new_term['from_class'] AND c2.`{identifier}` = new_term['to_class']"
+        for term_prop in term_identifiers:
+            clean_prop = term_prop.lower().replace(' ', '_')
+            where_clause += f"AND t1.`{term_prop}` = new_term['from_{clean_prop}']"
+            where_clause += f"AND t2.`{term_prop}` = new_term['to_{clean_prop}']"
+
+        q = f"""
+        UNWIND $same_as_terms as new_term
+        MATCH (c1:Class)-[:HAS_CONTROLLED_TERM]->(t1:Term)-[rel:SAME_AS]->(t2:Term)<-[:HAS_CONTROLLED_TERM]-(c2:Class)
+        {where_clause}
+        DETACH DELETE rel
+        """
+
+        return self.query(q, {'same_as_terms': same_as_terms}, return_type='neo4j.Result')
+
     def propagate_rels_to_parent_class(self):
         if self.verbose:
             print("Copying Relationships to 'parent' Classes where (child)-[:SUBCLASS_OF]->(parent)")

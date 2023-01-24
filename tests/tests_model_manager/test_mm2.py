@@ -314,6 +314,95 @@ def test_create_ct(mm):
     assert res.get('A') == [{'Order': 1, 'label': 'term7'}]
 
 
+def test_create_same_as_ct(mm):
+    mm.clean_slate()
+
+    q1 = """
+    MERGE (a:Class {label: 'Avocado', short_label: 'A'})
+    MERGE (a)-[:HAS_CONTROLLED_TERM]->(:Term {`Codelist Code`: 'term1c', `Term Code`: 'term1t'})
+    MERGE (b:Class {label: 'Banana', short_label: 'B'})
+    MERGE (b)-[:HAS_CONTROLLED_TERM]->(:Term {`Codelist Code`: 'term2c', `Term Code`: 'term2t'})
+    """
+
+    mm.query(q1)
+
+    mm.create_same_as_ct([
+        {'from_class': 'Avocado', 'to_class': 'Banana',
+         'from_codelist_code': 'term1c', 'to_codelist_code': 'term2c'}
+    ], ['Codelist Code'])
+
+    q2 = """
+    MATCH (t1:Term)-[:SAME_AS]->(t2:Term)
+    RETURN t1.`Codelist Code` as t1, t2.`Codelist Code` as t2
+    """
+
+    res = mm.query(q2)
+    assert res == [{'t1': 'term1c', 't2': 'term2c'}]
+
+    mm.clean_slate()
+    mm.query(q1)
+
+    mm.create_same_as_ct([
+        {'from_class': 'B', 'to_class': 'A',
+         'from_codelist_code': 'term2c', 'to_codelist_code': 'term1c',
+         'from_term_code': 'term2t', 'to_term_code': 'term1t'
+         }
+    ], ['Codelist Code', 'Term Code'], identifier='short_label')
+
+    q3 = """
+    MATCH (t1:Term)-[:SAME_AS]->(t2:Term)
+    RETURN t1.`Codelist Code` as t1, t2.`Codelist Code` as t2
+    """
+
+    res = mm.query(q3)
+    assert res == [{'t1': 'term2c', 't2': 'term1c'}]
+
+
+def test_remove_same_as_ct(mm):
+    mm.clean_slate()
+
+    q1 = """
+    MERGE (a:Class {label: 'Avocado', short_label: 'A'})
+    MERGE (a)-[:HAS_CONTROLLED_TERM]->(t1:Term {`Codelist Code`: 'term1c', `Term Code`: 'term1t'})
+    MERGE (b:Class {label: 'Banana', short_label: 'B'})
+    MERGE (b)-[:HAS_CONTROLLED_TERM]->(t2:Term {`Codelist Code`: 'term2c', `Term Code`: 'term2t'})
+    MERGE (t1)-[:SAME_AS]-(t2)
+    """
+
+    mm.query(q1)
+
+    mm.remove_same_as_ct([
+        {'from_class': 'Avocado', 'to_class': 'Banana',
+         'from_codelist_code': 'term1c', 'to_codelist_code': 'term2c'}
+    ], ['Codelist Code'])
+
+    q2 = """
+    MATCH (t1:Term)-[:SAME_AS]->(t2:Term)
+    RETURN t1.`Codelist Code` as t1, t2.`Codelist Code` as t2
+    """
+
+    res = mm.query(q2)
+    assert res == []
+
+    mm.clean_slate()
+    mm.query(q1)
+
+    mm.remove_same_as_ct([
+        {'from_class': 'A', 'to_class': 'B',
+         'from_codelist_code': 'term1c', 'to_codelist_code': 'term2c',
+         'from_term_code': 'term1t', 'to_term_code': 'term2t'
+         }
+    ], ['Codelist Code', 'Term Code'], identifier='short_label')
+
+    q3 = """
+    MATCH ()-[r:SAME_AS]->()
+    RETURN r
+    """
+
+    res = mm.query(q3)
+    assert res == []
+
+
 def test_delete_ct(mm):
     mm.clean_slate()
 
