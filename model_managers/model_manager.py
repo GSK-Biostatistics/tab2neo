@@ -105,7 +105,7 @@ class ModelManager(NeoInterface):
                 # Example resulting apoc_action format(merge):
                 # With ident props = ['label'] the resulting action would be:
                 # CALL apoc.merge.node(
-                #   ['Class'], {`label`: class_item[`label`]}, class_item, {}
+                #   ['Class'], {`label`: class_item[`label`]}, class_item, class_item
                 # ) YIELD node
                 # Which matches on 'label then sets the properties to class_item
         else:
@@ -610,7 +610,7 @@ class ModelManager(NeoInterface):
                     merge_on[key].append(_gen_new_prop_name(n))
         return dct, merge_on
 
-    def create_ct(self, controlled_terminology: dict, identifier='label', order_terms=True):
+    def create_ct(self, controlled_terminology: dict, identifier='label', order_terms=True, merge_on=None):
         """
         Creates :Term nodes and links them to a specified class with a [:HAS_CONTROLLED_TERM] relationship.
         If order terms is True, an ascending Order property will be assigned to terms in the order they are created
@@ -628,39 +628,56 @@ class ModelManager(NeoInterface):
         :param controlled_terminology: A dictionary of classes and terms eg: {'class1': [{prop1: value, prop2: value}, ...]}
         :param identifier: String, property used when identifying classes to assign terms.
         :param order_terms: Bool, if true order properties and next relationships will be created between terms.
+        :param merge_on: Optional List[string] term properties to merge on to prevent duplication
         :return: neo4j result object.
         """
+        ident_props = None
         missing = self.class_exists(list(controlled_terminology.keys()), identifier)
         assert not missing, f'Cannot create controlled terminology for nonexistent classes: {missing}'
 
-        # TODO: check if term exists already?
-        if order_terms:
-            for term_class in controlled_terminology:
-                count = 1
-                for term in controlled_terminology[term_class]:
-                    term['Order'] = count
-                    count += 1
+        if merge_on:
+            ident_props = f'{{`{merge_on[0]}`: term_props["{merge_on[0]}"]'
+            for prop in merge_on[1:]:
+                ident_props += f', `{prop}`: term_props["{prop}"]'
+            ident_props += '}'
 
         # Create terms
         q1 = f"""
         UNWIND KEYS($terminology) as class_label
         MATCH (class:Class {{{identifier}: class_label}})
-        OPTIONAL MATCH (class)-[:HAS_CONTROLLED_TERM]->(term:Term)
-
-        WITH class, MAX(term.Order) as term_order, class_label
-        WITH class, CASE WHEN term_order IS NULL THEN 0 ELSE term_order END as term_order, class_label
-        
+        WITH class, class_label
         UNWIND $terminology[class_label] as term_props
-        CALL apoc.merge.node(['Term', class.label], term_props) YIELD node as term
+        CALL apoc.merge.node(['Term', class.label], {f"{ident_props}, term_props, term_props" if ident_props else 'term_props, {}, {}'}) YIELD node as term
         MERGE (class)-[:HAS_CONTROLLED_TERM]->(term)
-        {"SET term.Order = term.Order + term_order" if order_terms else ""}
         """
         res1 = self.query(q1, {'terminology': controlled_terminology}, return_type='neo4j.Result')
 
-        # Create "next" rel along term order
         if order_terms:
+            # Create order property on new terms
             q2 = f"""
-            UNWIND KEYS($terminology) as class_label
+            UNWIND $labels as class_label
+            MATCH (c:Class{{{identifier}: class_label}})
+            OPTIONAL MATCH (class)-[:HAS_CONTROLLED_TERM]->(term:Term)
+            WITH c, MAX(term.Order) as term_order
+            WITH c, CASE WHEN term_order IS NULL THEN 1 ELSE term_order END as term_order
+    
+            MATCH (c)-[:HAS_CONTROLLED_TERM]->(t1:Term)
+            WHERE t1.Order is NULL
+            WITH c, term_order, t1 order by t1.`Codelist Code`, t1.`Term Code` 
+            WITH c, collect(t1) as terms_to_order, term_order
+            WITH *, apoc.coll.zip(terms_to_order, range(term_order, term_order + size(terms_to_order))) as pairs
+            UNWIND pairs as pair
+            WITH pair[0] as term_node, pair[1] as new_order, c, terms_to_order
+            SET term_node.Order = new_order
+            return c, terms_to_order
+            """
+            res2 = self.query(q2, {'labels': list(controlled_terminology.keys())})
+            print(list(controlled_terminology.keys()))
+            print(res2)
+
+            # Create next rel between terms
+            q3 = f"""
+            UNWIND $labels as class_label
             MATCH (c:Class{{{identifier}: class_label}})-[:HAS_CONTROLLED_TERM]->(t:Term)
             WITH c,t ORDER BY c.label, t.Order ASC
             WITH c, COLLECT(t) AS terms
@@ -669,7 +686,7 @@ class ModelManager(NeoInterface):
                     FOREACH (next IN [terms[n+1]] |
                         MERGE (prev)-[:NEXT]->(next))))
             """
-            res2 = self.query(q2, {'terminology': controlled_terminology})
+            res3 = self.query(q3, {'labels': list(controlled_terminology.keys())})
 
         return res1
 
@@ -742,6 +759,8 @@ class ModelManager(NeoInterface):
         :param identifier: string, property used to identify class
         :return: neo4j result object.
         """
+        # TODO: Resolving [:NEXT] rel when deleting CT
+
         where_clause = f't.`{term_props[0]}` = term_props[0]'
         for count, prop in enumerate(term_props[1:], start=1):
             where_clause += f' AND t.`{prop}` = term_props[{count}]'
