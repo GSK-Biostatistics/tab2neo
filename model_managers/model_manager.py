@@ -43,39 +43,71 @@ class ModelManager(NeoInterface):
                 for rel in rels
                 ]
 
-    def create_class(self, classes, merge=True) -> [list]:
+    def create_class(self, classes, merge=True, merge_on: List[str]=None) -> [list]:
         """
-        :param classes: List of string labels or a list of property dictionaries to give to the new class(es)
-                        created. For example:
-                        classes = ['class1', 'class2' ...] OR classes = [{"label": 'class1'}, {"label": 'class2'] ...]
-                        Will both result in the creation of two new classes with labels class1 and class2 respectively.
-        :param merge:   boolean - if True use MERGE statement to create nodes to avoid duplicate classes
-                            TODO: address question "would we want to ever allow multiple classes with the same name??"
-        :return:        A list of lists that contain a single dictionary with keys 'label', 'neo4j_id' and 'neo4j_labels'
-                        EXAMPLE: [ [{'label': 'A', 'neo4j_id': 0, 'neo4j_labels': ['Class']}],
-                                   [{'label': 'B', 'neo4j_id': 1, 'neo4j_labels': ['Class']}]
-                                 ]
+        :param classes:  List of string labels or a list of property dictionaries to give to the new class(es)
+                         created. For example:
+                         classes = ['class1', 'class2' ...] OR classes = [{"label": 'class1'}, {"label": 'class2'] ...]
+                         Will both result in the creation of two new classes with labels class1 and class2 respectively.
+        :param merge:    boolean - if True use MERGE statement to create nodes to avoid duplicate classes
+                             TODO: address question "would we want to ever allow multiple classes with the same name??"
+        :param merge_on: Optional list of property names MERGED on when classes is a list of property dictionaries. This
+                         can be used to selectively rename certain properties on an existing node rather than
+                         creating a new one, For example:
+
+                            With classes = [{'label': 'class1', 'type': 'new_type'}] and merge on = ['label']
+                            If a class node with 'label' = 'class1' already exists with 'type' = 'old_type' rather
+                            than creating a new node 'class1' will be updated with 'type' = 'new_type'
+
+                         When not merge_on is not set the default behaviour is to merge on all properties.
+        :return:         A list of lists that contain a single dictionary with keys 'label', 'neo4j_id' and 'neo4j_labels'
+                         EXAMPLE: [ [{'label': 'A', 'neo4j_id': 0, 'neo4j_labels': ['Class']}],
+                                    [{'label': 'B', 'neo4j_id': 1, 'neo4j_labels': ['Class']}]
+                                  ]
         """
-        assert type(merge) == bool, "Merge must be a bool"
 
         # Maintain backwards compatibility:
         if type(classes) == str:
             classes = [classes]
 
         assert type(classes) == list, "Classes must be a list"
+        assert type(merge) == bool, "Merge must be a bool"
+        if merge_on:
+            assert merge, "Merge_on requires merge = true"
 
         if type(classes[0]) == str:
+            # Note class_item is the result of unwinding $classes, which in this case is a list of string labels.
             apoc_action = f"""
                 CALL apoc.{'merge' if merge else 'create'}.node(
                     ['Class'], {{label: class_item}}{', {}, {}' if merge else ''}
                 ) YIELD node
             """
         elif type(classes[0]) == dict:
-            apoc_action = f"""
-                CALL apoc.{'merge' if merge else 'create'}.node(
-                    ['Class'], class_item{', {}, {}' if merge else ''}
-                ) YIELD node
-            """
+            # Note class_item is the result of unwinding $classes, which in this case is a list of property
+            # dictionaries. So a new node would be created/merged with that given dictionary.
+            if not merge_on:
+                apoc_action = f"""
+                    CALL apoc.{'merge' if merge else 'create'}.node(
+                        ['Class'], class_item{', {}, {}' if merge else ''}
+                    ) YIELD node
+                """
+            else:
+                ident_props = f'{{`{merge_on[0]}`: class_item["{merge_on[0]}"]'
+                for prop in merge_on[1:]:
+                    ident_props += f', `{prop}`: class_item["{prop}"]'
+                ident_props += '}'
+
+                apoc_action = f"""
+                    CALL apoc.merge.node(
+                        ['Class'], {ident_props}, class_item, class_item
+                    ) YIELD node
+                """
+                # Example resulting apoc_action format(merge):
+                # With ident props = ['label'] the resulting action would be:
+                # CALL apoc.merge.node(
+                #   ['Class'], {`label`: class_item[`label`]}, class_item, {}
+                # ) YIELD node
+                # Which matches on 'label then sets the properties to class_item
         else:
             raise AssertionError('Classes must be a list of strings or dict')
 

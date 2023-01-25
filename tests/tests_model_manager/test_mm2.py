@@ -68,6 +68,27 @@ def test_create_class_dict(mm):
         {"label": "Bravo", "short_label": "B"}
     ])
 
+    # Using merge on
+    mm.clean_slate()
+    mm.create_class([{"label": "A", "type": "original_type"}])
+    mm.create_class([{"label": "A", "type": "new_type"}], merge=True, merge_on=['label'])
+
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [
+        {"label": "A", "type": "new_type"}
+    ])
+
+    # Merge on non existing
+    mm.create_class([{"label": "B", "type": "new_type"}], merge=True, merge_on=['label'])
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [
+        {"label": "A", "type": "new_type"},
+        {"label": "B", "type": "new_type"}
+    ])
+
+    with pytest.raises(AssertionError):
+        mm.create_class([{"label": "B", "type": "new_type"}], merge=False, merge_on=['label'])
+
 
 def test_delete_class(mm):
     mm.clean_slate()
