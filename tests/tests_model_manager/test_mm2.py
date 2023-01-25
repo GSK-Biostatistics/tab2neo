@@ -268,7 +268,7 @@ def test_create_ct(mm):
     MERGE (:Class {label: 'G'})
     MERGE (:Class {label: 'S'})
     MERGE (:Class {label: 'K'})
-    MERGE (:Class {short_label: 'A'})
+    MERGE (:Class {short_label: 'A', label: 'Class A'})
     """
     mm.query(q)
 
@@ -283,6 +283,15 @@ def test_create_ct(mm):
     assert sorted(res.get('G'), key=lambda d: d['label']) == [{'Order': 1, 'label': 'term1'},
                                                               {'Order': 2, 'label': 'term2'}]
     assert res.get('S') == [{'Order': 1, 'label': 'term3'}]
+
+    # Ensure class labels are inherited by ct inheritance
+    q = """
+    MATCH (c:Class)-[:HAS_CONTROLLED_TERM]-(t:Term)
+    RETURN c.label as label, labels(t) as term_labels
+    """
+    res = mm.query(q)
+    for res in res:
+        assert res.get('label') in res.get('term_labels'), 'Class label not present on CT'
 
     # Test order increment
     mm.create_ct({
