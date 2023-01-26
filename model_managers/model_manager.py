@@ -43,39 +43,71 @@ class ModelManager(NeoInterface):
                 for rel in rels
                 ]
 
-    def create_class(self, classes, merge=True) -> [list]:
+    def create_class(self, classes, merge=True, merge_on: List[str]=None) -> [list]:
         """
-        :param classes: List of string labels or a list of property dictionaries to give to the new class(es)
-                        created. For example:
-                        classes = ['class1', 'class2' ...] OR classes = [{"label": 'class1'}, {"label": 'class2'] ...]
-                        Will both result in the creation of two new classes with labels class1 and class2 respectively.
-        :param merge:   boolean - if True use MERGE statement to create nodes to avoid duplicate classes
-                            TODO: address question "would we want to ever allow multiple classes with the same name??"
-        :return:        A list of lists that contain a single dictionary with keys 'label', 'neo4j_id' and 'neo4j_labels'
-                        EXAMPLE: [ [{'label': 'A', 'neo4j_id': 0, 'neo4j_labels': ['Class']}],
-                                   [{'label': 'B', 'neo4j_id': 1, 'neo4j_labels': ['Class']}]
-                                 ]
+        :param classes:  List of string labels or a list of property dictionaries to give to the new class(es)
+                         created. For example:
+                         classes = ['class1', 'class2' ...] OR classes = [{"label": 'class1'}, {"label": 'class2'] ...]
+                         Will both result in the creation of two new classes with labels class1 and class2 respectively.
+        :param merge:    boolean - if True use MERGE statement to create nodes to avoid duplicate classes
+                             TODO: address question "would we want to ever allow multiple classes with the same name??"
+        :param merge_on: Optional list of property names MERGED on when classes is a list of property dictionaries. This
+                         can be used to selectively rename certain properties on an existing node rather than
+                         creating a new one, For example:
+
+                            With classes = [{'label': 'class1', 'type': 'new_type'}] and merge on = ['label']
+                            If a class node with 'label' = 'class1' already exists with 'type' = 'old_type' rather
+                            than creating a new node 'class1' will be updated with 'type' = 'new_type'
+
+                         When not merge_on is not set the default behaviour is to merge on all properties.
+        :return:         A list of lists that contain a single dictionary with keys 'label', 'neo4j_id' and 'neo4j_labels'
+                         EXAMPLE: [ [{'label': 'A', 'neo4j_id': 0, 'neo4j_labels': ['Class']}],
+                                    [{'label': 'B', 'neo4j_id': 1, 'neo4j_labels': ['Class']}]
+                                  ]
         """
-        assert type(merge) == bool, "Merge must be a bool"
 
         # Maintain backwards compatibility:
         if type(classes) == str:
             classes = [classes]
 
         assert type(classes) == list, "Classes must be a list"
+        assert type(merge) == bool, "Merge must be a bool"
+        if merge_on:
+            assert merge, "Merge_on requires merge = true"
 
         if type(classes[0]) == str:
+            # Note class_item is the result of unwinding $classes, which in this case is a list of string labels.
             apoc_action = f"""
                 CALL apoc.{'merge' if merge else 'create'}.node(
                     ['Class'], {{label: class_item}}{', {}, {}' if merge else ''}
                 ) YIELD node
             """
         elif type(classes[0]) == dict:
-            apoc_action = f"""
-                CALL apoc.{'merge' if merge else 'create'}.node(
-                    ['Class'], class_item{', {}, {}' if merge else ''}
-                ) YIELD node
-            """
+            # Note class_item is the result of unwinding $classes, which in this case is a list of property
+            # dictionaries. So a new node would be created/merged with that given dictionary.
+            if not merge_on:
+                apoc_action = f"""
+                    CALL apoc.{'merge' if merge else 'create'}.node(
+                        ['Class'], class_item{', {}, {}' if merge else ''}
+                    ) YIELD node
+                """
+            else:
+                ident_props = f'{{`{merge_on[0]}`: class_item["{merge_on[0]}"]'
+                for prop in merge_on[1:]:
+                    ident_props += f', `{prop}`: class_item["{prop}"]'
+                ident_props += '}'
+
+                apoc_action = f"""
+                    CALL apoc.merge.node(
+                        ['Class'], {ident_props}, class_item, class_item
+                    ) YIELD node
+                """
+                # Example resulting apoc_action format(merge):
+                # With ident props = ['label'] the resulting action would be:
+                # CALL apoc.merge.node(
+                #   ['Class'], {`label`: class_item[`label`]}, class_item, class_item
+                # ) YIELD node
+                # Which matches on 'label then sets the properties to class_item
         else:
             raise AssertionError('Classes must be a list of strings or dict')
 
@@ -578,7 +610,7 @@ class ModelManager(NeoInterface):
                     merge_on[key].append(_gen_new_prop_name(n))
         return dct, merge_on
 
-    def create_ct(self, controlled_terminology: dict, identifier='label', order_terms=True):
+    def create_ct(self, controlled_terminology: dict, identifier='label', order_terms=True, merge_on=None):
         """
         Creates :Term nodes and links them to a specified class with a [:HAS_CONTROLLED_TERM] relationship.
         If order terms is True, an ascending Order property will be assigned to terms in the order they are created
@@ -596,39 +628,54 @@ class ModelManager(NeoInterface):
         :param controlled_terminology: A dictionary of classes and terms eg: {'class1': [{prop1: value, prop2: value}, ...]}
         :param identifier: String, property used when identifying classes to assign terms.
         :param order_terms: Bool, if true order properties and next relationships will be created between terms.
+        :param merge_on: Optional List[string] term properties to merge on to prevent duplication
         :return: neo4j result object.
         """
+        ident_props = None
         missing = self.class_exists(list(controlled_terminology.keys()), identifier)
         assert not missing, f'Cannot create controlled terminology for nonexistent classes: {missing}'
 
-        # TODO: check if term exists already?
-        if order_terms:
-            for term_class in controlled_terminology:
-                count = 1
-                for term in controlled_terminology[term_class]:
-                    term['Order'] = count
-                    count += 1
+        if merge_on:
+            ident_props = f'{{`{merge_on[0]}`: term_props["{merge_on[0]}"]'
+            for prop in merge_on[1:]:
+                ident_props += f', `{prop}`: term_props["{prop}"]'
+            ident_props += '}'
 
         # Create terms
         q1 = f"""
         UNWIND KEYS($terminology) as class_label
         MATCH (class:Class {{{identifier}: class_label}})
-        OPTIONAL MATCH (class)-[:HAS_CONTROLLED_TERM]->(term:Term)
-
-        WITH class, MAX(term.Order) as term_order, class_label
-        WITH class, CASE WHEN term_order IS NULL THEN 0 ELSE term_order END as term_order, class_label
-        
+        WITH class, class_label
         UNWIND $terminology[class_label] as term_props
-        CALL apoc.merge.node(['Term'], term_props) YIELD node as term
+        CALL apoc.merge.node(['Term', class.label], {f"{ident_props}, term_props, term_props" if ident_props else 'term_props, {}, {}'}) YIELD node as term
         MERGE (class)-[:HAS_CONTROLLED_TERM]->(term)
-        {"SET term.Order = term.Order + term_order" if order_terms else ""}
         """
         res1 = self.query(q1, {'terminology': controlled_terminology}, return_type='neo4j.Result')
 
-        # Create "next" rel along term order
         if order_terms:
+            # Create order property on new terms
             q2 = f"""
-            UNWIND KEYS($terminology) as class_label
+            UNWIND $labels as class_label
+            MATCH (c:Class{{{identifier}: class_label}})
+            OPTIONAL MATCH (c)-[:HAS_CONTROLLED_TERM]->(term:Term)
+            WITH c, MAX(term.Order) as term_order
+            WITH c, CASE WHEN term_order IS NULL THEN 1 ELSE term_order + 1 END as term_order
+    
+            MATCH (c)-[:HAS_CONTROLLED_TERM]->(t1:Term)
+            WHERE t1.Order is NULL
+            WITH c, term_order, t1 order by t1.`Codelist Code`, t1.`Term Code` 
+            WITH c, collect(t1) as terms_to_order, term_order
+            WITH *, apoc.coll.zip(terms_to_order, range(term_order, term_order + size(terms_to_order))) as pairs
+            UNWIND pairs as pair
+            WITH pair[0] as term_node, pair[1] as new_order, c, terms_to_order
+            SET term_node.Order = new_order
+            return c, terms_to_order
+            """
+            self.query(q2, {'labels': list(controlled_terminology.keys())})
+
+            # Create next rel between terms
+            q3 = f"""
+            UNWIND $labels as class_label
             MATCH (c:Class{{{identifier}: class_label}})-[:HAS_CONTROLLED_TERM]->(t:Term)
             WITH c,t ORDER BY c.label, t.Order ASC
             WITH c, COLLECT(t) AS terms
@@ -637,7 +684,7 @@ class ModelManager(NeoInterface):
                     FOREACH (next IN [terms[n+1]] |
                         MERGE (prev)-[:NEXT]->(next))))
             """
-            res2 = self.query(q2, {'terminology': controlled_terminology})
+            self.query(q3, {'labels': list(controlled_terminology.keys())})
 
         return res1
 
@@ -710,6 +757,8 @@ class ModelManager(NeoInterface):
         :param identifier: string, property used to identify class
         :return: neo4j result object.
         """
+        # TODO: Resolving [:NEXT] rel when deleting CT
+
         where_clause = f't.`{term_props[0]}` = term_props[0]'
         for count, prop in enumerate(term_props[1:], start=1):
             where_clause += f' AND t.`{prop}` = term_props[{count}]'

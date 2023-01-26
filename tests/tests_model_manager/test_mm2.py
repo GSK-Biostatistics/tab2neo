@@ -68,6 +68,27 @@ def test_create_class_dict(mm):
         {"label": "Bravo", "short_label": "B"}
     ])
 
+    # Using merge on
+    mm.clean_slate()
+    mm.create_class([{"label": "A", "type": "original_type"}])
+    mm.create_class([{"label": "A", "type": "new_type"}], merge=True, merge_on=['label'])
+
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [
+        {"label": "A", "type": "new_type"}
+    ])
+
+    # Merge on non existing
+    mm.create_class([{"label": "B", "type": "new_type"}], merge=True, merge_on=['label'])
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [
+        {"label": "A", "type": "new_type"},
+        {"label": "B", "type": "new_type"}
+    ])
+
+    with pytest.raises(AssertionError):
+        mm.create_class([{"label": "B", "type": "new_type"}], merge=False, merge_on=['label'])
+
 
 def test_delete_class(mm):
     mm.clean_slate()
@@ -247,54 +268,63 @@ def test_create_ct(mm):
     MERGE (:Class {label: 'G'})
     MERGE (:Class {label: 'S'})
     MERGE (:Class {label: 'K'})
-    MERGE (:Class {short_label: 'A'})
+    MERGE (:Class {short_label: 'A', label: 'Class A'})
     """
     mm.query(q)
 
     # Create ct with existing terms
     mm.create_ct({
-        'G': [{'label': 'term1'}, {'label': 'term2'}],
-        'S': [{'label': 'term3'}]
+        'G': [{'Codelist Code': 'term1'}, {'Codelist Code': 'term2'}],
+        'S': [{'Codelist Code': 'term3'}]
     })
 
-    res = mm.get_class_ct_map(classes=['G', 'S', 'K'], ct_props=['label', 'Order'])
+    res = mm.get_class_ct_map(classes=['G', 'S', 'K'], ct_props=['Codelist Code', 'Order'])
 
-    assert sorted(res.get('G'), key=lambda d: d['label']) == [{'Order': 1, 'label': 'term1'},
-                                                              {'Order': 2, 'label': 'term2'}]
-    assert res.get('S') == [{'Order': 1, 'label': 'term3'}]
+    assert sorted(res.get('G'), key=lambda d: d['Codelist Code']) == [{'Order': 1, 'Codelist Code': 'term1'},
+                                                              {'Order': 2, 'Codelist Code': 'term2'}]
+    assert res.get('S') == [{'Order': 1, 'Codelist Code': 'term3'}]
+
+    # Ensure class labels are inherited by ct inheritance
+    q = """
+    MATCH (c:Class)-[:HAS_CONTROLLED_TERM]-(t:Term)
+    RETURN c.label as label, labels(t) as term_labels
+    """
+    res = mm.query(q)
+    for res in res:
+        assert res.get('label') in res.get('term_labels'), 'Class label not present on CT'
 
     # Test order increment
     mm.create_ct({
-        'S': [{'label': 'term4'}]
+        'S': [{'Codelist Code': 'term4'}]
     })
 
-    res = mm.get_class_ct_map(classes=['S'], ct_props=['label', 'Order'])
+    res = mm.get_class_ct_map(classes=['S'], ct_props=['Codelist Code', 'Order'])
 
-    assert sorted(res.get('S'), key=lambda d: d['label']) == [{'Order': 1, 'label': 'term3'},
-                                                              {'Order': 2, 'label': 'term4'}]
+    assert sorted(res.get('S'), key=lambda d: d['Codelist Code']) == [{'Order': 1, 'Codelist Code': 'term3'},
+                                                              {'Order': 2, 'Codelist Code': 'term4'}]
 
     # Test NEXT relationship creation
     q = """
     MATCH (t1:Term)-[:NEXT]->(t2:Term)
-    WHERE t1.label = 'term3'
-    RETURN t2.label as label
+    WHERE t1.`Codelist Code` = 'term3'
+    RETURN t2.`Codelist Code` as `Codelist Code`
     """
     res = mm.query(q)[0]
-    assert res == {'label': 'term4'}
+    assert res == {'Codelist Code': 'term4'}
 
     # Test without order
     mm.create_ct({
-        'K': [{'label': 'term5'}, {'label': 'term6'}]
+        'K': [{'Codelist Code': 'term5'}, {'Codelist Code': 'term6'}]
     }, order_terms=False)
 
-    res = mm.get_class_ct_map(classes=['K'], ct_props=['label', 'Order'])
-    assert sorted(res.get('K'), key=lambda d: d['label']) == [{'Order': None, 'label': 'term5'},
-                                                              {'Order': None, 'label': 'term6'}]
+    res = mm.get_class_ct_map(classes=['K'], ct_props=['Codelist Code', 'Order'])
+    assert sorted(res.get('K'), key=lambda d: d['Codelist Code']) == [{'Order': None, 'Codelist Code': 'term5'},
+                                                              {'Order': None, 'Codelist Code': 'term6'}]
 
     q = """
     MATCH (t1:Term)-[:NEXT]->(t2:Term)
-    WHERE t1.label = 'term5'
-    RETURN t2.label as label
+    WHERE t1.`Codelist Code` = 'term5'
+    RETURN t2.`Codelist Code` as cc
     """
     res = mm.query(q)
     assert not res
@@ -302,16 +332,42 @@ def test_create_ct(mm):
     # Term for undefined class assertion error
     with pytest.raises(AssertionError):
         mm.create_ct({
-            'X': [{'label': 'term7'}]
+            'X': [{'Codelist Code': 'term7'}]
         })
 
     # Short_label identifier
     mm.create_ct({
-        'A': [{'label': 'term7'}]
-    }, 'short_label')
+        'A': [{'Codelist Code': 'term7'}]
+    }, 'short_label', merge_on=['Codelist Code'])
 
-    res = mm.get_class_ct_map(classes=['A'], ct_props=['label', 'Order'], identifier='short_label')
-    assert res.get('A') == [{'Order': 1, 'label': 'term7'}]
+    res = mm.get_class_ct_map(classes=['A'], ct_props=['Codelist Code', 'Order'], identifier='short_label')
+    assert res.get('A') == [{'Order': 1, 'Codelist Code': 'term7'}]
+
+    # With on_merge
+    mm.clean_slate()
+
+    q = """
+    MERGE (a:Class {label: 'Apple'})-[:HAS_CONTROLLED_TERM]->(t1:Term {`Codelist Code`: 'term1c', `Term Code`: 'term1t', `Order`:2})
+    MERGE (a)-[:HAS_CONTROLLED_TERM]->(t3:Term {`Codelist Code`: 'term3c', `Term Code`: 'term3t', `Order`:1})
+    MERGE (:Class {label: 'Banana'})-[:HAS_CONTROLLED_TERM]->(t2:Term {`Codelist Code`: 'term2c', `Term Code`: 'term2t', `Order`:1})
+    SET t1.`rdfs:label` = 'original'
+    SET t1 :Apple
+    SET t2 :Banana
+    SET t3 :Apple
+    """
+    mm.query(q)
+
+    mm.create_ct({
+        'Apple': [{'Codelist Code': 'term1c', 'Term Code': 'term1t', 'rdfs:label': 'updated'}]
+    }, merge_on=['Codelist Code', 'Term Code'])
+
+    res = mm.get_all_ct(term_props=['Codelist Code', 'Term Code', 'rdfs:label', 'Order'])
+
+    assert sorted(res, key=lambda d: d['Codelist Code']) == [
+        {'label': 'Apple', 'Codelist Code': 'term1c', 'Term Code': 'term1t', 'rdfs:label': 'updated', 'Order': 2},
+        {'label': 'Banana', 'Codelist Code': 'term2c', 'Term Code': 'term2t', 'rdfs:label': None, 'Order': 1},
+        {'label': 'Apple', 'Codelist Code': 'term3c', 'Term Code': 'term3t', 'rdfs:label': None, 'Order': 1},
+    ]
 
 
 def test_create_same_as_ct(mm):
