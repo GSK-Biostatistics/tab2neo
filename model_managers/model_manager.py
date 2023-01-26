@@ -657,9 +657,9 @@ class ModelManager(NeoInterface):
             q2 = f"""
             UNWIND $labels as class_label
             MATCH (c:Class{{{identifier}: class_label}})
-            OPTIONAL MATCH (class)-[:HAS_CONTROLLED_TERM]->(term:Term)
+            OPTIONAL MATCH (c)-[:HAS_CONTROLLED_TERM]->(term:Term)
             WITH c, MAX(term.Order) as term_order
-            WITH c, CASE WHEN term_order IS NULL THEN 1 ELSE term_order END as term_order
+            WITH c, CASE WHEN term_order IS NULL THEN 1 ELSE term_order + 1 END as term_order
     
             MATCH (c)-[:HAS_CONTROLLED_TERM]->(t1:Term)
             WHERE t1.Order is NULL
@@ -671,9 +671,7 @@ class ModelManager(NeoInterface):
             SET term_node.Order = new_order
             return c, terms_to_order
             """
-            res2 = self.query(q2, {'labels': list(controlled_terminology.keys())})
-            print(list(controlled_terminology.keys()))
-            print(res2)
+            self.query(q2, {'labels': list(controlled_terminology.keys())})
 
             # Create next rel between terms
             q3 = f"""
@@ -686,7 +684,7 @@ class ModelManager(NeoInterface):
                     FOREACH (next IN [terms[n+1]] |
                         MERGE (prev)-[:NEXT]->(next))))
             """
-            res3 = self.query(q3, {'labels': list(controlled_terminology.keys())})
+            self.query(q3, {'labels': list(controlled_terminology.keys())})
 
         return res1
 
