@@ -747,7 +747,7 @@ class ModelManager(NeoInterface):
         Deletes part of class specific controlled terminology.
         :param controlled_terminology: Dictionary of key: class identity - value: list of class specific term property
                                        values to delete. For example:
-                                       with term_props = ['Codelist Code'] controlled terminology might be:
+                                       with ct_props = ['Codelist Code'] controlled terminology might be:
                                       {'class1':[['code1'], ['code2']], class1':[['code2']]}
                                       Note these property values must align with the keys defined in term_props!
         :param ct_props: List of property names that define property values in a controlled terminology term,
