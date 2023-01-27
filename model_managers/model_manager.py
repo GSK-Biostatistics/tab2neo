@@ -818,8 +818,8 @@ class ModelManager(NeoInterface):
             A same as relationship would be created from a term of 'class1' with properties:
             `Codelist Code` = code_1 and `Term Code` = 'code_2' to the corresponding term for 'class2'.
 
-            Note term identifiers in a same_as_terms dictionaries must be lowercase and prefixed with from_ or to_ accordingly
-            to a property listed in term_identifiers.
+            Note term identifiers in a same_as_terms dictionaries must be lowercase, use underscores instead of spaces
+            and be prefixed with from_ or to_ a property listed in term_identifiers.
 
         :param same_as_terms: List of dictionaries defining same as terms between classes.
         :param term_identifiers: List of strings with term properties that guarantee uniqueness
