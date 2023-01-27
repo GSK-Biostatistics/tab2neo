@@ -170,7 +170,7 @@ def test_get_all_classes_props(mm):
     short_labels = mm.get_all_classes_props(['short_label'])
     expected_short_labels = [{"short_label": label.lower()} for label in class_list]
 
-    assert short_labels == expected_short_labels
+    assert sorted(short_labels, key=lambda d: d['short_label']) == expected_short_labels
 
     with pytest.raises(AssertionError):
         mm.get_all_classes_props([])
