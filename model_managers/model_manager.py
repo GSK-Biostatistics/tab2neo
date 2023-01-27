@@ -742,22 +742,26 @@ class ModelManager(NeoInterface):
                 data.update(term_dict.get('ct'))
         return data
 
-    def delete_ct(self, controlled_terminology: dict, term_props: list, identifier='label'):
+    def delete_ct(self, controlled_terminology: dict, ct_props: list, identifier='label'):
         """
-        Deletes class specific controlled terminology.
+        Deletes part of class specific controlled terminology.
         :param controlled_terminology: Dictionary of key: class identity - value: list of class specific term property
                                        values to delete. For example:
                                        with term_props = ['Codelist Code'] controlled terminology might be:
                                       {'class1':[['code1'], ['code2']], class1':[['code2']]}
                                       Note these property values must align with the keys defined in term_props!
-        :param term_props: List of property names to define controlled terminology term property values
+        :param ct_props: List of property names that define property values in a controlled terminology term,
+                         For example:
+                            With controlled terminology = {'class1':[['code1'], ['code2']], class1':[['code2']]}
+                            ct_props would be ['Codelist Code'] indicating that we intending to delete terms
+                            for 'class1' and 'class2' using 'Codelist Code' property value.
         :param identifier: string, property used to identify class
         :return: neo4j result object.
         """
         # TODO: Resolving [:NEXT] rel when deleting CT
 
-        where_clause = f't.`{term_props[0]}` = term_props[0]'
-        for count, prop in enumerate(term_props[1:], start=1):
+        where_clause = f't.`{ct_props[0]}` = term_props[0]'
+        for count, prop in enumerate(ct_props[1:], start=1):
             where_clause += f' AND t.`{prop}` = term_props[{count}]'
 
         q = f"""
