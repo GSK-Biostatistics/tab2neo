@@ -643,7 +643,8 @@ class ModelManager(NeoInterface):
         MATCH (class:Class {{{identifier}: class_label}})
         WITH class, class_label
         UNWIND $terminology[class_label] as term_props
-        CALL apoc.merge.node(['Term', class.label], {f"{ident_props}, term_props, term_props" if ident_props else 'term_props, {}, {}'}) YIELD node as term
+        CALL apoc.merge.node(['Term'], {f"{ident_props}, term_props, term_props" if ident_props else 'term_props, {}, {}'}) YIELD node
+        CALL apoc.create.addLabels([node], [class.label]) YIELD node as term
         MERGE (class)-[:HAS_CONTROLLED_TERM]->(term)
         """
         res1 = self.query(q1, {'terminology': controlled_terminology}, return_type='neo4j.Result')
