@@ -121,25 +121,25 @@ def test_delete_class(mm):
     ])
 
 
-def test_class_exists(mm):
+def test_get_missing_classes(mm):
     mm.clean_slate()
 
     class_list = ["A", "B", "C"]
     mm.create_class(class_list)
 
-    res = mm.class_exists(["A", "B", "C"])
+    res = mm.get_missing_classes(["A", "B", "C"])
     assert not res
 
-    res = mm.class_exists(["D"])
+    res = mm.get_missing_classes(["D"])
     assert res == set("D")
 
     class_list = [{"short_label": 'A'}, {"short_label": 'B'}]
     mm.create_class(class_list)
 
-    res = mm.class_exists(["A", "B"], 'short_label')
+    res = mm.get_missing_classes(["A", "B"], 'short_label')
     assert not res
 
-    res = mm.class_exists(["D"], 'short_label')
+    res = mm.get_missing_classes(["D"], 'short_label')
     assert res == set("D")
 
 

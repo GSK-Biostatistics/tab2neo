@@ -148,9 +148,9 @@ class ModelManager(NeoInterface):
 
         return self.query(q, params, return_type='neo4j.Result')
 
-    def class_exists(self, values: list, identifier='label'):
+    def get_missing_classes(self, values: list, identifier='label'):
         """
-        Samples a list of class property values to determine if a set of classes currently exist in neo4j.
+        Samples a list of class property values to determine if a set of classes are missing from the database.
         :param values: List of property values eg: [class1, class2]
         :param identifier: Property name to be used when identifying classes eg: 'label'
         :return: A list of any values not found in neo4j.
@@ -632,7 +632,7 @@ class ModelManager(NeoInterface):
         :return: neo4j result object.
         """
         ident_props = None
-        missing = self.class_exists(list(controlled_terminology.keys()), identifier)
+        missing = self.get_missing_classes(list(controlled_terminology.keys()), identifier)
         assert not missing, f'Cannot create controlled terminology for nonexistent classes: {missing}'
 
         if merge_on:
