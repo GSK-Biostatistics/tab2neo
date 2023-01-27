@@ -830,8 +830,8 @@ class ModelManager(NeoInterface):
         where_clause = f"WHERE c1.`{identifier}` = new_term['from_class'] AND c2.`{identifier}` = new_term['to_class']"
         for term_prop in term_identifiers:
             clean_prop = term_prop.lower().replace(' ', '_')
-            where_clause += f"AND t1.`{term_prop}` = new_term['from_{clean_prop}']"
-            where_clause += f"AND t2.`{term_prop}` = new_term['to_{clean_prop}']"
+            where_clause += f" AND t1.`{term_prop}` = new_term['from_{clean_prop}']"
+            where_clause += f" AND t2.`{term_prop}` = new_term['to_{clean_prop}']"
 
         q = f"""
         UNWIND $same_as_terms as new_term
