@@ -211,20 +211,11 @@ class ModelManager(NeoInterface):
 
         class_list = sorted(list(class_set))  # Convert the final set back to list
 
-        q = f"""            
-        UNWIND $rels as rel
-        WITH rel[0] as left, rel[1] as right, rel[2] as type    
-        WHERE apoc.meta.type(left) = apoc.meta.type(right) = 'STRING'  
-        MERGE (ln:Class {{`{identifier}`:left}})
-        MERGE (rn:Class {{`{identifier}`:right}})   
-        MERGE (ln)<-[:FROM]-(:Relationship{{relationship_type:type}})-[:TO]->(rn)   
-        """
-        params = {"rels": [(r if len(r) == 3 else r + [self.gen_default_reltype(to_label=r[1])]) for r in rel_list]}
-        self.query(q, params)
+        self.create_relationship(rel_list, identifier, match_classes=False)
 
         return class_list
 
-    def create_relationship(self, rel_list: List[List[str]], identifier='label'):
+    def create_relationship(self, rel_list: List[List[str]], identifier='label', match_classes=True) -> [str]:
         """
         Create relationship nodes between two specified classes as defined in rel_list.
         For example:
@@ -233,23 +224,28 @@ class ModelManager(NeoInterface):
             identifier, 'class1' and 'class2' with a relationship_type property = 'example'.
             This relationship node also includes 'FROM.Class.label' and 'TO.Class.label' properties
             regardless of the class identifier.
+        Note if no relationship type is included a default is generated via gen_default_reltype() 
         :param rel_list: A list of relationships represented as lists
         :param identifier: String class property used to identify to & from classes
+        :param match_classes: Boolean, If false classes are merged rather than matched which will create them
+                              if they do not already exist.
         :return: A list of created relationships = rel_list if all relationships were created successfully
         """
 
         q = f"""
         UNWIND $rels as rel
         WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type
-        MATCH (from:Class {{`{identifier}`:from_identity}})
-        MATCH (to:Class {{`{identifier}`:to_identity}})   
+        {'MATCH' if match_classes else 'MERGE'} (from:Class {{`{identifier}`:from_identity}})
+        {'MATCH' if match_classes else 'MERGE'} (to:Class {{`{identifier}`:to_identity}})   
         MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type}})-[:TO]->(to)
         SET rel_node.`FROM.Class.label` = from.label
         SET rel_node.`TO.Class.label` = to.label
         RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type]) as rels
         """
 
-        res = self.query(q, {"rels": rel_list})
+        res = self.query(q, {
+            "rels": [(r if len(r) == 3 else r + [self.gen_default_reltype(to_label=r[1])]) for r in rel_list]
+        })
         if res:
             return res[0].get('rels')
         else:
