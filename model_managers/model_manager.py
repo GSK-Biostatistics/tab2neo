@@ -136,15 +136,15 @@ class ModelManager(NeoInterface):
         :param identifier: Class property to use in combination with values for identification.
         :return:
         """
-        # TODO: Review is it safe to delete the relationship as well in this way?
+        # TODO: address the issue of invalid Methods linked to the deleted entities.
         q = f"""
         MATCH (class:Class)
-        WHERE class.`{identifier}` in $values
+        WHERE class[$identifier] in $values
         OPTIONAL MATCH (class)-[:HAS_CONTROLLED_TERM]->(term:Term)
         OPTIONAL MATCH (class)-[:TO|FROM]-(rel:Relationship)
         DETACH DELETE class, term, rel
         """
-        params = {'values': values}
+        params = {'values': values, 'identifier': identifier}
 
         return self.query(q, params, return_type='neo4j.Result')
 
