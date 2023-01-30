@@ -1,5 +1,6 @@
 import os
 from neointerface import NeoInterface
+from typing import List
 import pandas as pd
 
 
@@ -42,38 +43,81 @@ class ModelManager(NeoInterface):
                 for rel in rels
                 ]
 
-    def create_class(self, classes, merge=True) -> [list]:
+    def create_class(self, classes, merge=True, merge_on: List[str]=None) -> [list]:
         """
-        :param classes: Name, or list of names, to give to the new class(es) created
-        :param merge:   boolean - if True use MERGE statement to create nodes to avoid duplicate classes
-                            TODO: address question "would we want to ever allow multiple classes with the same name??"
-        :return:        A list of lists that contain a single dictionary with keys 'label', 'neo4j_id' and 'neo4j_labels'
-                        EXAMPLE: [ [{'label': 'A', 'neo4j_id': 0, 'neo4j_labels': ['Class']}],
-                                   [{'label': 'B', 'neo4j_id': 1, 'neo4j_labels': ['Class']}]
-                                 ]
-        """
-        assert type(merge) == bool
+        :param classes:  List of string labels or a list of property dictionaries to give to the new class(es)
+                         created. For example:
+                         classes = ['class1', 'class2' ...] OR classes = [{"label": 'class1'}, {"label": 'class2'] ...]
+                         Will both result in the creation of two new classes with labels class1 and class2 respectively.
+        :param merge:    boolean - if True use MERGE statement to create nodes to avoid duplicate classes
+                             TODO: address question "would we want to ever allow multiple classes with the same name??"
+        :param merge_on: Optional list of property names MERGED on when classes is a list of property dictionaries. This
+                         can be used to selectively rename certain properties on an existing node rather than
+                         creating a new one, For example:
 
-        if not type(classes) == list:
+                            With classes = [{'label': 'class1', 'type': 'new_type'}] and merge on = ['label']
+                            If a class node with 'label' = 'class1' already exists with 'type' = 'old_type' rather
+                            than creating a new node 'class1' will be updated with 'type' = 'new_type'
+
+                         When not merge_on is not set the default behaviour is to merge on all properties.
+        :return:         A list of lists that contain a single dictionary with keys 'label', 'neo4j_id' and 'neo4j_labels'
+                         EXAMPLE: [ [{'label': 'A', 'neo4j_id': 0, 'neo4j_labels': ['Class']}],
+                                    [{'label': 'B', 'neo4j_id': 1, 'neo4j_labels': ['Class']}]
+                                  ]
+        """
+
+        # Maintain backwards compatibility:
+        if type(classes) == str:
             classes = [classes]
 
-        if merge:
-            q = """
-            WITH $classes as classes 
-            UNWIND classes as class_name 
-            CALL apoc.merge.node(['Class'], {label: class_name}, {}, {}) 
-            YIELD node 
-            RETURN node as class
-            ORDER by node
+        assert type(classes) == list, "Classes must be a list"
+        assert type(merge) == bool, "Merge must be a bool"
+        if merge_on:
+            assert merge, "Merge_on requires merge = true"
+
+        if type(classes[0]) == str:
+            # Note class_item is the result of unwinding $classes, which in this case is a list of string labels.
+            apoc_action = f"""
+                CALL apoc.{'merge' if merge else 'create'}.node(
+                    ['Class'], {{label: class_item}}{', {}, {}' if merge else ''}
+                ) YIELD node
             """
+        elif type(classes[0]) == dict:
+            # Note class_item is the result of unwinding $classes, which in this case is a list of property
+            # dictionaries. So a new node would be created/merged with that given dictionary.
+            if not merge_on:
+                apoc_action = f"""
+                    CALL apoc.{'merge' if merge else 'create'}.node(
+                        ['Class'], class_item{', {}, {}' if merge else ''}
+                    ) YIELD node
+                """
+            else:
+                ident_props = f'{{`{merge_on[0]}`: class_item["{merge_on[0]}"]'
+                for prop in merge_on[1:]:
+                    ident_props += f', `{prop}`: class_item["{prop}"]'
+                ident_props += '}'
+
+                apoc_action = f"""
+                    CALL apoc.merge.node(
+                        ['Class'], {ident_props}, class_item, class_item
+                    ) YIELD node
+                """
+                # Example resulting apoc_action format(merge):
+                # With ident props = ['label'] the resulting action would be:
+                # CALL apoc.merge.node(
+                #   ['Class'], {`label`: class_item[`label`]}, class_item, class_item
+                # ) YIELD node
+                # Which matches on 'label then sets the properties to class_item
         else:
-            q = """
-            WITH $classes as classes 
-            UNWIND classes as class_name 
-            CALL apoc.create.node(['Class'], {label: class_name}) YIELD node 
-            RETURN node as class
-            ORDER by node
-            """
+            raise AssertionError('Classes must be a list of strings or dict')
+
+        q = f"""
+        WITH $classes as classes 
+        UNWIND classes as class_item 
+        {apoc_action}
+        RETURN node as class
+        ORDER by node
+        """
 
         params = {'classes': classes}
 
@@ -83,7 +127,45 @@ class ModelManager(NeoInterface):
             parameters: {params}
             """)
 
-        return self.query_expanded(q, params)
+        return self.query(q, params, return_type='neo4j.Result')
+
+    def delete_class(self, values: list, identifier='label'):
+        """
+        Deletes a class and any associated relationships or controlled terminology
+        :param values: list of class labels or property values (if identifier is changed) to match classes for removal
+        :param identifier: Class property to use in combination with values for identification.
+        :return:
+        """
+        # TODO: Review is it safe to delete the relationship as well in this way?
+        q = f"""
+        MATCH (class:Class)
+        WHERE class.`{identifier}` in $values
+        OPTIONAL MATCH (class)-[:HAS_CONTROLLED_TERM]->(term:Term)
+        OPTIONAL MATCH (class)-[:TO|FROM]-(rel:Relationship)
+        DETACH DELETE class, term, rel
+        """
+        params = {'values': values}
+
+        return self.query(q, params, return_type='neo4j.Result')
+
+    def class_exists(self, values: list, identifier='label'):
+        """
+        Samples a list of class property values to determine if a set of classes currently exist in neo4j.
+        :param values: List of property values eg: [class1, class2]
+        :param identifier: Property name to be used when identifying classes eg: 'label'
+        :return: A list of any values not found in neo4j.
+        """
+
+        q = f"""
+        MATCH (c:Class)
+        WHERE c.{identifier} in $values
+        RETURN collect(c.{identifier}) as existing
+        """
+        params = {'values': values}
+        existing_classes = self.query(q, params)[0].get('existing')
+
+        missing_classes = set(values) - set(existing_classes)
+        return missing_classes
 
     def set_short_label(self, label: str, short_label: str) -> None:
         "One the class with :Class{label:{label}} - sets property 'short_label value to the provided"
@@ -95,7 +177,7 @@ class ModelManager(NeoInterface):
         params = {'label': label, 'short_label': short_label}
         self.query(q, params)
 
-    def create_related_classes_from_list(self, rel_list: [[str, str, str]]) -> [str]:
+    def create_related_classes_from_list(self, rel_list: [[str, str, str]], identifier='label') -> [str]:
         """
         Create `Class` and `Relationship` nodes between them, as specified by rel_list
 
@@ -117,7 +199,8 @@ class ModelManager(NeoInterface):
                                         ["Study", "Subject", "Subject"],
                                         ["Subject", "Race", "Race"]
                                     ]
-        :return:         List of all the class names; repeated ones are taken out
+        :param identifier: String class property used to identify to & from classes
+        :return: List of all the class names; repeated ones are taken out
         """
 
         # Identify all the unique class names in inner elements of rel_list
@@ -132,14 +215,67 @@ class ModelManager(NeoInterface):
         UNWIND $rels as rel
         WITH rel[0] as left, rel[1] as right, rel[2] as type    
         WHERE apoc.meta.type(left) = apoc.meta.type(right) = 'STRING'  
-        MERGE (ln:Class {{label:left}})
-        MERGE (rn:Class {{label:right}})   
+        MERGE (ln:Class {{`{identifier}`:left}})
+        MERGE (rn:Class {{`{identifier}`:right}})   
         MERGE (ln)<-[:FROM]-(:Relationship{{relationship_type:type}})-[:TO]->(rn)   
         """
         params = {"rels": [(r if len(r) == 3 else r + [self.gen_default_reltype(to_label=r[1])]) for r in rel_list]}
         self.query(q, params)
 
         return class_list
+
+    def create_relationship(self, rel_list: List[List[str]], identifier='label'):
+        """
+        Create relationship nodes between two specified classes as defined in rel_list.
+        For example:
+            With rel_list = [ ['class1', 'class2', 'example'] ]
+            A new relationship node will be created between nodes with "label", as specified by the
+            identifier, 'class1' and 'class2' with a relationship_type property = 'example'.
+            This relationship node also includes 'FROM.Class.label' and 'TO.Class.label' properties
+            regardless of the class identifier.
+        :param rel_list: A list of relationships represented as lists
+        :param identifier: String class property used to identify to & from classes
+        :return: A list of created relationships = rel_list if all relationships were created successfully
+        """
+
+        q = f"""
+        UNWIND $rels as rel
+        WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type
+        MATCH (from:Class {{`{identifier}`:from_identity}})
+        MATCH (to:Class {{`{identifier}`:to_identity}})   
+        MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type}})-[:TO]->(to)
+        SET rel_node.`FROM.Class.label` = from.label
+        SET rel_node.`TO.Class.label` = to.label
+        RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type]) as rels
+        """
+
+        res = self.query(q, {"rels": rel_list})
+        if res:
+            return res[0].get('rels')
+        else:
+            return []
+
+    def delete_relationship(self, rel_list: [[str, str, str]], identifier='label'):
+        """
+        Deletes specified relationships between classes.
+        :param rel_list: List of relationships to be deleted in the following format:
+                         [from class prop value, to class prop value, relationship type]
+                         For example: With identifier = 'label' and
+                         rel_list = [['class1', 'class2', 'Example'], ...]
+                         Relationships of type "Example" between classes with labels = 'class1' and 'class2'
+                         would be deleted.
+        :param identifier: String class property to be used when identifying classes.
+        :return:
+        """
+
+        q = f"""
+        UNWIND $rels as rel
+        WITH rel[0] as from, rel[1] as to, rel[2] as type
+        MATCH (:Class{{`{identifier}`:from}})<-[:FROM]-(rel:Relationship {{relationship_type:type}})-[:TO]->(:Class{{`{identifier}`:to}})
+        DETACH DELETE rel
+        """
+        params = {"rels": rel_list}
+        return self.query(q, params, return_type='neo4j.Result')
 
     def get_all_classes(self) -> [str]:
         ""
@@ -249,17 +385,17 @@ class ModelManager(NeoInterface):
                     labels.append(rel.get(key))
         return labels
 
-    def get_rels_btw2(self, label1: str, label2: str):
+    def get_rels_btw2(self, label1: str, label2: str, identifier='label'):
         """
-        Returns all the relationships (according to the schema) between nodes with sprcified labels {label1} and {label2}
-        including the relationships of parent and child classes
+        Returns all the relationships (according to the schema) between classes with identifier properties equal to
+        {label1} and {label2} including the relationships of parent and child classes.
         """
         q = f"""
         MATCH 
             (c1:Class)<-[:SUBCLASS_OF*0..{str(self.SCD)}]-(c1low:Class),
             (c2:Class)<-[:SUBCLASS_OF*0..{str(self.SCD)}]-(c2low:Class)
         WHERE 
-            c1.label = $label1 AND c2.label = $label2 AND
+            c1.`{identifier}` = $label1 AND c2.`{identifier}` = $label2 AND
             NOT EXISTS ( (c1low)<-[:SUBCLASS_OF]-(:Class) ) AND
             NOT EXISTS ( (c2low)<-[:SUBCLASS_OF]-(:Class) ) 
         WITH c1low, c2low
@@ -275,7 +411,7 @@ class ModelManager(NeoInterface):
         WITH c1, c2
         MATCH (x)<-[f:FROM]-(rr:Relationship)-[t:TO]->(y)
         WHERE (x = c1 and y = c2) or (y = c1 and x = c2) 
-        RETURN {{from: x.label, to: y.label, type: rr.relationship_type}} as rel            
+        RETURN {{from: x.`{identifier}`, to: y.`{identifier}`, type: rr.relationship_type}} as rel            
         ORDER BY rel['from'], rel['to'], rel['type']
         """
         params = {'label1': label1, 'label2': label2}
@@ -474,6 +610,84 @@ class ModelManager(NeoInterface):
                     merge_on[key].append(_gen_new_prop_name(n))
         return dct, merge_on
 
+    def create_ct(self, controlled_terminology: dict, identifier='label', order_terms=True, merge_on=None):
+        """
+        Creates :Term nodes and links them to a specified class with a [:HAS_CONTROLLED_TERM] relationship.
+        If order terms is True, an ascending Order property will be assigned to terms in the order they are created
+        accounting for the order of existing terms (if any) and [:NEXT] relationships between terms following this order.
+        For example:
+            With identifier = 'label' and controlled_terminology =
+            {
+                'class1': [{'term_label': 'term1'}, {'term_label': 'term2'}],
+                'class2': [{'term_label': 'term3'}]
+            }
+            3 new term nodes with 'term_label' properties equal to 'term1', 'term2' and 'term3' would be
+            created. The class with 'label' = 'class1' would then be linked by [:HAS_CONTROLLED_TERM]
+            relationships to 'term1' and 'term2' and similarly 'class2' would be linked to 'term3'
+
+        :param controlled_terminology: A dictionary of classes and terms eg: {'class1': [{prop1: value, prop2: value}, ...]}
+        :param identifier: String, property used when identifying classes to assign terms.
+        :param order_terms: Bool, if true order properties and next relationships will be created between terms.
+        :param merge_on: Optional List[string] term properties to merge on to prevent duplication
+        :return: neo4j result object.
+        """
+        ident_props = None
+        missing = self.class_exists(list(controlled_terminology.keys()), identifier)
+        assert not missing, f'Cannot create controlled terminology for nonexistent classes: {missing}'
+
+        if merge_on:
+            ident_props = f'{{`{merge_on[0]}`: term_props["{merge_on[0]}"]'
+            for prop in merge_on[1:]:
+                ident_props += f', `{prop}`: term_props["{prop}"]'
+            ident_props += '}'
+
+        # Create terms
+        q1 = f"""
+        UNWIND KEYS($terminology) as class_label
+        MATCH (class:Class {{{identifier}: class_label}})
+        WITH class, class_label
+        UNWIND $terminology[class_label] as term_props
+        CALL apoc.merge.node(['Term', class.label], {f"{ident_props}, term_props, term_props" if ident_props else 'term_props, {}, {}'}) YIELD node as term
+        MERGE (class)-[:HAS_CONTROLLED_TERM]->(term)
+        """
+        res1 = self.query(q1, {'terminology': controlled_terminology}, return_type='neo4j.Result')
+
+        if order_terms:
+            # Create order property on new terms
+            q2 = f"""
+            UNWIND $labels as class_label
+            MATCH (c:Class{{{identifier}: class_label}})
+            OPTIONAL MATCH (c)-[:HAS_CONTROLLED_TERM]->(term:Term)
+            WITH c, MAX(term.Order) as term_order
+            WITH c, CASE WHEN term_order IS NULL THEN 1 ELSE term_order + 1 END as term_order
+    
+            MATCH (c)-[:HAS_CONTROLLED_TERM]->(t1:Term)
+            WHERE t1.Order is NULL
+            WITH c, term_order, t1 order by t1.`Codelist Code`, t1.`Term Code` 
+            WITH c, collect(t1) as terms_to_order, term_order
+            WITH *, apoc.coll.zip(terms_to_order, range(term_order, term_order + size(terms_to_order))) as pairs
+            UNWIND pairs as pair
+            WITH pair[0] as term_node, pair[1] as new_order, c, terms_to_order
+            SET term_node.Order = new_order
+            return c, terms_to_order
+            """
+            self.query(q2, {'labels': list(controlled_terminology.keys())})
+
+            # Create next rel between terms
+            q3 = f"""
+            UNWIND $labels as class_label
+            MATCH (c:Class{{{identifier}: class_label}})-[:HAS_CONTROLLED_TERM]->(t:Term)
+            WITH c,t ORDER BY c.label, t.Order ASC
+            WITH c, COLLECT(t) AS terms
+            FOREACH (n IN RANGE(0, SIZE(terms)-2) |
+                FOREACH (prev IN [terms[n]] |
+                    FOREACH (next IN [terms[n+1]] |
+                        MERGE (prev)-[:NEXT]->(next))))
+            """
+            self.query(q3, {'labels': list(controlled_terminology.keys())})
+
+        return res1
+
     def get_class_ct(self, class_: str, ct_prop_name='rdfs:label'):
         q = """
         MATCH (c:Class) 
@@ -487,6 +701,108 @@ class ModelManager(NeoInterface):
             return res[0]['coll']
         else:
             return []
+
+    def get_class_ct_map(self, classes: list, ct_props: list = None, identifier='label'):
+        """
+        Return controlled terminology for a given list of classes.
+        :param classes: list of class labels of class.identifier property values if using custom identifier
+                        for example: with identifier = 'short_label', classes = ['shortlabel1', 'shortlabel2']
+        :param ct_props: list of controlled terminology props to collect eg:
+                         ['label', 'Codelist Code', 'Order']
+                         defaults to ['rdfs:label']
+        :param identifier: string used when identifying classes
+        :return: Dictionary of classes and found controlled terminology for example:
+                 with classes = ['class1', 'class2'] and ct_props = ['label'] a typical result might be:
+                {'class1': [{'label': 'term1'}, {'label': 'term2'}], 'class2': [{{'label': 'term3'}}]}
+                Where 'class1' has two terms labeled 'term1' and 'term2' and 'class2' has one term labeled 'term3'
+        """
+
+        if ct_props is None:
+            ct_props = ['rdfs:label']
+        elif type(ct_props) == str:
+            ct_props = [ct_props]
+
+        prop_collection = f'["{ct_props[0]}", term.`{ct_props[0]}`]'
+        if len(ct_props) != 1:
+            for prop in ct_props[1:]:
+                prop_collection += f', ["{prop}", term.`{prop}`]'
+
+        q = f"""
+        UNWIND $classes as class
+        MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
+        WHERE c.`{identifier}` = class
+        WITH c, collect(apoc.map.fromPairs([{prop_collection}])) as terms
+        RETURN apoc.map.setKey({{}}, c.`{identifier}`, terms) as ct
+        """
+
+        params = {'classes': classes}
+        res = self.query(q, params)
+
+        data = {}
+        if res:
+            for term_dict in res:
+                # Flattened result {class.identifer:[[term.ct_props[0], ...], [term.ct_props[0], ...]]}
+                data.update(term_dict.get('ct'))
+        return data
+
+    def delete_ct(self, controlled_terminology: dict, term_props: list, identifier='label'):
+        """
+        Deletes class specific controlled terminology.
+        :param controlled_terminology: Dictionary of key: class identity - value: list of class specific term property
+                                       values to delete. For example:
+                                       with term_props = ['Codelist Code'] controlled terminology might be:
+                                      {'class1':[['code1'], ['code2']], class1':[['code2']]}
+                                      Note these property values must align with the keys defined in term_props!
+        :param term_props: List of property names to define controlled terminology term property values
+        :param identifier: string, property used to identify class
+        :return: neo4j result object.
+        """
+        # TODO: Resolving [:NEXT] rel when deleting CT
+
+        where_clause = f't.`{term_props[0]}` = term_props[0]'
+        for count, prop in enumerate(term_props[1:], start=1):
+            where_clause += f' AND t.`{prop}` = term_props[{count}]'
+
+        q = f"""
+        UNWIND KEYS($terminology) as class_label
+        MATCH (c:Class)
+        WHERE c.`{identifier}` = class_label
+        UNWIND $terminology[class_label] as term_props
+        MATCH (c)-[:HAS_CONTROLLED_TERM]-(t:Term)
+        WHERE {where_clause}
+        DETACH DELETE t
+        """
+
+        return self.query(q, {'terminology': controlled_terminology}, return_type='neo4j.Result')
+
+    def get_all_ct(self, term_props: list, class_prop='label', derived_only=False):
+        """
+        Returns a list of dictionaries containing specified props for all controlled terminology.
+        Example:
+            With term_props = ['rdfs:label'] and class_prop = ['label'] the return format would be:
+            [{'label': class1, 'rdfs:label': 'term1'}, {'label': class1, 'rdfs:label': 'term2'},
+            {'label': class2, 'rdfs:label': 'term1'} ...]
+            Repeated for all CT.
+        :param term_props: Term properties to return eg: ['rdfs:label', 'Codelist Code']
+        :param class_prop: Class property used to identify controlled terminology class
+                            :param derived_only:
+        :param derived_only: Bool, optional filter for classes where class.derived = 'true'.
+        :return: List of dictionaries, see example above.
+        """
+        # TODO: consider converting to format similar to get_class_ct_map? ie {'class.label': [{'rdfs:label': 'term1'}]}
+        assert len(term_props) >= 1, 'Must include at least 1 term_prop'
+        assert class_prop not in term_props, 'Class prop cannot be in term props'
+
+        term_return = f'term.`{term_props[0]}` as `{term_props[0]}`'
+        for prop in term_props[1:]:
+            term_return += f', term.`{prop}` as `{prop}`'
+
+        q = f"""
+        MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
+        {'WHERE c.derived = "true"' if derived_only else ''}
+        RETURN c.`{class_prop}` as `{class_prop}`, {term_return}
+        """
+        return self.query(q)
 
     def propagate_rels_to_parent_class(self):
         if self.verbose:

@@ -11,11 +11,11 @@ from utils.utils import compare_recordsets
 # that can be used by the various tests that need it
 @pytest.fixture(scope="module")
 def mm():
-    mm = ModelManager(verbose=False)
+    mm = ModelManager(verbose=False, debug=True)
     yield mm
 
 
-def test_create_class(mm):
+def test_create_class_list(mm):
     mm.clean_slate()
 
     mm.create_class("My First Class")
@@ -34,9 +34,113 @@ def test_create_class(mm):
     result = mm.get_nodes()
     assert compare_recordsets(result, [{'label': 'My First Class'}, {'label': 'A'}, {'label': 'A'}, {'label': 'B'}])
 
-    mm.create_class(["B", "X"], merge=True) # Only class "X" gets created, because "B" already exists
+    mm.create_class(["B", "X"], merge=True)  # Only class "X" gets created, because "B" already exists
     result = mm.get_nodes()
     assert compare_recordsets(result, [{'label': 'My First Class'}, {'label': 'A'}, {'label': 'A'}, {'label': 'B'}, {'label': 'X'}])
+
+    with pytest.raises(AssertionError):  # Invalid merge format
+        mm.create_class(["B", "X"], merge='true')
+
+
+def test_create_class_dict(mm):
+    mm.clean_slate()
+
+    # Dictionary format
+    mm.create_class([{"label": "A"}])
+    result = mm.get_nodes()
+    assert result == [{'label': 'A'}]
+
+    # Verifying create
+    mm.create_class([{"label": "A"}], merge=False)
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [{'label': 'A'}, {'label': 'A'}])
+
+    # Merge multiple
+    mm.create_class([{"label": "A"}, {"label": "B"}])
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [{'label': 'A'}, {'label': 'A'}, {"label": "B"}])
+
+    # Setting multiple properties
+    mm.create_class([{"label": "Bravo", "short_label": "B"}])
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [
+        {'label': 'A'}, {'label': 'A'}, {"label": "B"},
+        {"label": "Bravo", "short_label": "B"}
+    ])
+
+    # Using merge on
+    mm.clean_slate()
+    mm.create_class([{"label": "A", "type": "original_type"}])
+    mm.create_class([{"label": "A", "type": "new_type"}], merge=True, merge_on=['label'])
+
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [
+        {"label": "A", "type": "new_type"}
+    ])
+
+    # Merge on non existing
+    mm.create_class([{"label": "B", "type": "new_type"}], merge=True, merge_on=['label'])
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [
+        {"label": "A", "type": "new_type"},
+        {"label": "B", "type": "new_type"}
+    ])
+
+    with pytest.raises(AssertionError):
+        mm.create_class([{"label": "B", "type": "new_type"}], merge=False, merge_on=['label'])
+
+
+def test_delete_class(mm):
+    mm.clean_slate()
+
+    with open(os.path.join(filepath, 'data', 'test_delete_classes.json')) as jsonfile:
+        dct = json.load(jsonfile)
+    mm.load_arrows_dict(dct)
+
+    # Delete single
+    mm.delete_class(['Delete 1'])
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [
+        {'short_label': 'RM1', 'label': 'Remain 1'},
+        {'short_label': 'RM2', 'label': 'Remain 2'},
+        {'relationship_type': 'Remain'},
+        {'rdfs:label': 'Remaining term 1', 'Term Code': 'Term R1', 'Codelist Code': 'Codelist R1'},
+        {'short_label': 'D3', 'label': 'Delete 3'},
+        {'short_label': 'D2', 'label': 'Delete 2'},
+        {'relationship_type': 'Delete 2'}
+    ])
+
+    # Delete multiple with identifier
+    mm.delete_class(['D2', 'D3'], identifier='short_label')
+    result = mm.get_nodes()
+    assert compare_recordsets(result, [
+        {'short_label': 'RM1', 'label': 'Remain 1'},
+        {'short_label': 'RM2', 'label': 'Remain 2'},
+        {'relationship_type': 'Remain'},
+        {'rdfs:label': 'Remaining term 1', 'Term Code': 'Term R1', 'Codelist Code': 'Codelist R1'}
+    ])
+
+
+def test_class_exists(mm):
+    mm.clean_slate()
+
+    class_list = ["A", "B", "C"]
+    mm.create_class(class_list)
+
+    res = mm.class_exists(["A", "B", "C"])
+    assert not res
+
+    res = mm.class_exists(["D"])
+    assert res == set("D")
+
+    class_list = [{"short_label": 'A'}, {"short_label": 'B'}]
+    mm.create_class(class_list)
+
+    res = mm.class_exists(["A", "B"], 'short_label')
+    assert not res
+
+    res = mm.class_exists(["D"], 'short_label')
+    assert res == set("D")
 
 
 def test_get_all_classes(mm):
@@ -67,6 +171,9 @@ def test_get_all_classes_props(mm):
     expected_short_labels = [{"short_label": label.lower()} for label in class_list]
 
     assert short_labels == expected_short_labels
+
+    with pytest.raises(AssertionError):
+        mm.get_all_classes_props([])
 
     with pytest.raises(AssertionError):
         mm.get_all_classes_props(['short_label', 'short_label'])
@@ -106,8 +213,6 @@ def test_get_rels_btw2(mm:ModelManager):
         {'from': 'Person', 'to': 'Name of Treatment', 'type': 'HAS'},
         {'from': 'Subject', 'to': 'Exposure Name of Treatment', 'type': None}
     ]
-    # print(res)
-    # print(expected_res)
     assert res == expected_res
 
     res = mm.get_rels_btw2('Subject', 'Name of Treatment')
@@ -131,6 +236,238 @@ def test_get_rels_btw2(mm:ModelManager):
     ]
     assert res == expected_res
 
+    res = mm.get_rels_btw2('USUBJID', 'EXTRT', identifier='short_label')
+    expected_res = [
+        {'from': 'PERSON', 'to': '--TRT', 'type': 'HAS'},
+        {'from': 'USUBJID', 'to': 'EXTRT', 'type': None}
+    ]
+    assert res == expected_res
+
+
+def test_delete_relationship(mm):
+    mm.clean_slate()
+
+    with open(os.path.join(filepath, 'data', 'test_infer_rels.json')) as jsonfile:
+        dct = json.load(jsonfile)
+    mm.load_arrows_dict(dct)
+
+    mm.delete_relationship([['Person', 'Name of Treatment', 'HAS']])
+
+    res = mm.get_rels_btw2('Person', 'Name of Treatment')
+    expected_res = [
+        {'from': 'Subject', 'to': 'Exposure Name of Treatment', 'type': None}
+    ]
+    assert res == expected_res
+
+
+def test_create_ct(mm):
+    # Prepare test
+    mm.clean_slate()
+
+    q = """
+    MERGE (:Class {label: 'G'})
+    MERGE (:Class {label: 'S'})
+    MERGE (:Class {label: 'K'})
+    MERGE (:Class {short_label: 'A', label: 'Class A'})
+    """
+    mm.query(q)
+
+    # Create ct with existing terms
+    mm.create_ct({
+        'G': [{'Codelist Code': 'term1'}, {'Codelist Code': 'term2'}],
+        'S': [{'Codelist Code': 'term3'}]
+    })
+
+    res = mm.get_class_ct_map(classes=['G', 'S', 'K'], ct_props=['Codelist Code', 'Order'])
+
+    assert sorted(res.get('G'), key=lambda d: d['Codelist Code']) == [{'Order': 1, 'Codelist Code': 'term1'},
+                                                              {'Order': 2, 'Codelist Code': 'term2'}]
+    assert res.get('S') == [{'Order': 1, 'Codelist Code': 'term3'}]
+
+    # Ensure class labels are inherited by ct inheritance
+    q = """
+    MATCH (c:Class)-[:HAS_CONTROLLED_TERM]-(t:Term)
+    RETURN c.label as label, labels(t) as term_labels
+    """
+    res = mm.query(q)
+    for res in res:
+        assert res.get('label') in res.get('term_labels'), 'Class label not present on CT'
+
+    # Test order increment
+    mm.create_ct({
+        'S': [{'Codelist Code': 'term4'}]
+    })
+
+    res = mm.get_class_ct_map(classes=['S'], ct_props=['Codelist Code', 'Order'])
+
+    assert sorted(res.get('S'), key=lambda d: d['Codelist Code']) == [{'Order': 1, 'Codelist Code': 'term3'},
+                                                              {'Order': 2, 'Codelist Code': 'term4'}]
+
+    # Test NEXT relationship creation
+    q = """
+    MATCH (t1:Term)-[:NEXT]->(t2:Term)
+    WHERE t1.`Codelist Code` = 'term3'
+    RETURN t2.`Codelist Code` as `Codelist Code`
+    """
+    res = mm.query(q)[0]
+    assert res == {'Codelist Code': 'term4'}
+
+    # Test without order
+    mm.create_ct({
+        'K': [{'Codelist Code': 'term5'}, {'Codelist Code': 'term6'}]
+    }, order_terms=False)
+
+    res = mm.get_class_ct_map(classes=['K'], ct_props=['Codelist Code', 'Order'])
+    assert sorted(res.get('K'), key=lambda d: d['Codelist Code']) == [{'Order': None, 'Codelist Code': 'term5'},
+                                                              {'Order': None, 'Codelist Code': 'term6'}]
+
+    q = """
+    MATCH (t1:Term)-[:NEXT]->(t2:Term)
+    WHERE t1.`Codelist Code` = 'term5'
+    RETURN t2.`Codelist Code` as cc
+    """
+    res = mm.query(q)
+    assert not res
+
+    # Term for undefined class assertion error
+    with pytest.raises(AssertionError):
+        mm.create_ct({
+            'X': [{'Codelist Code': 'term7'}]
+        })
+
+    # Short_label identifier
+    mm.create_ct({
+        'A': [{'Codelist Code': 'term7'}]
+    }, 'short_label', merge_on=['Codelist Code'])
+
+    res = mm.get_class_ct_map(classes=['A'], ct_props=['Codelist Code', 'Order'], identifier='short_label')
+    assert res.get('A') == [{'Order': 1, 'Codelist Code': 'term7'}]
+
+    # With on_merge
+    mm.clean_slate()
+
+    q = """
+    MERGE (a:Class {label: 'Apple'})-[:HAS_CONTROLLED_TERM]->(t1:Term {`Codelist Code`: 'term1c', `Term Code`: 'term1t', `Order`:2})
+    MERGE (a)-[:HAS_CONTROLLED_TERM]->(t3:Term {`Codelist Code`: 'term3c', `Term Code`: 'term3t', `Order`:1})
+    MERGE (:Class {label: 'Banana'})-[:HAS_CONTROLLED_TERM]->(t2:Term {`Codelist Code`: 'term2c', `Term Code`: 'term2t', `Order`:1})
+    SET t1.`rdfs:label` = 'original'
+    SET t1 :Apple
+    SET t2 :Banana
+    SET t3 :Apple
+    """
+    mm.query(q)
+
+    mm.create_ct({
+        'Apple': [{'Codelist Code': 'term1c', 'Term Code': 'term1t', 'rdfs:label': 'updated'}]
+    }, merge_on=['Codelist Code', 'Term Code'])
+
+    res = mm.get_all_ct(term_props=['Codelist Code', 'Term Code', 'rdfs:label', 'Order'])
+
+    assert sorted(res, key=lambda d: d['Codelist Code']) == [
+        {'label': 'Apple', 'Codelist Code': 'term1c', 'Term Code': 'term1t', 'rdfs:label': 'updated', 'Order': 2},
+        {'label': 'Banana', 'Codelist Code': 'term2c', 'Term Code': 'term2t', 'rdfs:label': None, 'Order': 1},
+        {'label': 'Apple', 'Codelist Code': 'term3c', 'Term Code': 'term3t', 'rdfs:label': None, 'Order': 1},
+    ]
+
+
+def test_delete_ct(mm):
+    mm.clean_slate()
+
+    with open(os.path.join(filepath, 'data', 'test_delete_ct.json')) as jsonfile:
+        dct = json.load(jsonfile)
+    mm.load_arrows_dict(dct)
+
+    mm.delete_ct({'Subject': [['Codelist2']]}, ['Codelist Code'])
+
+    res = mm.get_class_ct_map(['Subject', 'Exposure Name of Treatment'], ct_props=['Codelist Code', 'Term Code', 'rdfs:label'])
+    assert res == {
+        'Subject': [{'Term Code': 'Termcode3', 'rdfs:label': 'Term3', 'Codelist Code': 'Codelist3'}],
+        'Exposure Name of Treatment': [{'Term Code': 'Termcode1', 'rdfs:label': 'Term1', 'Codelist Code': 'Codelist1'}]
+    }
+
+    mm.delete_ct({'EXTRT': [['Codelist1']]}, ['Codelist Code'], identifier='short_label')
+
+    res = mm.get_class_ct_map(['Subject', 'Exposure Name of Treatment'],
+                              ct_props=['Codelist Code', 'Term Code', 'rdfs:label'])
+    assert res == {
+        'Subject': [{'Term Code': 'Termcode3', 'rdfs:label': 'Term3', 'Codelist Code': 'Codelist3'}]
+    }
+
+
+def test_get_class_ct_map(mm):
+    mm.clean_slate()
+
+    with open(os.path.join(filepath, 'data', 'test_delete_ct.json')) as jsonfile:
+        dct = json.load(jsonfile)
+    mm.load_arrows_dict(dct)
+
+    res = mm.get_class_ct_map('Exposure Name of Treatment')
+    print(res)
+    assert res == {'Exposure Name of Treatment': [{'rdfs:label': 'Term1'}]}
+
+    res = mm.get_class_ct_map('Exposure Name of Treatment', 'Codelist Code')
+    print(res)
+    assert res == {'Exposure Name of Treatment': [{'Codelist Code': 'Codelist1'}]}
+
+    res = mm.get_class_ct_map(['USUBJID'], ct_props=['rdfs:label', 'Codelist Code'], identifier='short_label')
+    print(res)
+    assert sorted(res.get('USUBJID'), key=lambda d: d['rdfs:label']) == [
+        {'rdfs:label': 'Term2', 'Codelist Code': 'Codelist2'}, {'rdfs:label': 'Term3', 'Codelist Code': 'Codelist3'}
+    ]
+
+    res = mm.get_class_ct_map(['Undefined Class'])
+    print(res)
+    assert res == {}
+
+
+def test_get_all_ct(mm):
+    mm.clean_slate()
+
+    with open(os.path.join(filepath, 'data', 'test_delete_ct.json')) as jsonfile:
+        dct = json.load(jsonfile)
+    mm.load_arrows_dict(dct)
+
+    res = mm.get_all_ct(['Codelist Code', 'Term Code', 'rdfs:label'], derived_only=True)
+    assert res == [{'label': 'Exposure Name of Treatment',
+                    'Codelist Code': 'Codelist1', 'Term Code': 'Termcode1',
+                    'rdfs:label': 'Term1'}]
+
+    res = mm.get_all_ct(['Codelist Code', 'Term Code', 'rdfs:label'], class_prop='short_label', derived_only=False)
+    assert sorted(res, key=lambda d: d['Codelist Code']) == [
+        {'short_label': 'EXTRT', 'Codelist Code': 'Codelist1',
+         'Term Code': 'Termcode1', 'rdfs:label': 'Term1'},
+        {'short_label': 'USUBJID', 'Codelist Code': 'Codelist2',
+         'Term Code': 'Termcode2', 'rdfs:label': 'Term2'},
+        {'short_label': 'USUBJID', 'Codelist Code': 'Codelist3',
+         'Term Code': 'Termcode3', 'rdfs:label': 'Term3'},
+    ]
+
+    with pytest.raises(AssertionError):
+        mm.get_all_ct([], class_prop='short_label', derived_only=False)
+
+    with pytest.raises(AssertionError):
+        mm.get_all_ct(['short_label'], class_prop='short_label')
+
+
+def test_create_relationship(mm):
+    mm.clean_slate()
+
+    q = """
+    MERGE (a:Class{label:"class1", short_label:"C1"})-[:SUBCLASS_OF]->(b:Class{label:"class2", short_label:"C2"})
+    MERGE (c:Class{label:"class3", short_label:"C3"})
+    MERGE (d:Class{label:"class4", short_label:"C4"})
+    """
+    mm.query(q)
+
+    res1 = mm.create_relationship([['class1', 'class3', 'rel1']])
+    assert res1 == [['class1', 'class3', 'rel1']]
+
+    res2 = mm.get_rels_btw2("class1", "class3")
+    assert res2 == [{'from': 'class1', 'to': 'class3', 'type': 'rel1'}]
+
+    res1 = mm.create_relationship([['class1', 'MISSING CLASS', 'rel1']])
+    assert res1 == []
+
 
 def test_create_related_classes_from_list(mm):
     mm.clean_slate()
@@ -150,6 +487,13 @@ def test_create_related_classes_from_list(mm):
     assert res4 == []
     res4 = mm.get_rels_btw2("C", "D")
     assert res4 == []
+
+    res5 = mm.create_related_classes_from_list(rel_list=[["F", "G", "type4"], ["G", "H", "type5"]],
+                                               identifier='short_label')
+    assert res5 == ['F', 'G', 'H']
+
+    res6 = mm.get_rels_btw2("F", "G", identifier='short_label')
+    assert res6 == [{'from': 'F', 'to': 'G', 'type': 'type4'}]
 
 
 def test_get_rels_from_labels(mm):

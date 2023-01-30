@@ -1,0 +1,177 @@
+{
+  "nodes": [
+    {
+      "id": "n0",
+      "position": {
+        "x": 75,
+        "y": 585.8168728952579
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Subject",
+        "short_label": "USUBJID"
+      },
+      "style": {
+        "node-color": "#fcdc00"
+      }
+    },
+    {
+      "id": "n1",
+      "position": {
+        "x": 480.9070829327225,
+        "y": 585.8168728952579
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Exposure Name of Treatment",
+        "short_label": "EXTRT",
+        "derived": "true"
+      },
+      "style": {
+        "node-color": "#fcdc00"
+      }
+    },
+    {
+      "id": "n2",
+      "position": {
+        "x": 75,
+        "y": 139.40507814676073
+      },
+      "caption": "",
+      "labels": [
+        "Term"
+      ],
+      "properties": {
+        "Codelist Code": "Codelist3",
+        "Term Code": "Termcode3",
+        "rdfs:label": "Term3"
+      },
+      "style": {
+        "node-color": "#f44e3b"
+      }
+    },
+    {
+      "id": "n3",
+      "position": {
+        "x": 296.1132591400317,
+        "y": 139.40507814676076
+      },
+      "caption": "",
+      "labels": [
+        "Term"
+      ],
+      "properties": {
+        "Codelist Code": "Codelist2",
+        "Term Code": "Termcode2",
+        "rdfs:label": "Term2"
+      },
+      "style": {
+        "node-color": "#f44e3b"
+      }
+    },
+    {
+      "id": "n4",
+      "position": {
+        "x": 659.2145088184274,
+        "y": 139.40507814676076
+      },
+      "caption": "",
+      "labels": [
+        "Term"
+      ],
+      "properties": {
+        "Codelist Code": "Codelist1",
+        "Term Code": "Termcode1",
+        "rdfs:label": "Term1"
+      },
+      "style": {
+        "node-color": "#f44e3b"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "id": "n0",
+      "fromId": "n0",
+      "toId": "n2",
+      "type": "HAS_CONTROLLED_TERM",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n1",
+      "fromId": "n0",
+      "toId": "n3",
+      "type": "HAS_CONTROLLED_TERM",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n2",
+      "fromId": "n1",
+      "toId": "n4",
+      "type": "HAS_CONTROLLED_TERM",
+      "properties": {},
+      "style": {}
+    }
+  ],
+  "style": {
+    "font-family": "sans-serif",
+    "background-color": "#ffffff",
+    "background-image": "",
+    "background-size": "100%",
+    "node-color": "#ffffff",
+    "border-width": 4,
+    "border-color": "#000000",
+    "radius": 50,
+    "node-padding": 5,
+    "node-margin": 2,
+    "outside-position": "auto",
+    "node-icon-image": "",
+    "node-background-image": "",
+    "icon-position": "inside",
+    "icon-size": 64,
+    "caption-position": "inside",
+    "caption-max-width": 200,
+    "caption-color": "#000000",
+    "caption-font-size": 50,
+    "caption-font-weight": "normal",
+    "label-position": "inside",
+    "label-display": "pill",
+    "label-color": "#000000",
+    "label-background-color": "#ffffff",
+    "label-border-color": "#000000",
+    "label-border-width": 4,
+    "label-font-size": 40,
+    "label-padding": 5,
+    "label-margin": 4,
+    "directionality": "directed",
+    "detail-position": "inline",
+    "detail-orientation": "parallel",
+    "arrow-width": 5,
+    "arrow-color": "#000000",
+    "margin-start": 5,
+    "margin-end": 5,
+    "margin-peer": 20,
+    "attachment-start": "normal",
+    "attachment-end": "normal",
+    "relationship-icon-image": "",
+    "type-color": "#000000",
+    "type-background-color": "#ffffff",
+    "type-border-color": "#000000",
+    "type-border-width": 0,
+    "type-font-size": 16,
+    "type-padding": 5,
+    "property-position": "outside",
+    "property-alignment": "colon",
+    "property-color": "#000000",
+    "property-font-size": 16,
+    "property-font-weight": "normal"
+  }
+}
