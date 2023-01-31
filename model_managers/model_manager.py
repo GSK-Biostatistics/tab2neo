@@ -136,21 +136,21 @@ class ModelManager(NeoInterface):
         :param identifier: Class property to use in combination with values for identification.
         :return:
         """
-        # TODO: Review is it safe to delete the relationship as well in this way?
+        # TODO: address the issue of invalid Methods linked to the deleted entities.
         q = f"""
         MATCH (class:Class)
-        WHERE class.`{identifier}` in $values
+        WHERE class[$identifier] in $values
         OPTIONAL MATCH (class)-[:HAS_CONTROLLED_TERM]->(term:Term)
         OPTIONAL MATCH (class)-[:TO|FROM]-(rel:Relationship)
         DETACH DELETE class, term, rel
         """
-        params = {'values': values}
+        params = {'values': values, 'identifier': identifier}
 
         return self.query(q, params, return_type='neo4j.Result')
 
-    def class_exists(self, values: list, identifier='label'):
+    def get_missing_classes(self, values: list, identifier='label'):
         """
-        Samples a list of class property values to determine if a set of classes currently exist in neo4j.
+        Samples a list of class property values to determine if a set of classes are missing from the database.
         :param values: List of property values eg: [class1, class2]
         :param identifier: Property name to be used when identifying classes eg: 'label'
         :return: A list of any values not found in neo4j.
@@ -211,20 +211,11 @@ class ModelManager(NeoInterface):
 
         class_list = sorted(list(class_set))  # Convert the final set back to list
 
-        q = f"""            
-        UNWIND $rels as rel
-        WITH rel[0] as left, rel[1] as right, rel[2] as type    
-        WHERE apoc.meta.type(left) = apoc.meta.type(right) = 'STRING'  
-        MERGE (ln:Class {{`{identifier}`:left}})
-        MERGE (rn:Class {{`{identifier}`:right}})   
-        MERGE (ln)<-[:FROM]-(:Relationship{{relationship_type:type}})-[:TO]->(rn)   
-        """
-        params = {"rels": [(r if len(r) == 3 else r + [self.gen_default_reltype(to_label=r[1])]) for r in rel_list]}
-        self.query(q, params)
+        self.create_relationship(rel_list, identifier, match_classes=False)
 
         return class_list
 
-    def create_relationship(self, rel_list: List[List[str]], identifier='label'):
+    def create_relationship(self, rel_list: List[List[str]], identifier='label', match_classes=True) -> [str]:
         """
         Create relationship nodes between two specified classes as defined in rel_list.
         For example:
@@ -233,23 +224,28 @@ class ModelManager(NeoInterface):
             identifier, 'class1' and 'class2' with a relationship_type property = 'example'.
             This relationship node also includes 'FROM.Class.label' and 'TO.Class.label' properties
             regardless of the class identifier.
+        Note if no relationship type is included a default is generated via gen_default_reltype() 
         :param rel_list: A list of relationships represented as lists
         :param identifier: String class property used to identify to & from classes
+        :param match_classes: Boolean, If false classes are merged rather than matched which will create them
+                              if they do not already exist.
         :return: A list of created relationships = rel_list if all relationships were created successfully
         """
 
         q = f"""
         UNWIND $rels as rel
         WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type
-        MATCH (from:Class {{`{identifier}`:from_identity}})
-        MATCH (to:Class {{`{identifier}`:to_identity}})   
+        {'MATCH' if match_classes else 'MERGE'} (from:Class {{`{identifier}`:from_identity}})
+        {'MATCH' if match_classes else 'MERGE'} (to:Class {{`{identifier}`:to_identity}})   
         MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type}})-[:TO]->(to)
         SET rel_node.`FROM.Class.label` = from.label
         SET rel_node.`TO.Class.label` = to.label
         RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type]) as rels
         """
 
-        res = self.query(q, {"rels": rel_list})
+        res = self.query(q, {
+            "rels": [(r if len(r) == 3 else r + [self.gen_default_reltype(to_label=r[1])]) for r in rel_list]
+        })
         if res:
             return res[0].get('rels')
         else:
@@ -632,7 +628,7 @@ class ModelManager(NeoInterface):
         :return: neo4j result object.
         """
         ident_props = None
-        missing = self.class_exists(list(controlled_terminology.keys()), identifier)
+        missing = self.get_missing_classes(list(controlled_terminology.keys()), identifier)
         assert not missing, f'Cannot create controlled terminology for nonexistent classes: {missing}'
 
         if merge_on:
@@ -647,7 +643,8 @@ class ModelManager(NeoInterface):
         MATCH (class:Class {{{identifier}: class_label}})
         WITH class, class_label
         UNWIND $terminology[class_label] as term_props
-        CALL apoc.merge.node(['Term', class.label], {f"{ident_props}, term_props, term_props" if ident_props else 'term_props, {}, {}'}) YIELD node as term
+        CALL apoc.merge.node(['Term'], {f"{ident_props}, term_props, term_props" if ident_props else 'term_props, {}, {}'}) YIELD node
+        CALL apoc.create.addLabels([node], [class.label]) YIELD node as term
         MERGE (class)-[:HAS_CONTROLLED_TERM]->(term)
         """
         res1 = self.query(q1, {'terminology': controlled_terminology}, return_type='neo4j.Result')
@@ -745,22 +742,26 @@ class ModelManager(NeoInterface):
                 data.update(term_dict.get('ct'))
         return data
 
-    def delete_ct(self, controlled_terminology: dict, term_props: list, identifier='label'):
+    def delete_ct(self, controlled_terminology: dict, ct_props: list, identifier='label'):
         """
-        Deletes class specific controlled terminology.
+        Deletes part of class specific controlled terminology.
         :param controlled_terminology: Dictionary of key: class identity - value: list of class specific term property
                                        values to delete. For example:
-                                       with term_props = ['Codelist Code'] controlled terminology might be:
+                                       with ct_props = ['Codelist Code'] controlled terminology might be:
                                       {'class1':[['code1'], ['code2']], class1':[['code2']]}
                                       Note these property values must align with the keys defined in term_props!
-        :param term_props: List of property names to define controlled terminology term property values
+        :param ct_props: List of property names that define property values in a controlled terminology term,
+                         For example:
+                            With controlled terminology = {'class1':[['code1'], ['code2']], class1':[['code2']]}
+                            ct_props would be ['Codelist Code'] indicating that we intending to delete terms
+                            for 'class1' and 'class2' using 'Codelist Code' property value.
         :param identifier: string, property used to identify class
         :return: neo4j result object.
         """
         # TODO: Resolving [:NEXT] rel when deleting CT
 
-        where_clause = f't.`{term_props[0]}` = term_props[0]'
-        for count, prop in enumerate(term_props[1:], start=1):
+        where_clause = f't.`{ct_props[0]}` = term_props[0]'
+        for count, prop in enumerate(ct_props[1:], start=1):
             where_clause += f' AND t.`{prop}` = term_props[{count}]'
 
         q = f"""
@@ -803,6 +804,68 @@ class ModelManager(NeoInterface):
         RETURN c.`{class_prop}` as `{class_prop}`, {term_return}
         """
         return self.query(q)
+
+    def create_same_as_ct(self, same_as_terms: List[dict], term_identifiers: List[str], identifier='label'):
+        """
+        Creates a [:SAME_AS] relationship between two terms. For example:
+            With term_identifiers = ['Codelist Code', 'Term Code']
+            and same_as_terms = [
+                {'from_class': 'class1', 'to_class': 'class2', # Class identifiers
+                 'from_codelist_code': 'code_1', 'from_term_code': 'code_2', # Term 1 identifier
+                 'to_codelist_code: 'code_3', 'to_term_code': 'code_4' # Term 2 identifier
+                }
+            ]
+            A same as relationship would be created from a term of 'class1' with properties:
+            `Codelist Code` = code_1 and `Term Code` = 'code_2' to the corresponding term for 'class2'.
+
+            Note term identifiers in a same_as_terms dictionaries must be lowercase, use underscores instead of spaces
+            and be prefixed with from_ or to_ a property listed in term_identifiers.
+
+        :param same_as_terms: List of dictionaries defining same as terms between classes.
+        :param term_identifiers: List of strings with term properties that guarantee uniqueness
+        :param identifier: string class property used when matching classes
+        :return: neo4j result object
+        """
+
+        where_clause = f"WHERE c1.`{identifier}` = new_term['from_class'] AND c2.`{identifier}` = new_term['to_class']"
+        for term_prop in term_identifiers:
+            clean_prop = term_prop.lower().replace(' ', '_')
+            where_clause += f" AND t1.`{term_prop}` = new_term['from_{clean_prop}']"
+            where_clause += f" AND t2.`{term_prop}` = new_term['to_{clean_prop}']"
+
+        q = f"""
+        UNWIND $same_as_terms as new_term
+        MATCH (c1:Class)-[:HAS_CONTROLLED_TERM]-(t1:Term)
+        MATCH (c2:Class)-[:HAS_CONTROLLED_TERM]-(t2:Term)
+        {where_clause}
+        MERGE (t1)-[:SAME_AS]->(t2)
+        """
+        return self.query(q, {'same_as_terms': same_as_terms}, return_type='neo4j.Result')
+
+    def remove_same_as_ct(self, same_as_terms: List[dict], term_identifiers: List[str], identifier='label'):
+        """
+        Removes a [:SAME_AS] relationship between two terms, see "create_same_as_ct()" for format information.
+
+        :param same_as_terms: List of dictionaries defining same as terms between classes.
+        :param term_identifiers: List of strings with term properties that guarantee uniqueness
+        :param identifier: string class property used when matching classes
+        :return: neo4j result object
+        """
+
+        where_clause = f"WHERE c1.`{identifier}` = new_term['from_class'] AND c2.`{identifier}` = new_term['to_class']"
+        for term_prop in term_identifiers:
+            clean_prop = term_prop.lower().replace(' ', '_')
+            where_clause += f"AND t1.`{term_prop}` = new_term['from_{clean_prop}']"
+            where_clause += f"AND t2.`{term_prop}` = new_term['to_{clean_prop}']"
+
+        q = f"""
+        UNWIND $same_as_terms as new_term
+        MATCH (c1:Class)-[:HAS_CONTROLLED_TERM]->(t1:Term)-[rel:SAME_AS]->(t2:Term)<-[:HAS_CONTROLLED_TERM]-(c2:Class)
+        {where_clause}
+        DETACH DELETE rel
+        """
+
+        return self.query(q, {'same_as_terms': same_as_terms}, return_type='neo4j.Result')
 
     def propagate_rels_to_parent_class(self):
         if self.verbose:
