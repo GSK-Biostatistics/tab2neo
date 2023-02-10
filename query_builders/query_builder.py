@@ -26,11 +26,11 @@ class QueryBuilder():
     """
     QueryBuilder generates query strings
     QueryBuilder is ignorant about the database schema or existance of labels/relationships in the database
-    :param query_builder_debug: Whether to return extra debug logs specific to query builder
+    :param verbose: Provide debug logs
     """
 
-    def __init__(self, query_builder_debug=False):
-        self.query_builder_debug=query_builder_debug
+    def __init__(self, verbose=False):
+        self.verbose=verbose
 
     @staticmethod
     def generate_1match(
@@ -330,7 +330,7 @@ class QueryBuilder():
             return False
 
     def enrich_labels_from_rels(self, labels: list, rels: list, oclass_marker: str):
-        if self.verbose and self.query_builder_debug:
+        if self.verbose and:
             logger.debug(f'Enriching labels from rels')
             logger.debug(f'Labels {labels}')
             logger.debug(f'Rels {rels}')
@@ -374,11 +374,11 @@ class QueryBuilder():
                     # label is there, but optional is not (And we want to have an optional label),so replace label with
                     # optional label in new_labels
                     new_labels = list(map(lambda _label: _label.replace(label, cur_label), new_labels))
-            if self.verbose and self.query_builder_debug:
+            if self.verbose:
                 logger.debug(f'Returning labels {new_labels}')
             return new_labels
         else:
-            if self.verbose and self.query_builder_debug:
+            if self.verbose:
                 logger.debug(f'Returning labels {labels}')
             return labels
 
@@ -396,7 +396,7 @@ class QueryBuilder():
         g_lookup = {'label': 'group_n'}
         """
 
-        if self.verbose and self.query_builder_debug:
+        if self.verbose:
             logger.debug(f'Splitting out optional labels and rels')
             logger.debug(f'Labels {labels}')
             logger.debug(f'Rels {rels}')
@@ -486,13 +486,13 @@ class QueryBuilder():
                             _rels.append(_rel)
                 g_dict_compact.append((_labels, _rels))
 
-            if self.verbose and self.query_builder_debug:
+            if self.verbose:
                 logger.debug(f'Returning g_dict_compact {g_dict_compact}')
 
             return g_dict_compact
         else:
 
-            if self.verbose and self.query_builder_debug:
+            if self.verbose
                 logger.debug(f'Returning labels and rels {[(labels, rels)]}')
                 
             return [(labels, rels)]
