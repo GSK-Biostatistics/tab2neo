@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from model_managers import ModelManager
 import pandas as pd
-from logger import logger
+from logger.logger import logger
 
 
 def get_tag_label(

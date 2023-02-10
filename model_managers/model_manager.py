@@ -2,7 +2,7 @@ import os
 from neointerface import NeoInterface
 from typing import List
 import pandas as pd
-from logger import logger
+from logger.logger import logger
 
 
 class ModelManager(NeoInterface):

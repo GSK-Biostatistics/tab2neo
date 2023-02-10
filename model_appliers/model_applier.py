@@ -2,7 +2,7 @@ import re
 from neointerface import NeoInterface
 from data_providers.data_provider import DataProvider
 from query_builders.query_builder import QueryBuilder
-from logger import logger
+from logger.logger import logger
 
 
 class ModelApplier(NeoInterface):

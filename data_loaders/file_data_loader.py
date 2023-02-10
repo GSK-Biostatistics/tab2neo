@@ -4,7 +4,7 @@ import re
 import pyreadstat       # A library that was open-sourced by Roche
 import pyreadr          # Used for the RDA format
 import os
-from logger import logger
+from logger.logger import logger
 
 
 class FileDataLoader(neointerface.NeoInterface):
