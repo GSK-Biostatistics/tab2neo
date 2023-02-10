@@ -34,11 +34,8 @@ now = strftime("%Y-%m-%d_%H-%M-%S", gmtime())
 
 logger = logging.getLogger("tab2neo")
 logger.setLevel(logging.INFO)
-
 ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
 ch.setFormatter(CustomFormatter())
-
 logger.addHandler(ch)
 
 logger.info("-------------------------------   Loaded tab2neo Logger    -------------------------------")
