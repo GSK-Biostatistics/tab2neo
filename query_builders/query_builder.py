@@ -330,7 +330,7 @@ class QueryBuilder():
             return False
 
     def enrich_labels_from_rels(self, labels: list, rels: list, oclass_marker: str):
-        if self.verbose and:
+        if self.verbose:
             logger.debug(f'Enriching labels from rels')
             logger.debug(f'Labels {labels}')
             logger.debug(f'Rels {rels}')
@@ -492,7 +492,7 @@ class QueryBuilder():
             return g_dict_compact
         else:
 
-            if self.verbose
+            if self.verbose:
                 logger.debug(f'Returning labels and rels {[(labels, rels)]}')
                 
             return [(labels, rels)]
