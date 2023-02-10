@@ -2,6 +2,7 @@ import os
 from neointerface import NeoInterface
 from typing import List
 import pandas as pd
+from logger import logger
 
 
 class ModelManager(NeoInterface):
@@ -26,7 +27,7 @@ class ModelManager(NeoInterface):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.verbose:
-            print(f"---------------- {self.__class__} initialized -------------------")
+            logger.info(f"---------------- {self.__class__} initialized -------------------")
 
     def gen_default_reltype(self, to_label: str) -> str:
         """
@@ -121,8 +122,8 @@ class ModelManager(NeoInterface):
 
         params = {'classes': classes}
 
-        if self.debug:
-            print(f"""
+        if self.verbose:
+            logger.debug(f"""
             query: {q}
             parameters: {params}
             """)
@@ -869,7 +870,7 @@ class ModelManager(NeoInterface):
 
     def propagate_rels_to_parent_class(self):
         if self.verbose:
-            print("Copying Relationships to 'parent' Classes where (child)-[:SUBCLASS_OF]->(parent)")
+            logger.info("Copying Relationships to 'parent' Classes where (child)-[:SUBCLASS_OF]->(parent)")
         self.query("""
         MATCH (c:Class)<-[r1:TO|FROM]-(r:Relationship)-[r2:TO|FROM]-(target:Class), (c)-[:SUBCLASS_OF*1..50]->(source:Class)
         WHERE type(r1) <> type(r2)
@@ -885,6 +886,8 @@ class ModelManager(NeoInterface):
         """)
 
     def remove_unmapped_classes(self):
+        if self.verbose:
+            logger.info("Removing Unmapped Classes")
         q = """
         MATCH (c:Class)
         WHERE NOT EXISTS (
@@ -897,6 +900,8 @@ class ModelManager(NeoInterface):
         self.query(q)
 
     def remove_auxilary_term_labels(self):
+        if self.verbose:
+            logger.info("Removing Auxilary Term Labels")
         """
         To be used after reshaping - additional labels from Terms that have not been extracted from data are removed
         :return:

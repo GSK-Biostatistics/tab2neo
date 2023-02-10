@@ -19,8 +19,6 @@ class AzureDataLoader(FileDataLoader):
                             (files by default deleted after operation completed)
         :param domain_dict: dictionary with file names as keys, and domain to be assigned as values
                             (e.g. {'dm_xyz.sas7bdat': 'DM', 'ae_xyz.sas7bdat': 'AE'} )
-        :param verbose: bool - to print or not to print exec details
-        :param debug: bool - to print or not to print details for debugging (e.g. cypher queries to be submitted)
         :param args: other arguments
         :param kwargs: other keyword arguments
         """

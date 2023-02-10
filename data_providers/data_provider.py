@@ -5,8 +5,6 @@ from logger.logger import logger
 from model_managers import ModelManager
 from query_builders.query_builder import QueryBuilder
 
-logger.setLevel(logging.INFO)
-
 
 class DataProvider(NeoInterface):
     """
@@ -21,7 +19,7 @@ class DataProvider(NeoInterface):
         self.mm = ModelManager(*args, **kwargs)
         super().__init__(*args, **kwargs)
         if self.verbose:
-            print(f"---------------- {self.__class__} initialized -------------------")
+            logger.info(f"---------------- {self.__class__} initialized -------------------")
 
     def check_schema(self, labels: list, rels: list):
         for label in labels:
@@ -226,8 +224,8 @@ class DataProvider(NeoInterface):
         q = q_body + q_call + q_with + q_return + q_limit
         # ------------------------------ QUERY RUN ------------------------------------#
         if self.verbose:
-            logger.info(f"QUERY: {q}")
-            logger.info(f"PARAMS: {params}")
+            logger.debug(f"QUERY: {q}")
+            logger.debug(f"PARAMS: {params}")
         q_res = self.query(q, params)
         if return_disjoint:
             res = q_res
