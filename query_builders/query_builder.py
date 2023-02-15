@@ -23,7 +23,12 @@ def get_tag_label(
 
 class QueryBuilder():
     """
-    QueryBuilder generates query strings
+    QueryBuilder generates query strings for the 4 parts of a query:
+        - Body - where the (optional) match statements are defined
+        - Call - where any CALL statements are defined (not required)
+        - With - where any WITH statements are defined (are required if Call statements are defined)
+        - Return - where the return statement is defined
+
     QueryBuilder is ignorant about the database schema or existance of labels/relationships in the database
     """
 
@@ -34,6 +39,10 @@ class QueryBuilder():
     def generate_1match(
             label  # str or dict (if dict then format: {'short_label':<short_label>, 'label':<label>}}
     ):
+        """
+        Generates a single match statement e.g.
+        `USUBJID`:`Subject`
+        """
         short_label, label = get_tag_label(label)
         return f"(`{short_label}`:`{label}`)"
 
@@ -42,6 +51,11 @@ class QueryBuilder():
             self,
             label: str  # str or dict (if dict then format: {'short_label':<short_label>, 'label':<label>}}
     ):
+        """
+        Generates a single match statement for a class (i.e. schema level of the database)
+        e.g.
+        `USUBJID`:`Class`{label:'Subject'}
+        """
         short_label, label = self._get_tag_label(label)
         return f"(`{short_label}`:`Class`{{label:'{label}'}})"
 
@@ -49,6 +63,10 @@ class QueryBuilder():
     def generate_1rel(
             rel: dict  # {'from':<label1>, 'to':<label2>, 'type':<type>[, 'type_tag':<type_tag>]}
     ):
+        """
+        Generates a single match statement for a relationship e.g.
+        (`USUBJID`)-[`USUBJID_Analysis Age_AAGE`:`Analysis Age`]->(`AAGE`)
+        """
         for key in ['from', 'to']:
             assert isinstance(rel.get(key), str) and len(rel.get(key)) > 0
         type_ = rel.get('type')
@@ -69,6 +87,10 @@ class QueryBuilder():
             subclass_dir=None,
             subclass_depth=50
     ):
+        """
+        Generates a single match statement for a relationship node. (i.e. schema level of the database)
+        Along with any subclasses for the FROM and TO classes
+        """
         tag_dict = {}
         for key in ['from', 'to']:
             assert isinstance(rel.get(key), str) and len(rel.get(key)) > 0
@@ -97,8 +119,19 @@ class QueryBuilder():
         return q, where_map
 
     def generate_all_rel_match(self, match: str, labels: list, rels:list):
+        """
+        Generates the match statements for all the relationships inside the rels param, including mandatory and optional.
+        Optional rels are defined by having the 'optional': 'true' key value pair inside of the rel (which is represented as a dict).
+
+        :param match: A string in ['MATCH'. 'OPTIONAL MATCH'] defining if this batch of labels/rels should be optional. 
+        If match == 'MATCH' then all the labels will be mandatory, however there can still be relationships that have 'optional': 'true' and require an OPTIONAL MATCH.
+        If match == 'OPTIONAL MATCH' then all the labels will be optional.
+        :param labels: a list of labels (strings)
+        :param rels: a list of relationships (dictionaries)
+        """
         rel_text_list = []
         optional_rel_text_list = []
+        # generate two lists for mandatory and optional relationships
         for rel in rels:
             if rel.get('optional') == 'true':
                 optional_rel_text_list.append(self.generate_1rel(rel))
@@ -328,7 +361,18 @@ class QueryBuilder():
             return False
 
     @staticmethod
-    def enrich_labels_from_rels(labels: list, rels: list, oclass_marker: str):
+    def enrich_labels_from_rels(labels: list, rels: list, oclass_marker: str) -> list:
+        """
+        Add any labels found in relationships that are not already present in labels.
+        As sometimes a label is not optional when a relationship it is involved in IS optional, 
+        we decide on whether to make that label optional.
+
+        :param label: list of labels (string)
+        :param rels: list of relationships (dictionary)
+        :param oclass_marker: string to represent optional E.g. `Subject` is mandatory, `Subject**` is optional
+
+        :return: list of labels (string)
+        """
         if rels:
             labels_from_rels = {}
             all_optional_bool = all(rel.get('optional', False) for rel in rels)
@@ -374,8 +418,11 @@ class QueryBuilder():
             return labels
 
     @staticmethod
-    def split_out_optional(labels: list, rels: list, oclass_marker: str) -> (list, list, list, list):
+    def split_out_optional(labels: list, rels: list, oclass_marker: str) -> list:
         """
+        Separate labels and relationships into mandatory (0) and optional (1). Each label is returned with all the
+        relationships that it is involved in.
+        E.g.
         {
             0: [ #mandatory,
                 {'label1': ['rel1', 'rel2']},
@@ -386,6 +433,14 @@ class QueryBuilder():
             ]
         }
         g_lookup = {'label': 'group_n'}
+
+        :param label: list of labels (string)
+        :param rels: list of relationships (dictionary)
+        :param oclass_marker: string to represent optional E.g. `Subject` is mandatory, `Subject**` is optional
+
+        :return: list of size 2, composed of size 2 tuples. 
+        The first tuple is for mandatory labels and their rels, the second is for optional labels and their rels.
+        tuple[0] is a list of labels, tuple[1] is a list of relationships.
         """
 
         df_l_rels = pd.DataFrame(
@@ -484,6 +539,35 @@ class QueryBuilder():
             where_map=None,
             where_rel_map=None
     ):
+        """
+        Build a match statement string for given labels + rels + match.
+        Including where statements bases on where_map + where_rel_map.
+
+        :param label: list of labels (string)
+        :param rels: list of relationships (dictionary)
+        :param match: string in ['MATCH', 'OPTIONAL MATCH']
+        :param where_map: dict E.g 
+            {
+                'SUBJECT': {
+                    'USUBJID': '01-001',
+                    'SUBJID': '001',
+                    'PATIENT GROUP': [3, 5]
+                },
+                'SEX': {
+                    'ASEX': 'Male'
+                },
+                'Domain Abbreviation': {'rdfs:label': 'EX'}
+            }
+        :param where_rel_map: dict E.g
+        {
+            'nobs': {
+                'EXISTS': ['Ser', 'Pop', 'Asta'],
+                'NOT EXISTS': {'exclude': ['Ser', 'Pop', 'Asta']}
+            }
+        }
+
+        :return: match string E.g.
+        """
         assert match in ["MATCH", "OPTIONAL MATCH"]
         q_match = f"{match} " + ",\n".join(
             [self.generate_1match(label=label) for label in labels]
@@ -545,6 +629,29 @@ class QueryBuilder():
                       rels: list,
                       labels_to_pack: dict,
                       only_props: list) -> str:
+        """
+        Add call statements depending on the content of labels_to_pack.
+
+        :param label: list of labels (string)
+        :param rels: list of relationships (dictionary)
+        :param labels_to_pack: dict containing labels (keys) and their corresponding definitions (values) OR a size 1 list of their grouping class.
+
+        The first case is for classes that have a definition term.
+        The second case comes about when the relationship 'MAPS_TO_CLASS' is between the Data Column and the class, 
+        and when the relationship 'MAPS_TO_VALUE' is between the Data Column and the terms for that class.
+        E.g. 
+        {
+            'Age Group': 'Age Group Definition', 
+            'Population': ['Subject'],
+            'Baseline': ['Record']
+        }
+        Where a call statement is generated for any label that has a size 1 list as a value.
+
+        :return: call string
+        E.g.
+        'CALL apoc.path.subgraphNodes(`USUBJID`, {relationshipFilter: "Population", optional:true, minLevel: 1, maxLevel: 1}) YIELD node AS `POP_coll`'
+        'CALL apoc.path.subgraphNodes(`RECORD`, {relationshipFilter: "Baseline", optional:true, minLevel: 1, maxLevel: 1}) YIELD node AS `BASE_coll`'
+        """
         if labels_to_pack is None:  # is dict do below
             return ""
         assert len(labels) > 0
@@ -558,7 +665,6 @@ class QueryBuilder():
                     f'The core class passed into labels_to_pack was not of length 1. Was length: {len(value)}'
                 # Need to get the rel name for the apoc.path.subgraphNodes call to filter on the relationship.
                 relationship_label = None
-                # print(f'RELS: {rels}')
                 for rel in rels:
                     if rel.get('from') == value[0] and rel.get('to') == label:
                         relationship_label = rel.get('type').replace(f"{value[0]}_", "").replace(f"_{label}", "")
@@ -576,9 +682,32 @@ class QueryBuilder():
                       labels_to_pack: dict,
                       only_props: list) -> str:
         """
+        Generate WITH statements based on labels and labels_to_pack.
+
         :param labels: list of str or dict (if dict then format: {'tag':<tag>, 'label':<label>}}
-        :param labels_to_pack: list of dict containing labels (keys) and their corresponding definitions (values)
-        :return:
+        :param labels_to_pack: dict containing labels (keys) and their corresponding definitions (values) OR a size 1 list of their grouping class.
+        
+        The first case is for classes that have a definition term.
+        The second case comes about when the relationship 'MAPS_TO_CLASS' is between the Data Column and the class, 
+        and when the relationship 'MAPS_TO_VALUE' is between the Data Column and the terms for that class.
+        E.g. 
+        {
+            'Age Group': 'Age Group Definition', 
+            'Population': ['Subject'],
+            'Baseline': ['Record']
+        }
+
+        :return: WITH line for each label, with labels found in labels_to_pack being formatted differently E.g.
+            WITH 
+            `USUBJID`,
+            apoc.map.fromPairs(
+                collect([
+                    CASE WHEN `AGEGRDEF`.`Term Code` IS NOT NULL THEN `AGEGRDEF`.`Term Code` ELSE `AGEGRDEF`.`Short Label` END, `AGEGR`.`rdfs:label`
+                    ])
+                )
+            as `AGEGR_coll`,
+            collect(distinct `POP_coll`.`rdfs:label`) as `POP_coll`
+            collect(distinct `BASE_coll`.`rdfs:label`) as `BASE_coll`
         """
         if labels_to_pack is None:  # is dict do below
             return ""
@@ -619,8 +748,20 @@ class QueryBuilder():
                         only_props: list = None,
                         ) -> str:
         """
+        Generate a return statement for the query. The returned data is a list of dictionaries that can be easily converted to a dataframe.
+
         :param labels: list of str or dict (if dict then format: {'tag':<tag>, 'label':<label>}}
-        :param return_nodeid:
+        :param labels_to_pack: dict containing labels (keys) and their corresponding definitions (values) OR a size 1 list of their grouping class.
+        
+        The first case is for classes that have a definition term.
+        The second case comes about when the relationship 'MAPS_TO_CLASS' is between the Data Column and the class, 
+        and when the relationship 'MAPS_TO_VALUE' is between the Data Column and the terms for that class.
+        E.g. 
+        {
+            'Age Group': 'Age Group Definition', 
+            'Population': ['Subject'],
+            'Baseline': ['Record']
+        }
         :return:
         """
         assert len(labels) > 0
@@ -628,7 +769,6 @@ class QueryBuilder():
         for label in labels:
             if labels_to_pack is not None and label in labels_to_pack.values():
                 # Do not want a return statement for definitions
-                # print(f'{label} skipped over for query return')
                 continue
             return_items[label] = []
             assert isinstance(label, str) or isinstance(label, dict)
@@ -658,7 +798,6 @@ class QueryBuilder():
             if only_props:
                 if labels_to_pack is not None and label in labels_to_pack.keys():
                     item_str = f'{{`{label}`: `{label}_coll`}}'
-                    # print(f'ITEM STRING DEF: {item_str}')
                 else:
                     item_str = f'apoc.map.submap(`{tag}`, $only_props, NULL, False)'
             else:
