@@ -363,9 +363,8 @@ class QueryBuilder():
     @staticmethod
     def enrich_labels_from_rels(labels: list, rels: list, oclass_marker: str) -> list:
         """
-        Add any labels found in relationships that are not already present in labels.
-        As sometimes a label is not optional when a relationship it is involved in IS optional, 
-        we decide on whether to make that label optional.
+        Extends the labels list with any labels that are only present in relationships. 
+        Conditionally, non optional labels may become optional during this process if they are involved in an relationship that is optional.
 
         :param label: list of labels (string)
         :param rels: list of relationships (dictionary)
@@ -541,7 +540,7 @@ class QueryBuilder():
     ):
         """
         Build a match statement string for given labels + rels + match.
-        Including where statements bases on where_map + where_rel_map.
+        Including where statements based on where_map + where_rel_map.
 
         :param label: list of labels (string)
         :param rels: list of relationships (dictionary)
@@ -566,7 +565,7 @@ class QueryBuilder():
             }
         }
 
-        :return: match string E.g.
+        :return: match string
         """
         assert match in ["MATCH", "OPTIONAL MATCH"]
         q_match = f"{match} " + ",\n".join(
