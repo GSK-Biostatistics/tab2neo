@@ -3,38 +3,39 @@ Custom logger. Level INFO by default, can be changed to DEBUG if CLD is ran with
 """
 
 import logging
-import os
-import colorlog
-from pathlib import Path
 from time import gmtime, strftime
+
+
+class CustomFormatter(logging.Formatter):
+
+    grey = "\x1b[30;20m"
+    yellow = "\x1b[33;20m"
+    blue = "\x1b[36;20m"
+    red = "\x1b[31;20m"
+    bold_red = "\x1b[31;1m"
+    reset = "\x1b[0m"
+    format = "%(asctime)s    %(name)s    %(levelname)s    %(message)s (%(filename)s:%(lineno)d)"
+
+    FORMATS = {
+        logging.DEBUG: blue + format + reset,
+        logging.INFO: grey + format + reset,
+        logging.WARNING: yellow + format + reset,
+        logging.ERROR: red + format + reset,
+        logging.CRITICAL: bold_red + format + reset
+    }
+
+    def format(self, record):
+        log_fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(log_fmt, datefmt='%Y-%m-%d %I:%M:%S')
+        return formatter.format(record)
+
 
 now = strftime("%Y-%m-%d_%H-%M-%S", gmtime())
 
-logger = logging.getLogger("cld")
+logger = logging.getLogger("tab2neo")
 logger.setLevel(logging.INFO)
+ch = logging.StreamHandler()
+ch.setFormatter(CustomFormatter())
+logger.addHandler(ch)
 
-Path(os.path.join("logs", "logger")).mkdir(parents=True, exist_ok=True)
-file_handler = logging.FileHandler(os.path.join("logs", "logger", f"main_{now}.log"))
-
-file_handler.setFormatter(logging.Formatter("%(asctime)s    %(levelname)s    %(message)s"))
-file_handler.setLevel(logging.DEBUG)
-logger.addHandler(file_handler)
-
-stream_handler = colorlog.StreamHandler()
-stream_handler.setFormatter(
-    colorlog.ColoredFormatter(
-        "%(log_color)s%(asctime)s    %(name)s    %(levelname)s    %(message)s",
-        log_colors={
-            "DEBUG": "white",
-            "INFO": "white",
-            "WARNING": "yellow",
-            "ERROR": "red",
-            "CRITICAL": "red,bg_white",
-        },
-    )
-)
-
-logger.addHandler(file_handler)
-logger.addHandler(stream_handler)
-
-logger.info("-------------------------------   Loaded CLD Logger    -------------------------------")
+logger.info("-------------------------------   Loaded tab2neo Logger    -------------------------------")

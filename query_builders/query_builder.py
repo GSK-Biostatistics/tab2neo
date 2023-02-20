@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from model_managers import ModelManager
 import pandas as pd
+from logger.logger import logger
 
 
 def get_tag_label(
@@ -30,10 +31,11 @@ class QueryBuilder():
         - Return - where the return statement is defined
 
     QueryBuilder is ignorant about the database schema or existance of labels/relationships in the database
+    :param verbose: Provide debug logs
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, verbose=False):
+        self.verbose=verbose
 
     @staticmethod
     def generate_1match(
@@ -360,8 +362,7 @@ class QueryBuilder():
         else:
             return False
 
-    @staticmethod
-    def enrich_labels_from_rels(labels: list, rels: list, oclass_marker: str) -> list:
+    def enrich_labels_from_rels(self, labels: list, rels: list, oclass_marker: str):
         """
         Extends the labels list with any labels that are only present in relationships. 
         Conditionally, non optional labels may become optional during this process if they are involved in an relationship that is optional.
@@ -372,6 +373,12 @@ class QueryBuilder():
 
         :return: list of labels (string)
         """
+
+        if self.verbose:
+            logger.debug(f'Enriching labels from rels')
+            logger.debug(f'Labels {labels}')
+            logger.debug(f'Rels {rels}')
+
         if rels:
             labels_from_rels = {}
             all_optional_bool = all(rel.get('optional', False) for rel in rels)
@@ -412,12 +419,15 @@ class QueryBuilder():
                     # label is there, but optional is not (And we want to have an optional label),so replace label with
                     # optional label in new_labels
                     new_labels = list(map(lambda _label: _label.replace(label, cur_label), new_labels))
+            if self.verbose:
+                logger.debug(f'Returning labels {new_labels}')
             return new_labels
         else:
+            if self.verbose:
+                logger.debug(f'Returning labels {labels}')
             return labels
 
-    @staticmethod
-    def split_out_optional(labels: list, rels: list, oclass_marker: str) -> list:
+    def split_out_optional(self, labels: list, rels: list, oclass_marker: str) -> list:
         """
         Separate labels and relationships into mandatory (0) and optional (1). Each label is returned with all the
         relationships that it is involved in.
@@ -441,6 +451,11 @@ class QueryBuilder():
         The first tuple is for mandatory labels and their rels, the second is for optional labels and their rels.
         tuple[0] is a list of labels, tuple[1] is a list of relationships.
         """
+
+        if self.verbose:
+            logger.debug(f'Splitting out optional labels and rels')
+            logger.debug(f'Labels {labels}')
+            logger.debug(f'Rels {rels}')
 
         df_l_rels = pd.DataFrame(
             [
@@ -526,8 +541,16 @@ class QueryBuilder():
                                 'to') in _processed_labels and _rel not in _rels:
                             _rels.append(_rel)
                 g_dict_compact.append((_labels, _rels))
+
+            if self.verbose:
+                logger.debug(f'Returning g_dict_compact {g_dict_compact}')
+
             return g_dict_compact
         else:
+
+            if self.verbose:
+                logger.debug(f'Returning labels and rels {[(labels, rels)]}')
+                
             return [(labels, rels)]
 
     def generate_query_body(

@@ -2,6 +2,7 @@ import re
 from neointerface import NeoInterface
 from data_providers.data_provider import DataProvider
 from query_builders.query_builder import QueryBuilder
+from logger.logger import logger
 
 
 class ModelApplier(NeoInterface):
@@ -27,8 +28,8 @@ class ModelApplier(NeoInterface):
                 self.mode = "schema_PROPERTY"
             else:
                 self.mode = "schema_CLASS"
-            if self.debug:
-                print(f"Setting ModelApplier mode to {self.mode}")
+            if self.verbose:
+                logger.debug(f"Setting ModelApplier mode to {self.mode}")
         else:
             self.mode = mode
 
@@ -55,7 +56,7 @@ class ModelApplier(NeoInterface):
         self.delete_nodes_by_label(delete_labels=list_of_labels_to_delete)
 
         if self.verbose:
-            print("Nodes with the following labels have been deleted:", list_of_labels_to_delete)
+            logger.info("Nodes with the following labels have been deleted:", list_of_labels_to_delete)
 
     def define_refactor_indexes(self, where_map: dict = None) -> None:
         """
@@ -183,7 +184,7 @@ class ModelApplier(NeoInterface):
                 'lbl':      a list of "label" attributes in the `Class` node (along with labels of the classes to which the class is SUBCLASS_OF)
         """
         if self.verbose:
-            print(" ------ Refactoring loaded data per graph class_ definition.  EXECUTING PART 1 --------- ")
+            logger.info(" ------ Refactoring loaded data per graph class_ definition.  EXECUTING PART 1 --------- ")
         wh_list = []
         if not (where_map):
             where_map = {}
@@ -227,14 +228,14 @@ class ModelApplier(NeoInterface):
            RETURN mode, `Source Data Table`._domain_ as domain, coll, lbl           
            """
         params = where_map
-        if self.debug:
-            print(q, params)
+        if self.verbose:
+            logger.debug(q, params)
         qres = self.query(q, params)
 
-        if self.debug:
-            print("_extract_class_entities_part_1() created a list with the following ", len(qres), " elements: ")
+        if self.verbose:
+            logger.debug("_extract_class_entities_part_1() created a list with the following ", len(qres), " elements: ")
             for r in qres:
-                print("    ", r)
+                logger.debug("    ", r)
         ### Processing `Source Data Table` MAPS_TO_CLASS (extraction of 1 node per `Source Data Row` with no properties (CoreClass to link to)
         q2 = f"""
         MATCH (`Source Data Folder`:`Source Data Folder`)-[:HAS_TABLE]->(`Source Data Table`:`Source Data Table`),
@@ -273,12 +274,12 @@ class ModelApplier(NeoInterface):
         :return:        None
         """
         if self.verbose:
-            print(" ------ Refactoring loaded data per graph class_ definition.  EXECUTING PART 2 --------- ")
-            print("    LOOPING OVER ", len(qres), " entries in helper list:")
+            logger.info(" ------ Refactoring loaded data per graph class_ definition.  EXECUTING PART 2 --------- ")
+            logger.info("    LOOPING OVER ", len(qres), " entries in helper list:")
 
         for i, r in enumerate(qres):
-            if self.debug:
-                print(f"{i} Processing {r}")
+            if self.verbose:
+                logger.debug(f"{i} Processing {r}")
             self.extract_entities(
                 mode=r['mode'],
                 label='Source Data Row',
@@ -346,21 +347,21 @@ class ModelApplier(NeoInterface):
             """
 
         params = {"domains": domains, "classes": classes}
-        if self.debug:
-            print(q, params)
+        if self.verbose:
+            logger.info(q, params)
 
         qres = self.query(q, params)
 
-        if self.debug:
-            print("_link_classes_part_1() created a list with the following ", len(qres), " elements: ")
+        if self.verbose:
+            logger.debug("_link_classes_part_1() created a list with the following ", len(qres), " elements: ")
             for r in qres:
-                print("    ", r)
+                logger.debug("    ", r)
 
         return qres
 
     def _link_classes_part_2(self, qres: list) -> None:
         if self.verbose:
-            print("--------------- Linking classes ----------------------")
+            logger.info("--------------- Linking classes ----------------------")
         for res in qres:
             self.link_entities(
                 left_class=res['left_class'],
@@ -374,7 +375,7 @@ class ModelApplier(NeoInterface):
     # supporing the slternative refactoring (reshape_all)
     def create_is_a_rel_to_class(self, batch_size=10000):
         if self.verbose:
-            print("--------------- Creating IS_A relationship ----------------------")
+            logger.info("--------------- Creating IS_A relationship ----------------------")
         q = """            
         call apoc.periodic.iterate(
         '
@@ -397,13 +398,13 @@ class ModelApplier(NeoInterface):
                 r2 = self.query(q, {'parallel': False, 'batch_size': batch_size})
                 res.append(r2)
         if self.verbose:
-            print(res)
+            logger.info(res)
         return (res)
 
     # supporing the slternative refactoring (reshape_all)
     def create_is_a_rel_to_class2(self, batch_size=10000):
         if self.verbose:
-            print("--------------- Creating IS_A relationship ----------------------")
+            logger.info("--------------- Creating IS_A relationship ----------------------")
         q = """
         MATCH (c:Class)          
         WHERE c.label in $labels OR $labels = '*'    
@@ -425,13 +426,13 @@ class ModelApplier(NeoInterface):
             r2 = self.query(q, {'parallel': True, 'batch_size': batch_size, 'labels': labels})
             res.append(r2)
         if self.verbose:
-            print(res)
+            logger.info(res)
         return res
 
     # supporing the slternative refactoring (reshape_all)
     def link_via_is_a(self, batch_size=10000):
         if self.verbose:
-            print("--------------- Linking classes ----------------------")
+            logger.info("--------------- Linking classes ----------------------")
         q = """
         call apoc.periodic.iterate(      
         '  
@@ -471,7 +472,7 @@ class ModelApplier(NeoInterface):
                 r2 = self.query(q, {'parallel': False, 'batch_size': batch_size})
                 res.append(r2)
         if self.verbose:
-            print(res)
+            logger.info(res)
         return res
 
     # supporing the slternative refactoring (reshape_all)
@@ -496,12 +497,12 @@ class ModelApplier(NeoInterface):
                 """
         res = self.query(q, {'parallel': True, 'batch_size': batch_size})
         if self.verbose:
-            print(res)
+            logger.info(res)
         return res
 
     def delete_reshaped(self, batch_size=10000):
         if self.verbose:
-            print(" ------------------ Deleting reshaped instances ------------------")
+            logger.info(" ------------------ Deleting reshaped instances ------------------")
         q = f"""
         call apoc.periodic.iterate(
         '
@@ -540,7 +541,7 @@ class ModelApplier(NeoInterface):
                 r4 = self.query(q, {'parallel': False, 'batch_size': batch_size})
                 res.append(r4)
         if self.verbose:
-            print(res)
+            logger.info(res)
         return res
 
     def label_entities(self,
@@ -576,7 +577,7 @@ class ModelApplier(NeoInterface):
             assert re.search(f'RETURN.*{class_.lower()}', cond_cypher)
             assert re.search(f'RETURN.*{add_label["Class"].lower()}', cond_cypher)
             if self.verbose:
-                print(f"Using cypher condition add labels to link node {class_}; Cypher: {cond_cypher}")
+                logger.info(f"Using cypher condition add labels to link node {class_}; Cypher: {cond_cypher}")
             list_returns = [f'value["{rtrn}"] as `{rtrn}`' for rtrn in [class_.lower(), add_label['Class'].lower()]]
             periodic_part1 = f"""
             CALL apoc.cypher.run($cypher, $cypher_dict) YIELD value            
@@ -603,7 +604,7 @@ class ModelApplier(NeoInterface):
         params = {'cypher': cond_cypher, 'cypher_dict': cond_cypher_dict,
                   'property': "`" + add_label['Class'].lower() + "`.`" + add_label['Property'] + "`"
                   }
-        if self.debug:
-            print("        Query : ", q)
-            print("        Query parameters: ", params)
+        if self.verbose:
+            logger.debug("        Query : ", q)
+            logger.debug("        Query parameters: ", params)
         self.query(q, params)

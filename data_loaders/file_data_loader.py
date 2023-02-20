@@ -4,6 +4,7 @@ import re
 import pyreadstat       # A library that was open-sourced by Roche
 import pyreadr          # Used for the RDA format
 import os
+from logger.logger import logger
 
 
 class FileDataLoader(neointerface.NeoInterface):
@@ -17,10 +18,10 @@ class FileDataLoader(neointerface.NeoInterface):
         """
         :param domain_dict: dictionary with file names as keys and domain to be assigned as values
                             (e.g. {'dm_xyz.sas7bdat': 'DM', 'ae_xyz.sas7bdat': 'AE'} )
-        :param verbose: bool - to print or not to print exec details
-        :param debug: bool - to print or not to print details for debugging (e.g. cypher queries to be submitted)
-        :param args: other arguments
-        :param kwargs: other keyword arguments
+        :param verbose:     Flag indicating whether ANY logs will be displayed
+        :param debug:       Flag indicating whether logs will be in debug or info mode
+        :param args:        other arguments
+        :param kwargs:      other keyword arguments
         """
         self.domain_dict = domain_dict
         super().__init__(*args, **kwargs)
@@ -238,9 +239,9 @@ class FileDataLoader(neointerface.NeoInterface):
         """
         params = {'folder':folder, 'filename': filename, 'columns': columns, 'domain': domain}
         res = self.query(q, params)
-        if self.debug:
-            print("        Query : ", q)
-            print("        Query parameters: ", params)
+        if self.verbose:
+            logger.debug("        Query : ", q)
+            logger.debug("        Query parameters: ", params)
 
 
     def load_folder(self, folder="", only_files=None, metadataonly = False, test_run = False):
@@ -261,7 +262,7 @@ class FileDataLoader(neointerface.NeoInterface):
             # if only_files is empty list, then loads all files
             if (not only_files) or filename in only_files:
                 if self.verbose:
-                    print(f"Loading {filename}")
+                    logger.info(f"Loading {filename}")
                 self.load_file(folder, filename, metadataonly = metadataonly, test_run = test_run)
 
     def delete_source_data(self):
