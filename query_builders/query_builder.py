@@ -742,20 +742,21 @@ class QueryBuilder():
                 assert isinstance(labels_to_pack[label], (str, list)), \
                     f'Value in labels_to_pack is not string or list. It was: {type(labels_to_pack[label])}'
                 if isinstance(labels_to_pack[label], str):
+                    # If labels_to_unpack, take the dictionary of {'PREXGR1': `<=2'} as label_coll AND the label node
+                    item_str = f'''
+                    apoc.map.fromPairs(collect([CASE
+                        WHEN `{labels_to_pack[label]}`.`Term Code` IS NOT NULL
+                        THEN `{labels_to_pack[label]}`.`Term Code`
+                        ELSE `{labels_to_pack[label]}`.`Short Label`
+                        END, `{label}`.`rdfs:label`])) as `{label}_coll`'''
 
                     if return_nodeid:
-                        item_str = f'''
+                        id_item_str = f'''
                         apoc.map.fromPairs(collect([
                             `{labels_to_pack[label]}`.`Short Label`, id(`{labels_to_pack[label]}`)
                             ])) as ids_`{label}`'''
-                    else:
-                        # If labels_to_unpack, take the dictionary of {'PREXGR1': `<=2'} as label_coll AND the label node
-                        item_str = f'''
-                        apoc.map.fromPairs(collect([CASE
-                            WHEN `{labels_to_pack[label]}`.`Term Code` IS NOT NULL
-                            THEN `{labels_to_pack[label]}`.`Term Code`
-                            ELSE `{labels_to_pack[label]}`.`Short Label`
-                            END, `{label}`.`rdfs:label`])) as `{label}_coll`'''
+                        item_str = f'{item_str},\n{id_item_str}'
+
                 elif isinstance(labels_to_pack[label], list):
                     item_str = f'collect(distinct `{label}_coll`.`rdfs:label`) as `{label}_coll`'
             elif label in labels_to_pack.values():
