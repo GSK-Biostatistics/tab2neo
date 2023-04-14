@@ -702,7 +702,8 @@ class QueryBuilder():
     @staticmethod
     def generate_with(labels: list,
                       labels_to_pack: dict,
-                      only_props: list) -> str:
+                      only_props: list,
+                      return_nodeid: bool=False) -> str:
         """
         Generate WITH statements based on labels and labels_to_pack.
 
@@ -752,9 +753,11 @@ class QueryBuilder():
 
                     if return_nodeid:
                         id_item_str = f'''
-                        apoc.map.fromPairs(collect([
-                            `{labels_to_pack[label]}`.`Short Label`, id(`{labels_to_pack[label]}`)
-                            ])) as ids_`{label}`'''
+                        apoc.map.fromPairs(collect([CASE
+                        WHEN `{labels_to_pack[label]}`.`Term Code` IS NOT NULL
+                        THEN `{labels_to_pack[label]}`.`Term Code`
+                        ELSE `{labels_to_pack[label]}`.`Short Label`
+                        END, id(`{label}`)])) as `ids_{label}`'''
                         item_str = f'{item_str},\n{id_item_str}'
 
                 elif isinstance(labels_to_pack[label], list):
@@ -812,8 +815,8 @@ class QueryBuilder():
                 tag = label['tag']
             if return_nodeid:
                 id_col_name = self.gen_id_col_name(label, tag)
-                if labels_to_pack:
-                    item_str = f"{{`{id_col_name}`:ids_`{label}`)}}"
+                if label in labels_to_pack:
+                    item_str = f"{{`{id_col_name}`:`ids_{label}`}}"
                 else:
                     item_str = f"{{`{id_col_name}`:id(`{label}`)}}"
                 return_items[label].append(item_str)
