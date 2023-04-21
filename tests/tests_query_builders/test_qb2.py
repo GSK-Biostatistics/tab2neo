@@ -10,6 +10,9 @@ def qbr():
     yield qbr
 
 def test_generate_1match(qbr: QueryBuilder):
+    res = qbr.generate_1match(label='Study Subject', tag='S S')
+    assert res == "(`S S`:`Study Subject`)"
+    
     res = qbr.generate_1match(label='Study Subject')
     assert res == "(`Study Subject`:`Study Subject`)"
 
@@ -44,6 +47,16 @@ class TestGenerateQueryBody:
             where_map={'Subject': {'id': '001', 'name': 'Bob'}}
         )
         assert q == "MATCH (`Subject`:`Subject`),\n(`Exposure`:`Exposure`),\n(`Parameter`:`Parameter`),\n(`Subject`)-[`Subject_HAS_Exposure`:`HAS`]->(`Exposure`),\n(`Exposure`)-[`Exposure_HAS_Parameter`:`HAS`]->(`Parameter`)\nWHERE `Subject`.`id` = $par_1 AND `Subject`.`name` = $par_2"
+        assert params == {'par_1': '001', 'par_2': 'Bob'}
+        
+    def test_multi_label_and_tags_and_rel(self, qbr: QueryBuilder):
+        q, params = qbr.generate_query_body(
+            labels=['Subject', 'Exposure', 'Parameter'],
+            tags=['USUBJID', None, 'PARAM'],
+            rels=[{'to': 'Exposure', 'from': 'Subject', 'type': 'HAS'}, {'from': 'Exposure', 'to': 'Parameter', 'type': 'HAS'}],
+            where_map={'Subject': {'id': '001', 'name': 'Bob'}}
+        )        
+        assert q == "MATCH (`USUBJID`:`Subject`),\n(`Exposure`:`Exposure`),\n(`PARAM`:`Parameter`),\n(`USUBJID`)-[`USUBJID_HAS_Exposure`:`HAS`]->(`Exposure`),\n(`Exposure`)-[`Exposure_HAS_PARAM`:`HAS`]->(`PARAM`)\nWHERE `USUBJID`.`id` = $par_1 AND `USUBJID`.`name` = $par_2"
         assert params == {'par_1': '001', 'par_2': 'Bob'}
 
     def test_label_and_rel(self, qbr: QueryBuilder):

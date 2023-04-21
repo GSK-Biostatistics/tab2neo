@@ -7,6 +7,13 @@ from logger.logger import logger
 def get_tag_label(
         label  # str or dict (if dict then format: {'short_label':<short_label>, 'label':<label>}}
 ):
+    """
+    Generates standard tag for Neo4j query from class label
+    e.g. for {'label': 'Age (Years)', 'short_label': 'AGE Y'} will return `AGE U`
+    so that query builder can build a query
+    MATCH (`AGE U`:`Age (Years)`) ...
+    see generate_1match function
+    """
     assert len(label) > 0
     assert isinstance(label, str) or isinstance(label, dict)
     if isinstance(label, str):
@@ -39,14 +46,17 @@ class QueryBuilder():
 
     @staticmethod
     def generate_1match(
-            label  # str or dict (if dict then format: {'short_label':<short_label>, 'label':<label>}}
+            label,  # str or dict (if dict then format: {'short_label':<short_label>, 'label':<label>}}
+            tag: str = None
     ):
         """
         Generates a single match statement e.g.
-        `USUBJID`:`Subject`
-        """
+        (`USUBJID`:`Subject`)
+        """        
         short_label, label = get_tag_label(label)
-        return f"(`{short_label}`:`{label}`)"
+        if tag is None:
+            tag = short_label
+        return f"(`{tag}`:`{label}`)"
 
     @staticmethod
     def generate_1match_schema_check(
@@ -329,7 +339,8 @@ class QueryBuilder():
         return cypher_list, {}
 
     @staticmethod
-    def check_connectedness(labels: list, rels: list):
+    def check_connectedness(labels: list, rels: list) -> bool:
+    #TODO: rename to is_connected (convention for function returning bool)
 
         rels_ = rels.copy()
         if (len(labels) <= 1 and not rels_):
@@ -555,17 +566,18 @@ class QueryBuilder():
 
     def generate_query_body(
             self,
-            labels: list,
+            labels: list,            
             rels: list,  # [{'from':<label1>, 'to':<label2>, 'type':<type>}, ...]
             match="MATCH",
             where_map=None,
-            where_rel_map=None
+            where_rel_map=None,
+            tags: list = None,
     ):
         """
         Build a match statement string for given labels + rels + match.
         Including where statements based on where_map + where_rel_map.
 
-        :param label: list of labels (string)
+        :param label: list of labels (string)        
         :param rels: list of relationships (dictionary)
         :param match: string in ['MATCH', 'OPTIONAL MATCH']
         :param where_map: dict E.g 
@@ -581,6 +593,7 @@ class QueryBuilder():
                 'Domain Abbreviation': {'rdfs:label': 'EX'}
             }
         :param where_rel_map: dict E.g
+        :param tags: list of tags to be used for the list of labels (if None those are auto-generated from labels)
         {
             'nobs': {
                 'EXISTS': ['Ser', 'Pop', 'Asta'],
@@ -591,11 +604,34 @@ class QueryBuilder():
         :return: match string
         """
         assert match in ["MATCH", "OPTIONAL MATCH"]
+        assert tags is None or len(tags) == len(labels)
+        tag_mapping = {
+            label: (tags[i] if tags[i] else label) if tags else label
+            for i, label in enumerate(labels)
+        }
         q_match = f"{match} " + ",\n".join(
-            [self.generate_1match(label=label) for label in labels]
+            [
+                self.generate_1match(
+                    label=label,
+                    tag = tag_mapping[label]
+                ) 
+                for i, label in enumerate(labels)]
         )
         if rels:
-            q_rel_match = self.generate_all_rel_match(match, labels, rels)
+            q_rel_match = self.generate_all_rel_match(
+                match, 
+                [tag_mapping[label] for label in labels],
+                [
+                    {
+                    **rel, 
+                    **{
+                        'from': tag_mapping[rel['from']] if tag_mapping.get(rel['from']) else rel['from'], 
+                        'to': tag_mapping[rel['to']] if tag_mapping.get(rel['to']) else rel['to']
+                    }
+                    } 
+                 for rel in rels
+                 ]
+            )
             q_match += q_rel_match
 
         q_where = ""
@@ -603,9 +639,13 @@ class QueryBuilder():
         q_where_rel_list, q_where_rel_dict = [], {}
 
         if where_map:
-            q_where_list, q_where_dict = self.list_where_conditions_per_dict(mp=where_map)
+            q_where_list, q_where_dict = self.list_where_conditions_per_dict(
+                mp={(tag_mapping[k] if tag_mapping.get(k) else k):i for k, i in where_map.items()}
+            )
         if where_rel_map:
-            q_where_rel_list, q_where_rel_dict = self.list_where_rel_conditions_per_dict(mp=where_rel_map)
+            q_where_rel_list, q_where_rel_dict = self.list_where_rel_conditions_per_dict(
+                mp={(tag_mapping[k] if tag_mapping.get(k) else k):i for k, i in where_rel_map.items()}                
+            )
         if where_map or where_rel_map:
             q_where = "WHERE " + " AND ".join(q_where_list + q_where_rel_list)
         return ("\n".join([q_match, q_where]), {**q_where_dict, **q_where_rel_dict})

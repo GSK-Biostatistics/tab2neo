@@ -240,8 +240,8 @@ class FileDataLoader(neointerface.NeoInterface):
         params = {'folder':folder, 'filename': filename, 'columns': columns, 'domain': domain}
         res = self.query(q, params)
         if self.verbose:
-            logger.debug("        Query : ", q)
-            logger.debug("        Query parameters: ", params)
+            logger.debug(f"        Query : {q}")
+            logger.debug(f"        Query parameters: {params}")
 
 
     def load_folder(self, folder="", only_files=None, metadataonly = False, test_run = False):
