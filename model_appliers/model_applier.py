@@ -56,7 +56,7 @@ class ModelApplier(NeoInterface):
         self.delete_nodes_by_label(delete_labels=list_of_labels_to_delete)
 
         if self.verbose:
-            logger.info("Nodes with the following labels have been deleted:", list_of_labels_to_delete)
+            logger.info(f"Nodes with the following labels have been deleted: {list_of_labels_to_delete}")
 
     def define_refactor_indexes(self, where_map: dict = None) -> None:
         """
@@ -229,13 +229,13 @@ class ModelApplier(NeoInterface):
            """
         params = where_map
         if self.verbose:
-            logger.debug(q, params)
+            logger.debug(f"q : {q} | params : {params}")
         qres = self.query(q, params)
 
         if self.verbose:
-            logger.debug("_extract_class_entities_part_1() created a list with the following ", len(qres), " elements: ")
+            logger.debug(f"_extract_class_entities_part_1() created a list with the following {len(qres)} elements: ")
             for r in qres:
-                logger.debug("    ", r)
+                logger.debug(f"    {r}")
         ### Processing `Source Data Table` MAPS_TO_CLASS (extraction of 1 node per `Source Data Row` with no properties (CoreClass to link to)
         q2 = f"""
         MATCH (`Source Data Folder`:`Source Data Folder`)-[:HAS_TABLE]->(`Source Data Table`:`Source Data Table`),
@@ -275,7 +275,7 @@ class ModelApplier(NeoInterface):
         """
         if self.verbose:
             logger.info(" ------ Refactoring loaded data per graph class_ definition.  EXECUTING PART 2 --------- ")
-            logger.info("    LOOPING OVER ", len(qres), " entries in helper list:")
+            logger.info(f"    LOOPING OVER {len(qres)} entries in helper list:")
 
         for i, r in enumerate(qres):
             if self.verbose:
@@ -353,9 +353,9 @@ class ModelApplier(NeoInterface):
         qres = self.query(q, params)
 
         if self.verbose:
-            logger.debug("_link_classes_part_1() created a list with the following ", len(qres), " elements: ")
+            logger.debug(f"_link_classes_part_1() created a list with the following {len(qres)} elements: ")
             for r in qres:
-                logger.debug("    ", r)
+                logger.debug(f"    {r}")
 
         return qres
 
@@ -605,6 +605,6 @@ class ModelApplier(NeoInterface):
                   'property': "`" + add_label['Class'].lower() + "`.`" + add_label['Property'] + "`"
                   }
         if self.verbose:
-            logger.debug("        Query : ", q)
-            logger.debug("        Query parameters: ", params)
+            logger.debug(f"        Query : {q}")
+            logger.debug(f"        Query parameters: {params}")
         self.query(q, params)
