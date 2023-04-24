@@ -24,7 +24,7 @@ will return a dataframe
     1            9876      124           Active                1.0        125
     2             555      126           Active                1.0        127
 
-where columns 'Subject' and 'Treatment' would conatian unique identifiers of the corresponding nodes in the database (Neo4j node ids) and the rest of the columns will contain values of properties of the corresponding nodes.
+where columns 'Subject' and 'Treatment' would contain unique identifiers of the corresponding nodes in the database (Neo4j node ids) and the rest of the columns will contain values of properties of the corresponding nodes.
     
 # Detailed technical description
 ### __init__()
@@ -42,7 +42,7 @@ name | arguments| return
 
 ---
 
-##DATA RETRIEVAL
+## DATA RETRIEVAL
 
 ### get_data()
 name | arguments| return
@@ -109,7 +109,7 @@ name | arguments| return
 
 ![example of get_data](images/get_data_example.png)
 
-example of get_data
+Example of get_data
 
 
 
@@ -144,7 +144,7 @@ name | arguments| return
 
 
 ---
-##FILTERS
+## FILTERS
 
 ### get_filters()
 name | arguments| return
@@ -179,7 +179,7 @@ name | arguments| return
 
 ![example of get_filters](images/get_filters_example.png)
 
-example of get_filters
+Example of get_filters
 
 ---
 
@@ -218,7 +218,7 @@ name | arguments| return
 
 ---
 
-##PANDAS SUPPORT
+## PANDAS SUPPORT
 
 
 ### convert_qb_result_to_df()
