@@ -815,7 +815,10 @@ class QueryBuilder():
                 tag = label['tag']
             if return_nodeid:
                 id_col_name = self.gen_id_col_name(label, tag)
-                item_str = f"{{`{id_col_name}`:id(`{label}`)}}"
+                if (labels_to_pack is not None) and (label in labels_to_pack):
+                    item_str = f"{{`{id_col_name}`:`ids_{label}`}}"
+                else:
+                    item_str = f"{{`{id_col_name}`:id(`{label}`)}}"
                 return_items[label].append(item_str)
             if return_termorder:
                 item_str = f"""CASE 

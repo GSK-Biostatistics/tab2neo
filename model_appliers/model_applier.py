@@ -235,7 +235,7 @@ class ModelApplier(NeoInterface):
         if self.verbose:
             logger.debug(f"_extract_class_entities_part_1() created a list with the following {len(qres)} elements: ")
             for r in qres:
-                logger.debug(f"    {r}")
+                logger.debug(f" {r}")
         ### Processing `Source Data Table` MAPS_TO_CLASS (extraction of 1 node per `Source Data Row` with no properties (CoreClass to link to)
         q2 = f"""
         MATCH (`Source Data Folder`:`Source Data Folder`)-[:HAS_TABLE]->(`Source Data Table`:`Source Data Table`),
@@ -275,7 +275,7 @@ class ModelApplier(NeoInterface):
         """
         if self.verbose:
             logger.info(" ------ Refactoring loaded data per graph class_ definition.  EXECUTING PART 2 --------- ")
-            logger.info(f"    LOOPING OVER {len(qres)} entries in helper list:")
+            logger.info(f" LOOPING OVER {len(qres)} entries in helper list:")
 
         for i, r in enumerate(qres):
             if self.verbose:
@@ -355,7 +355,7 @@ class ModelApplier(NeoInterface):
         if self.verbose:
             logger.debug(f"_link_classes_part_1() created a list with the following {len(qres)} elements: ")
             for r in qres:
-                logger.debug(f"    {r}")
+                logger.debug(f" {r}")
 
         return qres
 
