@@ -15,7 +15,11 @@ EXAMPLE ([file with more details](../examples/load_adsl_adae.py)):
 
     df = dl.load_file(folder="../dummy_data", filename="adae.rda")
 ```
+NOTE: The `FileDataLoader()` call makes use of environment variables for your Neo4j databse credentials. Alternatively, call them directly within your code:
 
+```python
+dl = file_data_loader.FileDataLoader(host="bolt://...",credentials=("USERNAME","PASSWORD"))
+```
 The ADSL data import, when *only the metadata is imported* (metadataonly==True), produces the following Neo4j nodes and relationships:
 
 ![ADSL metadata import](images/ADSL%20metadata%20import.PNG)
