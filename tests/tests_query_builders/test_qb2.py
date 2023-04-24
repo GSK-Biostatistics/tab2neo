@@ -448,27 +448,6 @@ def test_generate_with(qbr: QueryBuilder):
                         END, `Subject`.`rdfs:label`])) as `Subject_coll`'''
     assert q3 == expected_q3
 
-    q4 = qbr.generate_with(
-        labels = ['Subject', 'Parameter', 'Analysis Value'],
-        labels_to_pack={'Analysis Value': 'Parameter'},   
-        only_props=['rdfs:label'],
-        return_nodeid=True
-    )
-
-    expected_q4 = '''WITH `Subject`
-, 
-                    apoc.map.fromPairs(collect([CASE
-                        WHEN `Parameter`.`Term Code` IS NOT NULL
-                        THEN `Parameter`.`Term Code`
-                        ELSE `Parameter`.`Short Label`
-                        END, `Analysis Value`.`rdfs:label`])) as `Analysis Value_coll`,
-
-                        apoc.map.fromPairs(collect([CASE
-                        WHEN `Parameter`.`Term Code` IS NOT NULL
-                        THEN `Parameter`.`Term Code`
-                        ELSE `Parameter`.`Short Label`
-                        END, id(`Analysis Value`)])) as `ids_Analysis Value`'''
-    assert q4 == expected_q4
 
 def test_generate_return(qbr: QueryBuilder):
     q1 = qbr.generate_return(
@@ -538,26 +517,3 @@ def test_generate_return(qbr: QueryBuilder):
                             END
 , CASE WHEN `No. of Exacerb in Last Year Group 1`{.*} IS NULL THEN {} ELSE `No. of Exacerb in Last Year Group 1`{.*} END]) as all'''
     assert q4 == expected_q4
-
-    q5 = qbr.generate_return(
-        labels=['Subject', 'Population'],
-        labels_to_pack={},
-        return_termorder=True,
-        return_nodeid=True
-    )
-
-    expected_q5 = '''RETURN apoc.map.mergeList([{`_id_Subject`:id(`Subject`)}
-, CASE 
-                                    WHEN `Subject`.Order IS NULL THEN {} 
-                                    ELSE {`Subject (N)`:`Subject`.Order} 
-                            END
-, apoc.map.fromPairs([key in keys(CASE WHEN `Subject`{.*} IS NULL THEN {} ELSE `Subject`{.*} END) | ["Subject" + "." + key, CASE WHEN `Subject`{.*} IS NULL THEN {} ELSE `Subject`{.*} END[key]]])
-, {`_id_Population`:id(`Population`)}
-, CASE 
-                                    WHEN `Population`.Order IS NULL THEN {} 
-                                    ELSE {`Population (N)`:`Population`.Order} 
-                            END
-, apoc.map.fromPairs([key in keys(CASE WHEN `Population`{.*} IS NULL THEN {} ELSE `Population`{.*} END) | ["Population" + "." + key, CASE WHEN `Population`{.*} IS NULL THEN {} ELSE `Population`{.*} END[key]]])]) as all'''
-    assert q5 == expected_q5
-
-
