@@ -571,8 +571,7 @@ class QueryBuilder():
             rels: list,  # [{'from':<label1>, 'to':<label2>, 'type':<type>}, ...]
             match="MATCH",
             where_map=None,
-            where_rel_map=None,
-            tags: list = None,
+            where_rel_map=None
     ):
         """
         Build a match statement string for given labels + rels + match.
@@ -594,49 +593,20 @@ class QueryBuilder():
                 'Domain Abbreviation': {'rdfs:label': 'EX'}
             }
         :param where_rel_map: dict E.g
-        :param tags: list of tags to be used for the list of labels (if None those are auto-generated from labels)
         {
             'nobs': {
                 'EXISTS': ['Ser', 'Pop', 'Asta'],
                 'NOT EXISTS': {'exclude': ['Ser', 'Pop', 'Asta']}
             }
         }
-
         :return: match string
         """
         assert match in ["MATCH", "OPTIONAL MATCH"]
-        assert tags is None or len(tags) == len(labels)   
-        for label in labels:
-            assert isinstance(label, str) or isinstance(label, dict)
-                
-        labels_str = [l.get('label') if isinstance(l, dict) else l for l in labels]
-        tag_mapping = {
-            label: (tags[i] if tags[i] else label) if tags else label
-            for i, label in enumerate(labels_str)
-        }
         q_match = f"{match} " + ",\n".join(
-            [
-                self.generate_1match(
-                    label=label,
-                    tag = tag_mapping[label]
-                ) 
-                for i, label in enumerate(labels_str)]
+            [self.generate_1match(label=label) for label in labels]
         )
         if rels:
-            q_rel_match = self.generate_all_rel_match(
-                match, 
-                [tag_mapping[label] for label in labels_str],
-                [
-                    {
-                    **rel, 
-                    **{
-                        'from': tag_mapping[rel['from']] if tag_mapping.get(rel['from']) else rel['from'], 
-                        'to': tag_mapping[rel['to']] if tag_mapping.get(rel['to']) else rel['to']
-                    }
-                    } 
-                 for rel in rels
-                 ]
-            )
+            q_rel_match = self.generate_all_rel_match(match, labels, rels)
             q_match += q_rel_match
 
         q_where = ""
@@ -644,13 +614,9 @@ class QueryBuilder():
         q_where_rel_list, q_where_rel_dict = [], {}
 
         if where_map:
-            q_where_list, q_where_dict = self.list_where_conditions_per_dict(
-                mp={(tag_mapping[k] if tag_mapping.get(k) else k):i for k, i in where_map.items()}
-            )
+            q_where_list, q_where_dict = self.list_where_conditions_per_dict(mp=where_map)
         if where_rel_map:
-            q_where_rel_list, q_where_rel_dict = self.list_where_rel_conditions_per_dict(
-                mp={(tag_mapping[k] if tag_mapping.get(k) else k):i for k, i in where_rel_map.items()}                
-            )
+            q_where_rel_list, q_where_rel_dict = self.list_where_rel_conditions_per_dict(mp=where_rel_map)
         if where_map or where_rel_map:
             q_where = "WHERE " + " AND ".join(q_where_list + q_where_rel_list)
         return ("\n".join([q_match, q_where]), {**q_where_dict, **q_where_rel_dict})
