@@ -815,7 +815,7 @@ class QueryBuilder():
                 tag = label['tag']
             if return_nodeid:
                 id_col_name = self.gen_id_col_name(label, tag)
-                if label in labels_to_pack:
+                if (labels_to_pack is not None) and (label in labels_to_pack):
                     item_str = f"{{`{id_col_name}`:`ids_{label}`}}"
                 else:
                     item_str = f"{{`{id_col_name}`:id(`{label}`)}}"
