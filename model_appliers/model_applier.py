@@ -56,7 +56,7 @@ class ModelApplier(NeoInterface):
         self.delete_nodes_by_label(delete_labels=list_of_labels_to_delete)
 
         if self.verbose:
-            logger.info("Nodes with the following labels have been deleted:", list_of_labels_to_delete)
+            logger.info(f"Nodes with the following labels have been deleted: {list_of_labels_to_delete}")
 
     def define_refactor_indexes(self, where_map: dict = None) -> None:
         """
@@ -229,7 +229,7 @@ class ModelApplier(NeoInterface):
            """
         params = where_map
         if self.verbose:
-            logger.debug(f"{q}, {params}")
+            logger.debug(f"q : {q} | params : {params}")
         qres = self.query(q, params)
 
         if self.verbose:
@@ -355,7 +355,7 @@ class ModelApplier(NeoInterface):
         if self.verbose:
             logger.debug(f"_link_classes_part_1() created a list with the following {len(qres)} elements: ")
             for r in qres:
-                logger.debug("    ", r)
+                logger.debug(f"    {r}")
 
         return qres
 
@@ -605,6 +605,6 @@ class ModelApplier(NeoInterface):
                   'property': "`" + add_label['Class'].lower() + "`.`" + add_label['Property'] + "`"
                   }
         if self.verbose:
-            logger.debug("        Query : ", q)
-            logger.debug("        Query parameters: ", params)
+            logger.debug(f"        Query : {q}")
+            logger.debug(f"        Query parameters: {params}")
         self.query(q, params)
