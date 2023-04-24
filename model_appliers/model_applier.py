@@ -56,7 +56,7 @@ class ModelApplier(NeoInterface):
         self.delete_nodes_by_label(delete_labels=list_of_labels_to_delete)
 
         if self.verbose:
-            logger.info("Nodes with the following labels have been deleted:", list_of_labels_to_delete)
+            logger.info(f"Nodes with the following labels have been deleted: {list_of_labels_to_delete}")
 
     def define_refactor_indexes(self, where_map: dict = None) -> None:
         """
