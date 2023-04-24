@@ -1,3 +1,4 @@
+from typing import List, Union
 from collections import OrderedDict
 from model_managers import ModelManager
 import pandas as pd
@@ -566,7 +567,7 @@ class QueryBuilder():
 
     def generate_query_body(
             self,
-            labels: list,            
+            labels: Union[List[str], List[dict]],
             rels: list,  # [{'from':<label1>, 'to':<label2>, 'type':<type>}, ...]
             match="MATCH",
             where_map=None,
@@ -577,7 +578,7 @@ class QueryBuilder():
         Build a match statement string for given labels + rels + match.
         Including where statements based on where_map + where_rel_map.
 
-        :param label: list of labels (string)        
+        :param label: list of labels (strings or dicts)
         :param rels: list of relationships (dictionary)
         :param match: string in ['MATCH', 'OPTIONAL MATCH']
         :param where_map: dict E.g 
@@ -604,10 +605,14 @@ class QueryBuilder():
         :return: match string
         """
         assert match in ["MATCH", "OPTIONAL MATCH"]
-        assert tags is None or len(tags) == len(labels)
+        assert tags is None or len(tags) == len(labels)   
+        for label in labels:
+            assert isinstance(label, str) or isinstance(label, dict)
+                
+        labels_str = [l.get('label') if isinstance(l, dict) else l for l in labels]
         tag_mapping = {
             label: (tags[i] if tags[i] else label) if tags else label
-            for i, label in enumerate(labels)
+            for i, label in enumerate(labels_str)
         }
         q_match = f"{match} " + ",\n".join(
             [
@@ -615,12 +620,12 @@ class QueryBuilder():
                     label=label,
                     tag = tag_mapping[label]
                 ) 
-                for i, label in enumerate(labels)]
+                for i, label in enumerate(labels_str)]
         )
         if rels:
             q_rel_match = self.generate_all_rel_match(
                 match, 
-                [tag_mapping[label] for label in labels],
+                [tag_mapping[label] for label in labels_str],
                 [
                     {
                     **rel, 
