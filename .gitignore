@@ -147,3 +147,4 @@ test.py
 temp/*
 utils/temp/*
 install_neointerface.bat
+.vscode/*
