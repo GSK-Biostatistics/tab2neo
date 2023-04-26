@@ -27,9 +27,9 @@ MODEL MANAGERS
 QUERY BUILDERS
 - QueryBuilder - Class to support creation of cypher queries to work with data in Neo4j  
 
-## A full example
+## End-to-end data loading and reshaping example
 
-The example code below runs through a use case with an example of data loaders, model appliers, data providers, and model managers.
+The example code below runs through a use case of data loader, model manager, model applier and data provider.
 
 #### Importing the data 
 
@@ -49,14 +49,11 @@ fdl.load_file(
 )
 ```
 
-Now the data will be populated within your database, but it wont be connected in a very meaningful way. We have \`Source Data Column\` nodes containing information about the columns of ur data - Study, Subject, Age and Sex, and \`Source Data Row\` nodes containing information about the two rows. The following code creates a model from the data using ModelManager. We are then setting some properties for classes Age and Subject via queries to the database.
+Now the data will be populated within your database, but it won't be connected in a meaningful way. We have \`Source Data Column\` nodes containing information about the columns of our data - Study, Subject, Age and Sex, and \`Source Data Row\` nodes containing information of the two rows. The following code creates a trivial model(Classes and Relationships) from the data using ModelManager.
 
 ```python
 mm = ModelManager()
 mm.create_model_from_data()
-mm.query("MATCH (c:Class{label:'Subject'}) set c.short_label = 'USUBJID'")
-mm.query("MATCH (c:Class{label:'Age'}) set c.data_type = 'int'")
-
 ```
 Here we can see we now have class and relationship nodes, illustrating connections between Study, Subject, Age and Sex. 
 
@@ -72,7 +69,12 @@ ma.refactor_all()
 
 ![modelapplier example](examples/data/create_model_from_data%20example.PNG)
 
-Next we can create some additional classes using `create_class` from ModelManager:
+TODO: add a DataProvider. get_data, get_data_cld or get_data_generic call here.
+
+
+Note: ModelManager as well allows to create addtional schema classes with the following functions, however the content of tab2neo package at this stage does not allow to populate those new classes with derived data. This functionality will become availabel in later releases.
+
+We can create some additional classes using `create_class` from ModelManager:
 
 ```python
 mm.create_class([
