@@ -67,7 +67,7 @@ ma.refactor_all()
 
 ```
 
-![modelapplier example](examples/data/create_model_from_data%20example.PNG)
+![modelapplier example](examples/data/modelapplier_example.png)
 
 TODO: add a DataProvider. get_data, get_data_cld or get_data_generic call here.
 
