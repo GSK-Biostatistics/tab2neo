@@ -30,15 +30,7 @@ where columns 'Subject' and 'Treatment' would contain unique identifiers of the 
 ### __init__()
 name | arguments| return
 -----| ---------| -------
-*__init__*| mode='schema_PROPERTY', allow_optional_classes = True, *args, **kwargs|
-
-    :param mode:                if 'schema_PROPERTY': determines matching based on Class-Property schema \
-                                if 'noschema': determines matching based on all relationships in the database
-                                if 'noschema': NOTE: all the interrelationships should consistently exits for all classes
-    :param allow_optional_classes   If True then classes in the list with postfix ** will be considered optional
-    (OPTIONAL MATCH will be used to fetch data for those classes - see example test_get_data_noschema_optional_class )
-
-
+*__init__*| *args, **kwargs|
 
 ---
 
@@ -124,9 +116,6 @@ name | arguments| return
 
     Assembles into a Pandas dataframe the Property values from the data nodes with the specified Classes.
     Use this instead of get_data() when you need a full set of options.
-
-    Used when we have a schema with Classes and Properties (in self.mode == 'schema_PROPERTY')
-    or on graph data as is (if self.mode == 'noschema')
 
     TODO: it cannot handle different classes with the same property name - it may produce wrong results;
           use prefix_keys_with_label = True in this case
