@@ -57,7 +57,7 @@ mm.create_model_from_data()
 ```
 Here we can see we now have class and relationship nodes, illustrating connections between Study, Subject, Age and Sex. The red nodes below indicate relationship nodes, while the blue indicate class nodes.
 
-![modelmanager example](examples/data/modelmanager_example.png)
+![modelmanager example](examples/data/model_manager_example.png)
 
 Now using that class-relationship model we built using ModelManager, we can refactor our data and extract entities of the defined classes into separate nodes. In the code below we use `refactor_all` to do this, and we can see in the image that age values of 40 and 50 have been extracted into their own nodes. 
 
