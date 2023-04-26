@@ -69,8 +69,18 @@ ma.refactor_all()
 
 ![modelapplier example](examples/data/modelapplier_example.png)
 
-TODO: add a DataProvider. get_data, get_data_cld or get_data_generic call here.
+Now we have our data set up, we can call it back using DataProvider. Here we call back the Age class. As we have not specified any relationships, we must set `infer_rels=True`.
 
+```python
+dp.get_data_generic(["Age"],infer_rels=True) 
+```
+
+```
+            _id_Age  Age.rdfs:label  
+    0            175415      30
+    1            175416      40
+```
+    
 
 Note: ModelManager as well allows to create addtional schema classes with the following functions, however the content of tab2neo package at this stage does not allow to populate those new classes with derived data. This functionality will become availabel in later releases.
 
