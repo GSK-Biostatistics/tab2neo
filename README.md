@@ -49,29 +49,42 @@ fdl.load_file(
 )
 ```
 
-Now the data will be populated within your database, but it wont be connected in a very meaningful way. We have /`Source Data Column/` nodes containing information about the columns of ur data - Study, Subject, Age and Sex, and /`Source Data Row/` nodes containing information about the two rows. The following code creates a model from the data using ModelManager:
+Now the data will be populated within your database, but it wont be connected in a very meaningful way. We have /`Source Data Column/` nodes containing information about the columns of ur data - Study, Subject, Age and Sex, and /`Source Data Row/` nodes containing information about the two rows. The following code creates a model from the data using ModelManager. We are then setting some properties for classes Age and Subject via queries to the database.
 
 ```python
 mm = ModelManager()
 mm.create_model_from_data()
-```
-Here we can see we now have class and relationship nodes, illustrating connections between Study, Subject, Age and Sex.
-
-![modelmanager example](examples/data/create_model_from_data%20example.PNG)
-
-
 mm.query("MATCH (c:Class{label:'Subject'}) set c.short_label = 'USUBJID'")
 mm.query("MATCH (c:Class{label:'Age'}) set c.data_type = 'int'")
 
+```
+Here we can see we now have class and relationship nodes, illustrating connections between Study, Subject, Age and Sex. 
+
+![modelmanager example](examples/data/create_model_from_data%20example.PNG)
+
+Now using that class-relationship model we built using ModelManager, we can refactor our data and extract entities of the defined classes into separate nodes. In the code below we use `refactor_all` to do this, and we can see in the image that age values of 40 and 50 have been extracted into their own nodes. 
+
+```python
 ma = ModelApplier(mode="schema_CLASS")
 ma.refactor_all()
 
+```
+
+![modelapplier example](examples/data/create_model_from_data%20example.PNG)
+
+Next we can create some additional classes using `create_class` from ModelManager:
+
+```python
 mm.create_class([
     {'label': 'Parameter', 'short_label': 'PARAM'}, 
     {'label': 'Analysis Value (C)', 'short_label': 'AVALC'}, 
     {'label': 'Analysis Value', 'short_label': 'AVAL'}, 
     {'label': 'Record', 'short_label': 'RECORD'}
     ])
+```
+And we can also create related classes, where for each triplet, the required classes and the relationships between them will be created:
+
+```python
 mm.create_related_classes_from_list([
     ['Subject', 'Record', 'Record'],
     ['Record', 'Parameter', 'Parameter'],
@@ -79,14 +92,15 @@ mm.create_related_classes_from_list([
     ['Record', 'Analysis Value (C)', 'Analysis Value (C)'],
 ]
 )
+```
+And finally we can create Term nodes using `create_ct`. Here the class with label 'Parameter' is being linked with [:HAS_CONTROLLED_TERM] relationships to 'Age' and 'Sex'.
+
+```python
 mm.create_ct(
     {
     'Parameter': [{'rdfs:label': 'Age'}, {'rdfs:label': 'Sex'}],               
     }
 )
-
-dp = DataProvider()
-
 ```
 
 
