@@ -45,7 +45,7 @@ fdl = FileDataLoader()
 fdl.clean_slate()
 fdl.load_file(
     folder='examples/data/', 
-    filename='full_example_data.csv'
+    filename='Record.csv'
 )
 ```
 
