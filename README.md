@@ -49,7 +49,7 @@ fdl.load_file(
 )
 ```
 
-Now the data will be populated within your database, but it wont be connected in a very meaningful way. We have /`Source Data Column/` nodes containing information about the columns of ur data - Study, Subject, Age and Sex, and /`Source Data Row/` nodes containing information about the two rows. The following code creates a model from the data using ModelManager. We are then setting some properties for classes Age and Subject via queries to the database.
+Now the data will be populated within your database, but it wont be connected in a very meaningful way. We have \`Source Data Column\` nodes containing information about the columns of ur data - Study, Subject, Age and Sex, and \`Source Data Row\` nodes containing information about the two rows. The following code creates a model from the data using ModelManager. We are then setting some properties for classes Age and Subject via queries to the database.
 
 ```python
 mm = ModelManager()
