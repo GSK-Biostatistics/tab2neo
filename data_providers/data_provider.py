@@ -105,7 +105,8 @@ class DataProvider(NeoInterface):
             return_class_uris: bool = False,  # to return dict with Class as key and distinct values as values set to True
             check_schema=False,
             limit=None,
-            return_q_and_dict=False
+            return_q_and_dict=False,
+            pivot: bool = False
     ):
         if only_props:
             if isinstance(only_props, str):
@@ -207,7 +208,8 @@ class DataProvider(NeoInterface):
         q_with = "\n" + self.qb.generate_with(
             labels=labels_clean,
             labels_to_pack=labels_to_pack,
-            only_props=only_props
+            only_props=only_props,
+            return_nodeid=return_nodeid
         )
 
         q_return = "\n" + self.qb.generate_return(
@@ -232,6 +234,19 @@ class DataProvider(NeoInterface):
         else:
             res = pd.DataFrame([r['all'] for r in q_res])
         # TODO: rename rdfs:label to short_label of each class
+        # pivot dictionaries if labels_to_pack not none
+        if pivot:
+            if labels_to_pack:
+            #code to pivot tables
+                for label in labels_to_pack:
+                    
+                    res = res.drop(label,1).join(pd.DataFrame.from_dict(getattr(res,label).to_dict(), 
+                                                            orient='index'))
+                    if return_nodeid:
+                        id_label = "_id_"+label
+                        res = res.drop(id_label,1).join(pd.DataFrame.from_dict(getattr(res,id_label).to_dict(), 
+                                                            orient='index').add_prefix("_id_"))
+
         if return_q_and_dict:
             return res, q, params
         else:
