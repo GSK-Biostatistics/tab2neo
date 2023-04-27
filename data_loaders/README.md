@@ -15,11 +15,12 @@ EXAMPLE ([file with more details](../examples/load_adsl_adae.py)):
 
     df = dl.load_file(folder="../dummy_data", filename="adae.rda")
 ```
-NOTE: The `FileDataLoader()` call makes use of environment variables for your Neo4j databse credentials. Alternatively, call them directly within your code:
-
+NOTE: The `FileDataLoader()` call makes use of [environment variables same as in NeoInterface](https://github.com/GSK-Biostatistics/neointerface#neointerface) for your Neo4j database credentials. Alternatively one could call them directly within code as follows:
 ```python
 dl = file_data_loader.FileDataLoader(host="bolt://...",credentials=("USERNAME","PASSWORD"))
 ```
+However it is not a good practise as if this code is pushed to git, your credentials become visible to others.
+
 The ADSL data import, when *only the metadata is imported* (metadataonly==True), produces the following Neo4j nodes and relationships:
 
 ![ADSL metadata import](images/ADSL%20metadata%20import.PNG)

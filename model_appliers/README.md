@@ -1,4 +1,4 @@
-# ModelApplier Class (schema_Class mode)
+# ModelApplier Class
 ModelApplier - Python class to restructure data in Neo4j database using Class-Relationship model 
 (which as well resides in Neo4j). 
 
@@ -27,7 +27,7 @@ since the following path of metadata nodes exists: (:Class{label:'Subject'})<-[:
 
 
 
-# ModelApplier Class (schema_PROPERTY mode - used before 12.2021)
+# ModelApplier Class (schema_PROPERTY mode - to be deprecated - used before 12.2021)
 ModelApplier - Class to restructure data in Neo4j database using Class-Property model 
 (which as well resides in Neo4j). 
 

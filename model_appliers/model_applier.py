@@ -14,7 +14,7 @@ class ModelApplier(NeoInterface):
     """
     RDFSLABEL = 'rdfs:label'
 
-    def __init__(self, mode="schema_PROPERTY", *args, **kwargs):
+    def __init__(self, mode="schema_CLASS", *args, **kwargs):
         """
         :param mode: mode of MethodApplier to work either with schema_PROPERTY schema or MAPS_TO_CLASS schema
         :param args:
