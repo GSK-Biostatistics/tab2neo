@@ -34,7 +34,7 @@ def test_extract_class_entities_part_1_A(db):
         """
     db.query(q1)
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
 
     mod_a.debug = True
     res1 = mod_a._extract_class_entities_part_1()
@@ -79,7 +79,7 @@ def test_extract_class_entities_part_1_B(db):
         """
     db.query(q1)
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
 
     res1 = mod_a._extract_class_entities_part_1()
     expected1 = [{'mode': 'merge', 'domain': 'Automotive', 'coll': [['car_color', 'color'], ['plane_color', 'color']],
@@ -107,7 +107,7 @@ def test_extract_class_entities_part_1_C(db):
         """
     db.query(q1)
 
-    mod_a = model_applier.ModelApplier()  # The passed argument indicates a list of labels that must always be created
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")  # The passed argument indicates a list of labels that must always be created
 
     res1 = mod_a._extract_class_entities_part_1()
     expected1 = [{'mode': 'create', 'domain': 'Automotive', 'coll': [['car_color', 'color']], 'lbl': ['car']}]
@@ -152,7 +152,7 @@ def test_extract_class_entities_part_1_C_where_map(db):
             """
     db.query(q1)
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
     res1 = mod_a._extract_class_entities_part_1()
     print(res1)
     expected_res1 = [
@@ -193,7 +193,7 @@ def test_extract_class_entities_part_1_select_single(db):
             """
     db.query(q1)
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
 
     # test extracting a single domain
     res1 = mod_a._extract_class_entities_part_1(where_map={'Source Data Table': {'_domain_': ['Automotive']}})
@@ -238,7 +238,7 @@ def test_extract_class_entities_part_1_select_multiple(db):
             """
     db.query(q1)
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
 
     # test extracting 2 domains
     res1 = mod_a._extract_class_entities_part_1(where_map={'Source Data Table': {'_domain_': ['Automotive', 'Marine']}})
@@ -281,7 +281,7 @@ def test_extract_class_entities_part_2_A(db):
     # Use the list produced by test_extract_class_entities_part_1_A()
     res = [{'mode': 'merge', 'domain': 'Automotive', 'coll': [['car_color', 'color']], 'lbl': ['car']}]
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
 
     mod_a._extract_class_entities_part_2(res)
 
@@ -314,7 +314,7 @@ def test_extract_class_entities_part_2_B(db):
     # Use the list produced by test_extract_class_entities_part_1_A()
     res = [{'mode': 'merge', 'domain': 'Automotive', 'coll': [['car_color_NO_OVERLAP_ANYMORE', 'color']], 'lbl': ['car']}]
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
 
     mod_a._extract_class_entities_part_2(res)
 
@@ -348,7 +348,7 @@ def test_extract_class_entities_part_2_C(db):
     # Use the list produced by test_extract_class_entities_part_1_A()
     res = [{'mode': 'merge', 'domain': 'Automotive', 'coll': [['car_color', 'COLOR']], 'lbl': ['Color']}]
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
 
     mod_a._extract_class_entities_part_2(res)
 
@@ -390,7 +390,7 @@ def test_extract_class_entities_part_2_D(db):
             'coll': [['car_color', 'color'], ['car_make', 'make']],
             'lbl': ['Color']}]
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
 
     mod_a._extract_class_entities_part_2(res)
 
@@ -441,7 +441,7 @@ def test_extract_class_entities_part_2_E(db):
             'lbl': ['Manufacturer']}
            ]
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
     mod_a.debug=True
     mod_a._extract_class_entities_part_2(res)
 
@@ -513,7 +513,7 @@ def test_extract_class_entities_part_2_F(db):
             'lbl': ['BoatType']}
            ]
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
 
     mod_a._extract_class_entities_part_2(res)
 
@@ -586,7 +586,7 @@ def test_extract_class_entities_A(db):
         """
     db.query(q1)
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
 
     mod_a.extract_class_entities()
     # Note: the internal parameters are [{'mode': 'merge', 'domain': 'Automotive', 'coll': [['car_color', 'color']], 'lbl': ['car']}]
@@ -622,7 +622,7 @@ def test_extract_class_entities_B(db):
         """
     db.query(q1)
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
 
     mod_a.extract_class_entities()
     # Note: the internal parameters are [{'mode': 'merge', 'domain': 'Automotive', 'coll': [['car_color', 'color']], 'lbl': ['car']}]
@@ -662,7 +662,7 @@ def test_extract_class_entities_C(db):
         """
     db.query(q1)
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
 
     mod_a.extract_class_entities()
     # Note: the internal parameters are [{'mode': 'merge', 'domain': 'Automotive', 'coll': [['car_color', 'color']], 'lbl': ['car']}]
@@ -709,7 +709,7 @@ def test_extract_class_entities_D(db):
         """
     db.query(q1)
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
 
     mod_a.extract_class_entities()
     # Note: the internal parameters are [{'mode': 'merge', 'domain': 'Automotive', 'coll': [['car_color', 'color']], 'lbl': ['car']}]

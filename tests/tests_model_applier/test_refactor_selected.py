@@ -225,7 +225,7 @@ def test_refactor_selected(db):
     db.clean_slate()
     prep_data(db)
 
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
 
     # Verify Subject nodes do not already exist
     cypher = "MATCH (n:Subject) RETURN n"
@@ -285,7 +285,7 @@ def test_refactor_selected_2classes_domains(db):
     """
     A scenario to test linking selected classes and domains (list >1).
     """
-    mod_a = model_applier.ModelApplier()
+    mod_a = model_applier.ModelApplier(mode="schema_PROPERTY")
 
     # 1. refactor_selected(classes=["Subject", "Sex])
     db.clean_slate()
