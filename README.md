@@ -1,6 +1,7 @@
 # tab2neo- backend classes
 High-level Python classes to load, model and reshape tabular data imported into Neo4j database  
-IMPORTANT NOTE: tested on **versions 4.3.6 and 4.4.11 of Neo4j**
+IMPORTANT NOTE: tested on **versions 4.3.6 and 4.4.11 of Neo4j**  
+python verison: 3.8
 
 ## Installation
 
@@ -62,14 +63,14 @@ Here we can see we now have class and relationship nodes, illustrating connectio
 Now using that class-relationship model we built using ModelManager, we can refactor our data and extract entities of the defined classes into separate nodes. In the code below we use `refactor_all` to do this, and we can see in the image that age values of 40 and 50 have been extracted into their own nodes. 
 
 ```python
-ma = ModelApplier(mode="schema_CLASS")
+ma = ModelApplier()
 ma.refactor_all()
 
 ```
 
 ![modelapplier example](examples/data/modelapplier_example.png)
 
-Now we have our data set up, we can call it back using DataProvider. Here we call back the Subject, Record and Age classes. 
+Now we have our data set up, we can call it back in a tabular way using DataProvider. Here we call back the Subject, Record and Age classes. 
 
 *Note: The Record class connects the graph between Subject and Age, and so is required for this call, despite not appearing in the output.*
 
@@ -86,7 +87,7 @@ dp.get_data_generic(["Subject","Record","Age"],infer_rels=True,return_propname=F
 ```
     
 
-Note: ModelManager as well allows to create addtional schema classes with the following functions, however the content of tab2neo package at this stage does not allow to populate those new classes with derived data. This functionality will become availabel in later releases.
+Note: ModelManager as well allows to create addtional schema classes with the following functions, however the content of tab2neo package at this stage does not allow to populate those new classes with derived data. This functionality will become available in later releases.
 
 We can create some additional classes using `create_class` from ModelManager:
 
@@ -109,7 +110,7 @@ mm.create_related_classes_from_list([
 ]
 )
 ```
-And finally we can create Term nodes using `create_ct`. Here the class with label 'Parameter' is being linked with [:HAS_CONTROLLED_TERM] relationships to 'Age' and 'Sex'.
+And finally we can create Term nodes using `create_ct`. Here the class with label 'Parameter' is being linked with [:HAS_CONTROLLED_TERM] relationships to 'Age' and 'Sex' Term nodes.
 
 ```python
 mm.create_ct(
