@@ -69,16 +69,20 @@ ma.refactor_all()
 
 ![modelapplier example](examples/data/modelapplier_example.png)
 
-Now we have our data set up, we can call it back using DataProvider. Here we call back the Age class. As we have not specified any relationships, we must set `infer_rels=True`.
+Now we have our data set up, we can call it back using DataProvider. Here we call back the Subject, Record and Age classes. 
+
+*Note: The Record class connects the graph between Subject and Age, and so is required for this call, despite not appearing in the output.*
+
+As we have not specified any relationships, we must set `infer_rels=True`. The argument `return_propname = False` ensures that we see the label name in our output, and `return_nodeid = False` removes the id values generated for each unique node in Neo4j from your output.
 
 ```python
-dp.get_data_generic(["Age"],infer_rels=True) 
+dp.get_data_generic(["Subject","Record","Age"],infer_rels=True,return_propname=False,return_nodeid=False) 
 ```
 
 ```
-            _id_Age  Age.rdfs:label  
-    0            175415      30
-    1            175416      40
+            Subject  Age 
+    0            S001      30
+    1            s002      40
 ```
     
 
