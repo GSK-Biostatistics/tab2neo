@@ -90,7 +90,7 @@ name | arguments| return
 ### get_data_generic()
 name | arguments| return
 -----| ---------| -------
-*get_data_generic*| classes: list, where_map=None, allow_unrelated_subgraphs=False, return_nodeid = False, return_properties ="*", prefix_keys_with_label=False, order = None, limit = 20| pd.DataFrame
+*get_data_generic*| labels: list, rels: list = None, labels_to_pack=None, infer_rels=False, where_map=None, where_rel_map=None,allow_unrelated_subgraphs: bool = False, use_shortlabel: bool = False, use_rel_labels: bool = True, return_nodeid: bool = True, return_propname: bool = True, return_termorder: bool = False, only_props: list = None, check_schema=False, limit=None, return_q_and_dict=False, pivot: bool = False| pd.DataFrame
 
     Assembles into a Pandas dataframe the Property values from the data nodes with the specified Classes.
     Use this instead of get_data() when you need a full set of options.
@@ -98,15 +98,22 @@ name | arguments| return
     TODO: it cannot handle different classes with the same property name - it may produce wrong results;
           use prefix_keys_with_label = True in this case
 
-    :param classes:             List of strings.  EXAMPLE: ['Study', 'Site', 'Subject']
+    :param labels:             List of strings.  EXAMPLE: ['Study', 'Site', 'Subject']
+    :param rels: A list of relationships e.g [{'from':<label1>, 'to':<label2>, 'type':<type>}, ...]
     :param where_map:           Used to restrict the data (default, no restriction.)
                                 A dictionary of dictionaries.  SEE explanation in get_data()
+    :param where_rel_map 
+    :param allow_unrelated_subgraphs: Boolean
+    :param use_short_label: Boolean
+    :param use_rel_labels: Boolean
     :param return_nodeid:       Boolean
-    :param return_properties:   Either a list of Property names to include in the dataframe, or the string "*" (meaning, "all")
-                                        EXAMPLE: ["STUDYID", "SITEID"]
-    :param prefix_keys_with_label: If True adds a prefix (corresponding node label) to each column name of the returned dataframe
-    :param order:               Either None (default) or a list or a string
-    :param limit:               Either None or an integer.  Defaults to 20
+    :param return_propname: Boolean
+    :param return_termorder: Boolean
+    :param only_props: list = None
+    :param check_schema: Boolean
+    :param limit: Either None or an integer
+    :param return_q_and_dict: Boolean
+    :param pivot: Boolean
     :return: pd.DataFrame(): nodes in path, merged with apoc.map.mergeList and converted to pd.DataFrame()
 
 
