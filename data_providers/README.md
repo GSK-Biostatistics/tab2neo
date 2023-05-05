@@ -6,25 +6,26 @@
 
 # Quick start
 Given that Neo4j database contains the following metadata nodes:  
-![metadata](images/data_provider_meta.png)    
-![metadata_detail](images/data_provider_meta_detail.png)    
+
+![metadata](images/data_provider_1.png)    
+
 And the following data nodes:  
-![data](images/data_provider_data.png)  
-![data_detail](images/data_provider_data_detail.png)    
-a call  
+
+![data](images/data_provider_2.png) 
+
+a call of 
    
     dp = DataProvider()
-    dp.get_data(["Subject", "Treatment"]) 
+    dp.dp.get_data_generic(["Subject","RECORD","Sex"],infer_rels=True,return_propname=False) 
     
 will return a dataframe
     
 
-      Subject.USUBJID  Subject Treatment.TRT01A  Treatment.TRT01AN  Treatment
-    0            1234      122          Placebo                2.0        123
-    1            9876      124           Active                1.0        125
-    2             555      126           Active                1.0        127
 
-where columns 'Subject' and 'Treatment' would contain unique identifiers of the corresponding nodes in the database (Neo4j node ids) and the rest of the columns will contain values of properties of the corresponding nodes.
+             _id_RECORD Sex  _id_Sex  _id_Subject Subject
+    0               96   M       91           93    S001
+    1               97   F       92           94    S002
+where columns 'id.\_Sex_', 'id.\_RECORD_'and 'id.\_Treatment_' would contain unique identifiers of the corresponding nodes in the database (Neo4j node ids) and the rest of the columns will contain values of properties of the corresponding nodes.
     
 # Detailed technical description
 ### __init__()
@@ -39,12 +40,12 @@ name | arguments| return
 ### get_data()
 name | arguments| return
 -----| ---------| -------
-*get_data*| classes:list, where_map=None, limit = 20|pd.DataFrame
+*get_data*|  labels: list, rels: list = None, where_map=None, return_nodeid=False |pd.DataFrame
 
     Assembles into a Pandas dataframe the Property values from all the data nodes with the specified Classes.
     Simplified version of get_data_generic()
 
-    :param classes:         List of strings with Class names.  EXAMPLE: ['Study', 'Site', 'Subject']
+    :param labels:         List of strings with Class names.  EXAMPLE: ['Study', 'Site', 'Subject']
     :param where_map:       Used to restrict the data (by default, no restriction.)
                             A dictionary whose keys are Classes to apply restrictions to,
                                 and whose values are dictionaries specifying conditions on Property values.
@@ -66,45 +67,22 @@ name | arguments| return
                                   are meant to be (attribute names : desired values)
                                   that are applicable to the node with their corresponding label.
                                 - The values may be various data type, incl. strings, integers and lists.
-    :param where_rel_map:   Used to restrict the data (by default, no restriction.)
-                            A dictionary whose keys are Classes to apply restrictions to,
-                                and whose values are dictionaries specifying conditions existance/non-existance 
-                                of relationships to that class, depending on the setup of the dictionary.
-                            EXAMPLE:
-                            {
-                                'Subject': {
-                                    'EXISTS': {'include': ['Adverse Events']}
-                                }
-                            }
-                            translates into a query:
-                            MATCH (`Subject`:`Subject`)
-                            WHERE EXISTS {MATCH (`Subject`)-[]-(x) WHERE (x:`Adverse Events`)}
-                            See QueryBuilder unit tests for more examples
-    :param limit:           Either None or an integer.  If specified, it restricts the maximum number of rows
-                                    in the returned dataframe.  Defaults to 20
-    
+    :param rels: A list of relationships e.g [{'from':<label1>, 'to':<label2>, 'type':<type>}, ...]
+    :param return_nodeid: Boolean
     :return: pd.DataFrame   A Pandas dataframe containing all the (direct and indirect) Property values
                             of the data points from the requested Classes, plus their Neo4j IDs.
                             The Property names are prefixed with the Class names
 
     *EXAMPLE* - given the data in the image below,
-              get_data(['Subject', 'Treatment']) produces:
+              get_data(['Subject', 'Age']) produces:
 
-      Subject.USUBJID Treatment.TRT01A  Treatment.TRT01AN  Subject  Treatment
-    0            1234          Placebo                2.0      183        184
-    1            9876           Active                1.0      185        186
+                Subject     Age
+    0            1          Placebo       
+    1            2          Active       
 
-    (The numbers in the last 2 columns are Neo4j ID's, and they will vary.)
+
 
 ---
-
-
-![example of get_data](images/get_data_example.png)
-
-Example of get_data
-
-
-
 
 ---
 
