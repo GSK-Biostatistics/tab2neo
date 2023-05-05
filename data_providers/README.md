@@ -74,16 +74,16 @@ name | arguments| return
                             The Property names are prefixed with the Class names
 
     *EXAMPLE* - given the data in the image below,
-              get_data(['Subject', 'Age']) produces:
+              get_data(['Subject','Record', 'Age']) produces:
 
                 Subject     Age
-    0            1          Placebo       
-    1            2          Active       
+    0            S001       30        
+    1            S002       40      
 
 
 
 ---
-
+![data](images/data_provider_3.png) 
 ---
 
 
@@ -118,100 +118,5 @@ name | arguments| return
 
 
 ---
-## FILTERS
-
-### get_filters()
-name | arguments| return
------| ---------| -------
-*get_filters*| classes:list, where_map=None|dict
-
-    Useful to build a dropdown menu in a UI.
-    Simplified version of get_filters_generic()
-
-    :param classes:     A string or list of strings with Class names.  EXAMPLE: ['Study', 'Site', 'Subject']
-    :param where_map:   See explanation in get_data()
-    :return:            A (possibly empty) Python dictionary.  For example, see get_filters_generic()
-
-    *EXAMPLE* - given the data in the image below,
-                get_filters_generic(['patient', 'gender'])
-                   
-                produces a dictionary with 2 keys, 'patient' and 'gender', and Pandas data frames for values
-                The 'patient' value is the dataframe:
-                       patient patient.label
-                    0       60          Jack
-                    1       62          Jill
-                The 'gender' value is the dataframe:
-                       gender gender.label
-                    0      61            M
-                    1      63            F                
-
-
-                (The numbers in the first columns are Neo4j ID's, and they will vary.)
-
----
-
-
-![example of get_filters](images/get_filters_example.png)
-
-Example of get_filters
-
----
-
-### get_filters_generic()
-name | arguments| return
------| ---------| -------
-*get_filters_generic*| classes, where_map=None, allow_unrelated_subgraphs=False, return_nodeid = False, return_properties ="*", prefix_keys_with_label=False| dict
-
-    Useful to build a dropdown menu in a UI
-
-    :param classes:             A string or list of strings with Class names.  EXAMPLE: ['Study', 'Site', 'Subject']
-    :param where_map:           See explanation in get_data()
-    :param return_nodeid:       Boolean
-    :param return_properties:   Either a list of Property names to include in the dataframe, or the string "*" (meaning, "all")
-                                        EXAMPLE: ["STUDYID", "SITEID"]
-    :param prefix_keys_with_label: If True adds a prefix (corresponding node label) to each column name of the returned data
-    :return:                    A (possibly empty) Python dictionary
-                                EXAMPLE:
-                                {
-                                    Label1: pd.DataFrame(
-                                        [
-                                            {prop1: value11, prop2: value21},
-                                            {prop2: value21, prop2: value22},
-                                            ...
-                                        ]
-                                    ),
-                                    Label3: pd.DataFrame(
-                                        [
-                                            {prop3: value11},
-                                            {prop3: value21},
-                                            ...
-                                        ]
-                                    )
-                                }
-
-
----
-
-## PANDAS SUPPORT
-
-
-### convert_qb_result_to_df()
-name | arguments| return
------| ---------| -------
-*convert_qb_result_to_df*| neoresult, hstack = True|
-    
-    :param neoresult:
-    :param hstack:  If hstack == True returns 1 dataframe (properties of all returned neo4j variables are concatenated horizontally)
-                    if hstack == False returns a dictionary of dataframes (1 per returned unit)
-
-    :return:        Either a Pandas dataframe or a dictionary of dataframes
-
-
-
-
----
-
-
-
 
 
