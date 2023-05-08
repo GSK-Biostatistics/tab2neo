@@ -2,6 +2,7 @@ import os
 from neointerface import NeoInterface
 from typing import List
 import pandas as pd
+import numpy as np
 from logger.logger import logger
 
 
@@ -220,12 +221,20 @@ class ModelManager(NeoInterface):
         """
         Create relationship nodes between two specified classes as defined in rel_list.
         For example:
-            With rel_list = [ ['class1', 'class2', 'example', 'false'] ]
+        1.  With rel_list = [ ['class1', 'class2', 'example'] ]
             A new relationship node will be created between nodes with "label", as specified by the
-            identifier, 'class1' and 'class2' with a relationship_type property = 'example' and optional_relationship property = 'false.
+            identifier, 'class1' and 'class2' with a relationship_type property = 'example'.
             This relationship node also includes 'FROM.Class.label' and 'TO.Class.label' properties
             regardless of the class identifier.
-        Note if no relationship type is included a default is generated via gen_default_reltype() 
+
+        2.  With rel_list = [ ['class1', 'class2', 'example','false'] ]
+            A new relationship node will be created between nodes with "label", as specified by the
+            identifier, 'class1' and 'class2' with a relationship_type property = 'example' and optional_relationship = 'false'.
+            This relationship node also includes 'FROM.Class.label' and 'TO.Class.label' properties
+            regardless of the class identifier.
+        Note if no relationship type is included in example-1, a default is generated via gen_default_reltype() 
+        and if no relationship type is included in example-2, optional_relationship would be considered as relationship type 
+        and optional relationship would be ignored
         :param rel_list: A list of relationships represented as lists
         :param identifier: String class property used to identify to & from classes
         :param match_classes: Boolean, If false classes are merged rather than matched which will create them
@@ -235,24 +244,38 @@ class ModelManager(NeoInterface):
 
         q = f"""
         UNWIND $rels as rel
-        WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type, rel[3] as optional
+        CALL apoc.do.when(size(rel)<=3,
+        "WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type
+        {'MATCH' if match_classes else 'MERGE'} (from:Class {{`{identifier}`:from_identity}})
+        {'MATCH' if match_classes else 'MERGE'} (to:Class {{`{identifier}`:to_identity}})   
+        MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type}})-[:TO]->(to)
+        SET rel_node.`FROM.Class.label` = from.label
+        SET rel_node.`TO.Class.label` = to.label
+        RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type]) as rels", 
+        "WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type, rel[3] as optional
         {'MATCH' if match_classes else 'MERGE'} (from:Class {{`{identifier}`:from_identity}})
         {'MATCH' if match_classes else 'MERGE'} (to:Class {{`{identifier}`:to_identity}})   
         MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type, relationship_optional:optional}})-[:TO]->(to)
         SET rel_node.`FROM.Class.label` = from.label
         SET rel_node.`TO.Class.label` = to.label
         RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type, rel_node.relationship_optional]) as rels
+        ",
+        {{rel:rel}})
+        YIELD value
+        RETURN collect(value.rels) as rels
         """
 
         res = self.query(q, {
-            "rels": [(r if len(r) == 4 else r + [self.gen_default_reltype(to_label=r[1])]) for r in rel_list]
+            "rels": [(r if len(r)>=3 else r + [self.gen_default_reltype(to_label=r[1])]) for r in rel_list]
         })
+
         if res:
-            return res[0].get('rels')
+            result = [np.array(i).flatten().tolist() for i in res[0].get('rels')]
+            return result
         else:
             return []
 
-    def delete_relationship(self, rel_list: [[str, str, str, str]], identifier='label'):
+    def delete_relationship(self, rel_list: [[str, str, str]], identifier='label'):
         """
         Deletes specified relationships between classes.
         :param rel_list: List of relationships to be deleted in the following format:
@@ -366,7 +389,7 @@ class ModelManager(NeoInterface):
         UNWIND col1 as c1       
         MATCH (x)<-[f:FROM]-(rr:Relationship)-[t:TO]->(y)
         WHERE x = c1 or y = c1
-        RETURN {{from: x.label, to: y.label, type: rr.relationship_type}} as rel            
+        RETURN {{from: x.label, to: y.label, type: rr.relationship_type, optional: rr.relationship_optional}} as rel            
         ORDER BY rel['from'], rel['to'], rel['type']
         """
         params = {'labels': labels}
