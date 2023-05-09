@@ -188,18 +188,21 @@ def test_get_rels_where(mm: ModelManager):
 
     # Test without where clause (all rels)
     res1 = mm.get_rels_where()
-    assert res1 == [
-        {'from': 'Person', 'to': 'Name of Treatment', 'type': 'HAS'},
-        {'from': 'Subject', 'to': 'Exposure Name of Treatment', 'type': None}
+    expected_res = [
+        {'from': 'Person', 'to': 'Name of Treatment', 'type': 'HAS', 'optional':None},
+        {'from': 'Subject', 'to': 'Exposure Name of Treatment', 'type': None, 'optional':None}
     ]
+    assert compare_recordsets(res1,expected_res)
 
     # Test with where clause
     res2 = mm.get_rels_where('WHERE from_class.label = "Person"')
-    assert res2 == [{'from': 'Person', 'to': 'Name of Treatment', 'type': 'HAS'}]
+    expected_res = [{'from': 'Person', 'to': 'Name of Treatment', 'type': 'HAS', 'optional': None}]
+    assert compare_recordsets(res2, expected_res)
 
     # Test with custom return prop
     res3 = mm.get_rels_where('WHERE from_class.short_label = "PERSON"', 'short_label')
-    assert res3 == [{'from': 'PERSON', 'to': '--TRT', 'type': 'HAS'}]
+    expected_res = [{'from': 'PERSON', 'to': '--TRT', 'type': 'HAS', 'optional': None}]
+    assert compare_recordsets(res3, expected_res)
 
 
 def test_get_rels_btw2(mm:ModelManager):
@@ -554,8 +557,14 @@ def test_create_relationship(mm):
     res2 = mm.get_rels_btw2("class1", "class3")
     assert res2 == [{'from': 'class1', 'to': 'class3', 'type': 'rel1'}]
 
-    res1 = mm.create_relationship([['class1', 'MISSING CLASS', 'rel1']])
-    assert res1 == []
+    res3 = mm.create_relationship([['class1', 'MISSING CLASS', 'rel1']])
+    assert res3 == [[]]
+
+    res4 = mm.create_relationship([['class3', 'class4']]) 
+    assert res4 == [['class3', 'class4', 'class4']]
+
+    res5 = mm.create_relationship([['class1', 'class3', 'rel1','true'],['class1', 'class2', 'rel2']])
+    assert res5 == [['class1', 'class3', 'rel1','true'],['class1', 'class2', 'rel2']]
 
 
 def test_create_related_classes_from_list(mm):
@@ -600,7 +609,7 @@ def test_get_rels_from_labels(mm):
 
     res = mm.get_rels_from_labels(labels=['A', 'D'])
 
-    expected_res = [{'from': 'A', 'to': 'C', 'type': 'type1'}, {'from': 'C', 'to': 'D', 'type': 'type2'}]
+    expected_res = [{'from': 'A', 'to': 'C', 'type': 'type1', 'optional': None}, {'from': 'C', 'to': 'D', 'type': 'type2', 'optional': None}]
 
     assert res == expected_res
 
