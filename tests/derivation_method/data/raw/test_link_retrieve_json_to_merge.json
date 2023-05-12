@@ -1,0 +1,479 @@
+{
+    "nodes": [
+        {
+            "caption": "",
+            "id": "n59",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": -200,
+                "y": 0
+            },
+            "properties": {
+                "relationship_type": "Original Collected race code (RACEOR1)"
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n60",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": -200,
+                "y": 200
+            },
+            "properties": {
+                "relationship_type": "Analysis Race"
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n61",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": -200,
+                "y": 400
+            },
+            "properties": {
+                "id": "link2",
+                "type": "link"
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n62",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": -200,
+                "y": 600
+            },
+            "properties": {
+                "derived": "true",
+                "label": "Analysis Race",
+                "short_label": "ARACE"
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n63",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 0,
+                "y": -200
+            },
+            "properties": {
+                "id": "test_link_retrieve_json_to_merge"
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n64",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "properties": {
+                "label": "Demographics",
+                "short_label": "DM"
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n65",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 0,
+                "y": 200
+            },
+            "properties": {
+                "label": "Race",
+                "short_label": "RACE"
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n66",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 0,
+                "y": 400
+            },
+            "properties": {
+                "derived": "true",
+                "label": "Analysis Race Definition",
+                "short_label": "ADSL_RACEDEF"
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n67",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": 0,
+                "y": 600
+            },
+            "properties": {
+                "label": "Unique Subject Identifier",
+                "relationship_type": "Subject",
+                "short_label": "USUBJID"
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n68",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 200,
+                "y": -200
+            },
+            "properties": {
+                "label": "Subject",
+                "short_label": "USUBJID"
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n69",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": 200,
+                "y": 0
+            },
+            "properties": {
+                "relationship_type": "Race"
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n70",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": 200,
+                "y": 200
+            },
+            "properties": {
+                "relationship_type": "Definition"
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n71",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 200,
+                "y": 400
+            },
+            "properties": {
+                "id": "arace",
+                "lang": "python",
+                "package": "study_specific_ops",
+                "params": "",
+                "script": "arace",
+                "type": "run_script",
+                "version": "\"0.1\""
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n72",
+            "labels": [
+                "Class",
+                "Term"
+            ],
+            "position": {
+                "x": 200,
+                "y": 600
+            },
+            "properties": {
+                "Codelist Code": "S989298",
+                "Term Code": "S2004310",
+                "label": "Original Collected race code (RACEOR1)",
+                "short_label": "RACEOR1"
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n134",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 400,
+                "y": -200
+            },
+            "properties": {
+                "id": "get_data",
+                "type": "get_data"
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n135",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 400,
+                "y": 0
+            },
+            "properties": {
+                "id": "link1",
+                "type": "link"
+            },
+            "style": {}
+        },
+        {
+            "caption": "",
+            "id": "n136",
+            "labels": [
+                "Term"
+            ],
+            "position": {
+                "x": 400,
+                "y": 200
+            },
+            "properties": {
+                "Codelist Code": "ADSL_RACEDEF",
+                "Term Code": "ADSL_RACEDEF"
+            },
+            "style": {}
+        }
+    ],
+    "relationships": [
+        {
+            "fromId": "n59",
+            "id": "n291",
+            "properties": {},
+            "style": {},
+            "toId": "n64",
+            "type": "FROM"
+        },
+        {
+            "fromId": "n59",
+            "id": "n280",
+            "properties": {},
+            "style": {},
+            "toId": "n72",
+            "type": "TO"
+        },
+        {
+            "fromId": "n134",
+            "id": "n303",
+            "properties": {},
+            "style": {},
+            "toId": "n59",
+            "type": "SOURCE_RELATIONSHIP"
+        },
+        {
+            "fromId": "n60",
+            "id": "n296",
+            "properties": {},
+            "style": {},
+            "toId": "n62",
+            "type": "TO"
+        },
+        {
+            "fromId": "n60",
+            "id": "n297",
+            "properties": {},
+            "style": {},
+            "toId": "n68",
+            "type": "FROM"
+        },
+        {
+            "fromId": "n135",
+            "id": "n301",
+            "properties": {
+                "how": "merge"
+            },
+            "style": {},
+            "toId": "n60",
+            "type": "LINK"
+        },
+        {
+            "fromId": "n63",
+            "id": "n287",
+            "properties": {},
+            "style": {},
+            "toId": "n61",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n61",
+            "id": "n299",
+            "properties": {},
+            "style": {},
+            "toId": "n70",
+            "type": "LINK"
+        },
+        {
+            "fromId": "n135",
+            "id": "n290",
+            "properties": {},
+            "style": {},
+            "toId": "n61",
+            "type": "NEXT"
+        },
+        {
+            "fromId": "n61",
+            "id": "n285",
+            "properties": {},
+            "style": {},
+            "toId": "n136",
+            "type": "TO_VALUE"
+        },
+        {
+            "fromId": "n70",
+            "id": "n298",
+            "properties": {},
+            "style": {},
+            "toId": "n62",
+            "type": "FROM"
+        },
+        {
+            "fromId": "n63",
+            "id": "n284",
+            "properties": {},
+            "style": {},
+            "toId": "n71",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n63",
+            "id": "n294",
+            "properties": {},
+            "style": {},
+            "toId": "n134",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n63",
+            "id": "n286",
+            "properties": {},
+            "style": {},
+            "toId": "n135",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n67",
+            "id": "n292",
+            "properties": {},
+            "style": {},
+            "toId": "n64",
+            "type": "FROM"
+        },
+        {
+            "fromId": "n69",
+            "id": "n281",
+            "properties": {},
+            "style": {},
+            "toId": "n64",
+            "type": "FROM"
+        },
+        {
+            "fromId": "n69",
+            "id": "n302",
+            "properties": {},
+            "style": {},
+            "toId": "n65",
+            "type": "TO"
+        },
+        {
+            "fromId": "n70",
+            "id": "n293",
+            "properties": {},
+            "style": {},
+            "toId": "n66",
+            "type": "TO"
+        },
+        {
+            "fromId": "n66",
+            "id": "n288",
+            "properties": {},
+            "style": {},
+            "toId": "n136",
+            "type": "HAS_CONTROLLED_TERM"
+        },
+        {
+            "fromId": "n67",
+            "id": "n283",
+            "properties": {},
+            "style": {},
+            "toId": "n68",
+            "type": "TO"
+        },
+        {
+            "fromId": "n134",
+            "id": "n300",
+            "properties": {},
+            "style": {},
+            "toId": "n67",
+            "type": "SOURCE_RELATIONSHIP"
+        },
+        {
+            "fromId": "n134",
+            "id": "n282",
+            "properties": {},
+            "style": {},
+            "toId": "n69",
+            "type": "SOURCE_RELATIONSHIP"
+        },
+        {
+            "fromId": "n134",
+            "id": "n295",
+            "properties": {},
+            "style": {},
+            "toId": "n71",
+            "type": "NEXT"
+        },
+        {
+            "fromId": "n71",
+            "id": "n289",
+            "properties": {},
+            "style": {},
+            "toId": "n135",
+            "type": "NEXT"
+        }
+    ],
+    "style": {}
+}

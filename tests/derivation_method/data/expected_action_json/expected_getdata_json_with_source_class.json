@@ -1,0 +1,143 @@
+{
+    "nodes":[
+       {
+          "caption":"",
+          "style":{
+ 
+          },
+          "id":"n-10",
+          "position":{
+             "x":0,
+             "y":0
+          },
+          "properties":{
+             "id":"get_data",
+             "type":"get_data"
+          },
+          "labels":[
+             "Method"
+          ]
+       },
+       {
+          "caption":"",
+          "style":{
+ 
+          },
+          "id":"n570",
+          "position":{
+             "x":0,
+             "y":200
+          },
+          "properties":{
+             "label":"Demographics"
+          },
+          "labels":[
+             "Class"
+          ]
+       },
+       {
+          "caption":"",
+          "style":{
+ 
+          },
+          "id":"n579",
+          "position":{
+             "x":0,
+             "y":400
+          },
+          "properties":{
+             "label":"Subject"
+          },
+          "labels":[
+             "Class"
+          ]
+       },
+       {
+          "caption":"",
+          "style":{
+ 
+          },
+          "id":"n580",
+          "position":{
+             "x":200,
+             "y":0
+          },
+          "properties":{
+             "label":"Date/Time of Birth"
+          },
+          "labels":[
+             "Class"
+          ]
+       },
+       {
+          "caption":"",
+          "style":{
+ 
+          },
+          "id":"n581",
+          "position":{
+             "x":200,
+             "y":200
+          },
+          "properties":{
+             "label":"Date of Screening"
+          },
+          "labels":[
+             "Class"
+          ]
+       }
+    ],
+    "relationships":[
+       {
+          "toId":"n570",
+          "style":{
+ 
+          },
+          "id":"r-16",
+          "type":"SOURCE_CLASS",
+          "fromId":"n-10",
+          "properties":{
+ 
+          }
+       },
+       {
+          "toId":"n579",
+          "style":{
+ 
+          },
+          "id":"r-17",
+          "type":"SOURCE_CLASS",
+          "fromId":"n-10",
+          "properties":{
+ 
+          }
+       },
+       {
+          "toId":"n580",
+          "style":{
+ 
+          },
+          "id":"r-18",
+          "type":"SOURCE_CLASS",
+          "fromId":"n-10",
+          "properties":{
+ 
+          }
+       },
+       {
+          "toId":"n581",
+          "style":{
+ 
+          },
+          "id":"r-19",
+          "type":"SOURCE_CLASS",
+          "fromId":"n-10",
+          "properties":{
+ 
+          }
+       }
+    ],
+    "style":{
+ 
+    }
+ }

@@ -1,0 +1,324 @@
+{
+  "style": {
+    "font-family": "sans-serif",
+    "background-color": "#ffffff",
+    "node-color": "#ffffff",
+    "border-width": 4,
+    "border-color": "#000000",
+    "radius": 50,
+    "node-padding": 5,
+    "node-margin": 2,
+    "outside-position": "auto",
+    "node-icon-image": "",
+    "node-background-image": "",
+    "icon-position": "inside",
+    "icon-size": 64,
+    "caption-position": "inside",
+    "caption-max-width": 200,
+    "caption-color": "#000000",
+    "caption-font-size": 50,
+    "caption-font-weight": "normal",
+    "label-position": "inside",
+    "label-display": "pill",
+    "label-color": "#000000",
+    "label-background-color": "#ffffff",
+    "label-border-color": "#000000",
+    "label-border-width": 4,
+    "label-font-size": 40,
+    "label-padding": 5,
+    "label-margin": 4,
+    "directionality": "directed",
+    "detail-position": "inline",
+    "detail-orientation": "parallel",
+    "arrow-width": 5,
+    "arrow-color": "#000000",
+    "margin-start": 5,
+    "margin-end": 5,
+    "margin-peer": 20,
+    "attachment-start": "normal",
+    "attachment-end": "normal",
+    "relationship-icon-image": "",
+    "type-color": "#000000",
+    "type-background-color": "#ffffff",
+    "type-border-color": "#000000",
+    "type-border-width": 0,
+    "type-font-size": 16,
+    "type-padding": 5,
+    "property-position": "outside",
+    "property-alignment": "colon",
+    "property-color": "#000000",
+    "property-font-size": 16,
+    "property-font-weight": "normal"
+  },
+  "nodes": [
+    {
+      "id": "n0",
+      "position": {
+        "x": 75,
+        "y": 145.47587162006278
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "derive_test_link_from_value"
+      },
+      "style": {}
+    },
+    {
+      "id": "n1",
+      "position": {
+        "x": 75,
+        "y": 575.4359877011789
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "get_data",
+        "type": "get_data"
+      },
+      "style": {}
+    },
+    {
+      "id": "n2",
+      "position": {
+        "x": 406.1750393272518,
+        "y": 49.999999999999986
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "link",
+        "type": "link"
+      },
+      "style": {}
+    },
+    {
+      "id": "n4",
+      "position": {
+        "x": 529.56409486496,
+        "y": 894.495598086775
+      },
+      "caption": "",
+      "labels": [
+        "Relationship"
+      ],
+      "properties": {
+        "relationship_type": "HAS TEST NAME"
+      },
+      "style": {}
+    },
+    {
+      "id": "n5",
+      "position": {
+        "x": 950.9776276125895,
+        "y": 386.8691238415524
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Test Name",
+        "short_label": "TS"
+      },
+      "style": {}
+    },
+    {
+      "id": "n6",
+      "position": {
+        "x": 880.600639323051,
+        "y": 894.495598086775
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Vital Signs",
+        "short_label": "VS"
+      },
+      "style": {}
+    },
+    {
+      "id": "n7",
+      "position": {
+        "x": 1269.125761606005,
+        "y": 50.00000000000003
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Subject",
+        "short_label": "USUBJID"
+      },
+      "style": {}
+    },
+    {
+      "id": "n8",
+      "position": {
+        "x": 713.6387557197968,
+        "y": 50
+      },
+      "caption": "",
+      "labels": [
+        "Relationship"
+      ],
+      "properties": {
+        "relationship_type": "Subject"
+      },
+      "style": {}
+    },
+    {
+      "id": "n9",
+      "position": {
+        "x": 508.0304495663671,
+        "y": 379.2689237386957
+      },
+      "caption": "",
+      "style": {},
+      "labels": [
+        "Term"
+      ],
+      "properties": {
+        "rdfs:label": "Weight"
+      }
+    },
+    {
+      "id": "n11",
+      "position": {
+        "x": 1158.7182145540348,
+        "y": 643.3323963593439
+      },
+      "caption": "",
+      "style": {},
+      "labels": [
+        "Relationship"
+      ],
+      "properties": {
+        "relationship_type": "Subject"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "id": "n0",
+      "fromId": "n0",
+      "toId": "n1",
+      "type": "METHOD_ACTION",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n1",
+      "fromId": "n0",
+      "toId": "n2",
+      "type": "METHOD_ACTION",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n4",
+      "fromId": "n1",
+      "toId": "n4",
+      "type": "SOURCE_RELATIONSHIP",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n5",
+      "fromId": "n4",
+      "toId": "n5",
+      "type": "TO",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n6",
+      "fromId": "n4",
+      "toId": "n6",
+      "type": "FROM",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n9",
+      "fromId": "n2",
+      "toId": "n8",
+      "type": "LINK",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n10",
+      "fromId": "n8",
+      "toId": "n7",
+      "type": "TO",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n11",
+      "fromId": "n8",
+      "toId": "n5",
+      "type": "FROM",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n12",
+      "type": "HAS_CONTROLLED_TERM",
+      "style": {},
+      "properties": {},
+      "fromId": "n5",
+      "toId": "n9"
+    },
+    {
+      "id": "n13",
+      "type": "FROM_VALUE",
+      "style": {},
+      "properties": {},
+      "fromId": "n2",
+      "toId": "n9"
+    },
+    {
+      "id": "n19",
+      "type": "SOURCE_RELATIONSHIP",
+      "style": {},
+      "properties": {},
+      "fromId": "n1",
+      "toId": "n11"
+    },
+    {
+      "id": "n21",
+      "type": "TO",
+      "style": {},
+      "properties": {},
+      "fromId": "n11",
+      "toId": "n7"
+    },
+    {
+      "id": "n22",
+      "type": "NEXT",
+      "style": {},
+      "properties": {},
+      "fromId": "n1",
+      "toId": "n2"
+    },
+    {
+      "id": "n23",
+      "type": "FROM",
+      "style": {},
+      "properties": {},
+      "fromId": "n11",
+      "toId": "n6"
+    }
+  ]
+}

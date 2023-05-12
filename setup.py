@@ -43,8 +43,7 @@ setuptools.setup(
         "data_providers",
         "model_appliers",
         "model_managers",
-        "query_builders",
-        "method_appliers"
+        "query_builders"
     ]),    # List of all python modules to be installed
     classifiers=[
         "Programming Language :: Python :: 3",

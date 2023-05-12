@@ -1,0 +1,85 @@
+{
+   "nodes":[
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n-208",
+         "position":{
+            "x":0,
+            "y":0
+         },
+         "properties":{
+            "id":"build_uri1",
+            "type":"build_uri"
+         },
+         "labels":[
+            "Method"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n-209",
+         "position":{
+            "x":0,
+            "y":200
+         },
+         "properties":{
+            "label":"Merge Result"
+         },
+         "labels":[
+            "Class"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n-211",
+         "position":{
+            "x":0,
+            "y":200
+         },
+         "properties":{
+            "label":"Vital Signs"
+         },
+         "labels":[
+            "Class"
+         ]
+      }
+   ],
+   "relationships":[
+      {
+         "toId":"n-209",
+         "style":{
+
+         },
+         "id":"r-1141",
+         "type":"URI_FOR",
+         "fromId":"n-208",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n-211",
+         "style":{
+
+         },
+         "id":"r-1142",
+         "type":"URI_BY",
+         "fromId":"n-208",
+         "properties":{
+
+         }
+      }
+   ],
+   "style":{
+
+   }
+}

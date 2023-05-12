@@ -1,0 +1,308 @@
+{
+   "nodes":[
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n-82",
+         "position":{
+            "x":0,
+            "y":0
+         },
+         "properties":{
+            "id":"get_data",
+            "type":"get_data"
+         },
+         "labels":[
+            "Method"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n25950",
+         "position":{
+            "x":0,
+            "y":200
+         },
+         "properties":{
+            "relationship_type":"HAS NUMERIC RESULT"
+         },
+         "labels":[
+            "Relationship"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n25951",
+         "position":{
+            "x":0,
+            "y":400
+         },
+         "properties":{
+            "relationship_type":"HAS TEST NAME"
+         },
+         "labels":[
+            "Relationship"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n25953",
+         "position":{
+            "x":200,
+            "y":0
+         },
+         "properties":{
+            "label":"Vital Signs"
+         },
+         "labels":[
+            "Class"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n25954",
+         "position":{
+            "x":200,
+            "y":200
+         },
+         "properties":{
+            "label":"Numeric Result"
+         },
+         "labels":[
+            "Class"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n25952",
+         "position":{
+            "x":200,
+            "y":400
+         },
+         "properties":{
+            "label":"Test Name"
+         },
+         "labels":[
+            "Class"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n-83",
+         "position":{
+            "x":1000,
+            "y":0
+         },
+         "properties":{
+            "id":"filter",
+            "type":"filter"
+         },
+         "labels":[
+            "Method"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n25947",
+         "position":{
+            "x":1200,
+            "y":0
+         },
+         "properties":{
+            
+         },
+         "labels":[
+            "Term"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n25948",
+         "position":{
+            "x":1200,
+            "y":200
+         },
+         "properties":{
+            
+         },
+         "labels":[
+            "Term"
+         ]
+      }
+   ],
+   "relationships":[
+      {
+         "toId":"n25950",
+         "style":{
+            
+         },
+         "id":"r-107",
+         "type":"SOURCE_RELATIONSHIP",
+         "fromId":"n-82",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n25951",
+         "style":{
+            
+         },
+         "id":"r-108",
+         "type":"SOURCE_RELATIONSHIP",
+         "fromId":"n-82",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n25953",
+         "style":{
+            
+         },
+         "id":"r6889928",
+         "type":"FROM",
+         "fromId":"n25950",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n25954",
+         "style":{
+            
+         },
+         "id":"r6889929",
+         "type":"TO",
+         "fromId":"n25950",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n25952",
+         "style":{
+            
+         },
+         "id":"r6889926",
+         "type":"TO",
+         "fromId":"n25951",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n25953",
+         "style":{
+            
+         },
+         "id":"r6889927",
+         "type":"FROM",
+         "fromId":"n25951",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n25947",
+         "style":{
+            
+         },
+         "id":"r-111",
+         "type":"ON_VALUE",
+         "fromId":"n-83",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n25948",
+         "style":{
+            
+         },
+         "id":"r-110",
+         "type":"ON_VALUE",
+         "fromId":"n-83",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n25952",
+         "style":{
+            
+         },
+         "id":"r-109",
+         "type":"ON",
+         "fromId":"n-83",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n25947",
+         "style":{
+            
+         },
+         "id":"r6889920",
+         "type":"HAS_CONTROLLED_TERM",
+         "fromId":"n25952",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n25948",
+         "style":{
+            
+         },
+         "id":"r6889922",
+         "type":"HAS_CONTROLLED_TERM",
+         "fromId":"n25952",
+         "properties":{
+            
+         }
+      },
+      {
+         "id":"r999999998",
+         "fromId":"n-82",
+         "toId":"n-83",
+         "type":"NEXT",
+         "properties":{
+            
+         },
+         "style":{
+            
+         }
+      }
+   ],
+   "style":{
+      
+   }
+}

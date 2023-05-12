@@ -1,0 +1,14 @@
+@prefix n4sch: <neo4j://graph.schema#> .
+
+<neo4j://graph.individuals#81644> a n4sch:Method;
+  n4sch:id "derive_simple_002";
+  n4sch:METHOD_ACTION <neo4j://graph.individuals#81646>, <neo4j://graph.individuals#81645> .
+
+<neo4j://graph.individuals#81646> a n4sch:Method;
+  n4sch:type "assign_class";
+  n4sch:id "assign_class" .
+
+<neo4j://graph.individuals#81645> a n4sch:Method;
+  n4sch:type "get_data";
+  n4sch:id "get_data";
+  n4sch:NEXT <neo4j://graph.individuals#81646> .

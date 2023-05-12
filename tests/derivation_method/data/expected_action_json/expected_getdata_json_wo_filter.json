@@ -1,0 +1,257 @@
+{
+   "nodes":[
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n-78",
+         "position":{
+            "x":0,
+            "y":0
+         },
+         "properties":{
+            "id":"get_data",
+            "type":"get_data"
+         },
+         "labels":[
+            "Method"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n60",
+         "position":{
+            "x":0,
+            "y":200
+         },
+         "properties":{
+            "relationship_type":"Original Collected race code (RACEOR1)"
+         },
+         "labels":[
+            "Relationship"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n136",
+         "position":{
+            "x":0,
+            "y":400
+         },
+         "properties":{
+            "relationship_type":"Subject"
+         },
+         "labels":[
+            "Relationship"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n138",
+         "position":{
+            "x":200,
+            "y":0
+         },
+         "properties":{
+            "relationship_type":"Race"
+         },
+         "labels":[
+            "Relationship"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n132",
+         "position":{
+            "x":200,
+            "y":200
+         },
+         "properties":{
+            "label":"Demographics"
+         },
+         "labels":[
+            "Class"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n141",
+         "position":{
+            "x":200,
+            "y":400
+         },
+         "properties":{
+            "Term Code":"S2004310",
+            "label":"Original Collected race code (RACEOR1)",
+            "Codelist Code":"S989298"
+         },
+         "labels":[
+            "Class",
+            "Term"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n137",
+         "position":{
+            "x":400,
+            "y":0
+         },
+         "properties":{
+            "label":"Subject"
+         },
+         "labels":[
+            "Class"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n133",
+         "position":{
+            "x":400,
+            "y":200
+         },
+         "properties":{
+            "label":"Race"
+         },
+         "labels":[
+            "Class"
+         ]
+      }
+   ],
+   "relationships":[
+      {
+         "toId":"n60",
+         "style":{
+
+         },
+         "id":"r-130",
+         "type":"SOURCE_RELATIONSHIP",
+         "fromId":"n-78",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n136",
+         "style":{
+
+         },
+         "id":"r-131",
+         "type":"SOURCE_RELATIONSHIP",
+         "fromId":"n-78",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n138",
+         "style":{
+
+         },
+         "id":"r-132",
+         "type":"SOURCE_RELATIONSHIP",
+         "fromId":"n-78",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n132",
+         "style":{
+
+         },
+         "id":"r6889029",
+         "type":"FROM",
+         "fromId":"n60",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n141",
+         "style":{
+
+         },
+         "id":"r6889018",
+         "type":"TO",
+         "fromId":"n60",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n132",
+         "style":{
+
+         },
+         "id":"r6889030",
+         "type":"FROM",
+         "fromId":"n136",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n137",
+         "style":{
+
+         },
+         "id":"r6889021",
+         "type":"TO",
+         "fromId":"n136",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n132",
+         "style":{
+
+         },
+         "id":"r6889019",
+         "type":"FROM",
+         "fromId":"n138",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n133",
+         "style":{
+
+         },
+         "id":"r6889040",
+         "type":"TO",
+         "fromId":"n138",
+         "properties":{
+
+         }
+      }
+   ],
+   "style":{
+
+   }
+}

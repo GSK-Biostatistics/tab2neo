@@ -1,0 +1,132 @@
+{
+  "nodes": [
+    {
+      "id": "n188",
+      "position": {
+        "x": 15309.010548375316,
+        "y": -492.2583547085344
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "derive_run_cypher_basic"
+      },
+      "style": {}
+    },
+    {
+      "id": "n189",
+      "position": {
+        "x": 15309.010548375316,
+        "y": -207.94225882006708
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "run_cypher1",
+        "type": "run_cypher",
+        "query": "MATCH (vs:`Vital Signs`)-[:Subject]->(s:Subject) WHERE s.`rdfs:label` = $target RETURN vs ORDER BY vs.`rdfs:label`",
+        "params": "{\"target\": \"0001\"}"
+      },
+      "style": {}
+    },
+    {
+      "id": "n195",
+      "position": {
+        "x": 15660.779890534664,
+        "y": -207.94225882006708
+      },
+      "caption": "",
+      "style": {},
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "type": "branch_save",
+        "id": "branch_save1"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "id": "n240",
+      "type": "METHOD_ACTION",
+      "style": {},
+      "properties": {},
+      "fromId": "n188",
+      "toId": "n189"
+    },
+    {
+      "id": "n247",
+      "type": "NEXT",
+      "style": {},
+      "properties": {},
+      "fromId": "n189",
+      "toId": "n195"
+    },
+    {
+      "id": "n248",
+      "type": "METHOD_ACTION",
+      "style": {},
+      "properties": {},
+      "fromId": "n188",
+      "toId": "n195"
+    }
+  ],
+  "style": {
+    "font-family": "sans-serif",
+    "background-color": "#ffffff",
+    "background-image": "",
+    "background-size": "100%",
+    "node-color": "#ffffff",
+    "border-width": 4,
+    "border-color": "#000000",
+    "radius": 50,
+    "node-padding": 5,
+    "node-margin": 2,
+    "outside-position": "auto",
+    "node-icon-image": "",
+    "node-background-image": "",
+    "icon-position": "inside",
+    "icon-size": 64,
+    "caption-position": "inside",
+    "caption-max-width": 200,
+    "caption-color": "#000000",
+    "caption-font-size": 50,
+    "caption-font-weight": "normal",
+    "label-position": "inside",
+    "label-display": "pill",
+    "label-color": "#000000",
+    "label-background-color": "#ffffff",
+    "label-border-color": "#000000",
+    "label-border-width": 4,
+    "label-font-size": 40,
+    "label-padding": 5,
+    "label-margin": 4,
+    "directionality": "directed",
+    "detail-position": "inline",
+    "detail-orientation": "parallel",
+    "arrow-width": 5,
+    "arrow-color": "#000000",
+    "margin-start": 5,
+    "margin-end": 5,
+    "margin-peer": 20,
+    "attachment-start": "normal",
+    "attachment-end": "normal",
+    "relationship-icon-image": "",
+    "type-color": "#000000",
+    "type-background-color": "#ffffff",
+    "type-border-color": "#000000",
+    "type-border-width": 0,
+    "type-font-size": 16,
+    "type-padding": 5,
+    "property-position": "outside",
+    "property-alignment": "colon",
+    "property-color": "#000000",
+    "property-font-size": 16,
+    "property-font-weight": "normal"
+  }
+}
