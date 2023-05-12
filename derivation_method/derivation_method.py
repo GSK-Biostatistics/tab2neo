@@ -15,7 +15,7 @@ from derivation_method.method import Method
 from derivation_method.super_method import SuperMethod, ApplyStatSuperMethod, DecodeSuperMethod, SubjectLevelLinkSuperMethod
 from derivation_method.utils import simplify_arrows_json
 from logger.logger import logger
-from gsk_model_managers import ModelManager
+from model_managers import ModelManager
 from derivation_method.utils import visualise_json, topological_sort
 
 RDFSLABEL = ModelManager.RDFSLABEL

@@ -10,7 +10,7 @@ import requests
 from datetime import date as DatetimeDate
 
 from logger.logger import logger
-from gsk_model_managers import ModelManager
+from model_managers import ModelManager
 from query_builders import QueryBuilder
 from derivation_method.utils import get_arrows_json_cypher, merge_dicts_on_node_keys, add_warn_log_if_column_missing
 from neointerface.neointerface import NeoInterface

@@ -2,7 +2,7 @@ import json
 from abc import abstractmethod
 from itertools import chain, combinations
 from logger.logger import logger
-from gsk_model_managers import ModelManager
+from model_managers import ModelManager
 
 from derivation_method.utils import get_arrows_json_cypher, merge_dicts_on_node_keys
 from derivation_method.action import AssignLabel, BranchSave, BranchLoad, CallAPI, RunScript, BuildUri, LinkStat, BranchCombine, Link, RunCypher, Action
