@@ -71,6 +71,39 @@ def compare_recordsets(rs1: [{}], rs2: [{}]) -> bool:
     return True
 
 
+def format_nodes(method_json: dict, keep_id=False):
+    keys_to_remove =  ['style', 'position', 'caption'] if keep_id else  ['id', 'style', 'position', 'caption']
+    nodes = []
+    for i in method_json['nodes']:
+        temp = {}
+        for j in i:
+            if j not in keys_to_remove:
+                temp[j] = i[j]
+        nodes.append(temp)
+        del temp
+    return nodes
+
+
+def format_relationships(method_json: dict, keep_id=False):
+    keys_to_remove =  ['style', 'position', 'caption'] if keep_id else  ['id', 'style', 'position', 'caption', 'fromId', 'toId']
+    relationships = []
+    for i in method_json['relationships']:
+        temp = {}
+        for j in i:
+            if j not in keys_to_remove:
+                temp[j] = i[j]
+        relationships.append(temp)
+        del temp
+    return relationships
+
+
+def format_json(method_json: dict, keep_id=False) -> dict:
+    method_json['nodes'] = format_nodes(method_json, keep_id=keep_id)
+    method_json['relationships'] = format_relationships(method_json, keep_id=keep_id)
+    del method_json['style']
+    return method_json
+
+
 
 ##########################  TESTS  ##########################
 

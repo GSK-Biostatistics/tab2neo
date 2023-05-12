@@ -1,0 +1,304 @@
+{
+  "nodes": [
+    {
+      "id": "n66",
+      "position": {
+        "x": 5906.433362185967,
+        "y": -329.3448125674124
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "derive_test_link_merge_on_uri"
+      },
+      "style": {}
+    },
+    {
+      "id": "n68",
+      "position": {
+        "x": 6258.456658191624,
+        "y": -22.236477577437398
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "link",
+        "type": "link"
+      },
+      "style": {}
+    },
+    {
+      "id": "n70",
+      "position": {
+        "x": 6258.456658191624,
+        "y": 641.8433256139419
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Merge Result",
+        "short_label": "MR"
+      },
+      "style": {}
+    },
+    {
+      "id": "n73",
+      "position": {
+        "x": 6258.456658191624,
+        "y": 355.6281237886085
+      },
+      "caption": "",
+      "labels": [
+        "Relationship"
+      ],
+      "properties": {
+        "relationship_type": "HAS MERGE RESULT"
+      },
+      "style": {}
+    },
+    {
+      "id": "n76",
+      "position": {
+        "x": 5568.252368026787,
+        "y": -22.236477577437398
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "type": "get_data",
+        "id": "get_data1"
+      },
+      "style": {}
+    },
+    {
+      "id": "n78",
+      "position": {
+        "x": 5568.252368026787,
+        "y": 311.81900584082
+      },
+      "caption": "",
+      "labels": [
+        "Relationship"
+      ],
+      "properties": {
+        "relationship_type": "HAS TEST NAME"
+      },
+      "style": {}
+    },
+    {
+      "id": "n79",
+      "position": {
+        "x": 5906.433362185967,
+        "y": 650
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Vital Signs"
+      },
+      "style": {}
+    },
+    {
+      "id": "n81",
+      "position": {
+        "x": 5568.252368026787,
+        "y": 641.8433256139419
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Test Name"
+      },
+      "style": {}
+    },
+    {
+      "id": "n107",
+      "position": {
+        "x": 5906.433362185967,
+        "y": 91.0191199261137
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "type": "build_uri",
+        "id": "build_uri1"
+      },
+      "style": {}
+    }
+  ],
+  "relationships": [
+    {
+      "id": "n74",
+      "fromId": "n66",
+      "toId": "n68",
+      "type": "METHOD_ACTION",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n78",
+      "fromId": "n68",
+      "toId": "n73",
+      "type": "LINK",
+      "properties": {
+        "how": "merge_on_uri"
+      },
+      "style": {}
+    },
+    {
+      "id": "n80",
+      "fromId": "n73",
+      "toId": "n70",
+      "type": "TO",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n88",
+      "fromId": "n76",
+      "toId": "n78",
+      "type": "SOURCE_RELATIONSHIP",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n91",
+      "fromId": "n78",
+      "toId": "n79",
+      "type": "FROM",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n92",
+      "fromId": "n78",
+      "toId": "n81",
+      "type": "TO",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n112",
+      "type": "NEXT",
+      "style": {},
+      "properties": {},
+      "fromId": "n107",
+      "toId": "n68"
+    },
+    {
+      "id": "n113",
+      "type": "URI_FOR",
+      "style": {},
+      "properties": {},
+      "fromId": "n107",
+      "toId": "n70"
+    },
+    {
+      "id": "n114",
+      "type": "METHOD_ACTION",
+      "style": {},
+      "properties": {},
+      "fromId": "n66",
+      "toId": "n107"
+    },
+    {
+      "id": "n116",
+      "type": "METHOD_ACTION",
+      "style": {},
+      "properties": {},
+      "fromId": "n66",
+      "toId": "n76"
+    },
+    {
+      "id": "n117",
+      "type": "NEXT",
+      "style": {},
+      "properties": {},
+      "fromId": "n76",
+      "toId": "n107"
+    },
+    {
+      "id": "n118",
+      "type": "FROM",
+      "style": {},
+      "properties": {},
+      "fromId": "n73",
+      "toId": "n79"
+    },
+    {
+      "id": "n119",
+      "type": "URI_BY",
+      "style": {},
+      "properties": {},
+      "fromId": "n107",
+      "toId": "n79"
+    }
+  ],
+  "style": {
+    "font-family": "sans-serif",
+    "background-color": "#ffffff",
+    "background-image": "",
+    "background-size": "100%",
+    "node-color": "#ffffff",
+    "border-width": 4,
+    "border-color": "#000000",
+    "radius": 50,
+    "node-padding": 5,
+    "node-margin": 2,
+    "outside-position": "auto",
+    "node-icon-image": "",
+    "node-background-image": "",
+    "icon-position": "inside",
+    "icon-size": 64,
+    "caption-position": "inside",
+    "caption-max-width": 200,
+    "caption-color": "#000000",
+    "caption-font-size": 50,
+    "caption-font-weight": "normal",
+    "label-position": "inside",
+    "label-display": "pill",
+    "label-color": "#000000",
+    "label-background-color": "#ffffff",
+    "label-border-color": "#000000",
+    "label-border-width": 4,
+    "label-font-size": 40,
+    "label-padding": 5,
+    "label-margin": 4,
+    "directionality": "directed",
+    "detail-position": "inline",
+    "detail-orientation": "parallel",
+    "arrow-width": 5,
+    "arrow-color": "#000000",
+    "margin-start": 5,
+    "margin-end": 5,
+    "margin-peer": 20,
+    "attachment-start": "normal",
+    "attachment-end": "normal",
+    "relationship-icon-image": "",
+    "type-color": "#000000",
+    "type-background-color": "#ffffff",
+    "type-border-color": "#000000",
+    "type-border-width": 0,
+    "type-font-size": 16,
+    "type-padding": 5,
+    "property-position": "outside",
+    "property-alignment": "colon",
+    "property-color": "#000000",
+    "property-font-size": 16,
+    "property-font-weight": "normal"
+  }
+}

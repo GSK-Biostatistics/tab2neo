@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 from pathlib import Path
 from data_providers import DataProvider
-from tests.test_comparison_utilities import compare_recordsets
+from tests.test_comparison_utilities import compare_recordsets, format_nodes, format_relationships
 from derivation_method import derivation_method_factory
 
 filepath = os.path.dirname(__file__)
@@ -14,30 +14,6 @@ study = 'test_study'
 @pytest.fixture
 def interface():
     return DataProvider(rdf=True)
-
-
-def format_nodes(method_json: dict):
-    nodes = []
-    for i in method_json['nodes']:
-        temp = {}
-        for j in i:
-            if j not in ['id', 'style', 'position']:
-                temp[j] = i[j]
-        nodes.append(temp)
-        del temp
-    return nodes
-
-
-def format_relationships(method_json: dict):
-    relationships = []
-    for i in method_json['relationships']:
-        temp = {}
-        for j in i:
-            if j not in ['id', 'style', 'position', 'fromId', 'toId']:
-                temp[j] = i[j]
-        relationships.append(temp)
-        del temp
-    return relationships
 
 
 class TestRetrieveJson:

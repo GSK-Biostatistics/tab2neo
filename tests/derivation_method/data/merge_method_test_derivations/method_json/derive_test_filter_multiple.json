@@ -1,0 +1,399 @@
+{
+  "style": {
+    "font-family": "sans-serif",
+    "background-color": "#ffffff",
+    "node-color": "#ffffff",
+    "border-width": 4,
+    "border-color": "#000000",
+    "radius": 50,
+    "node-padding": 5,
+    "node-margin": 2,
+    "outside-position": "auto",
+    "node-icon-image": "",
+    "node-background-image": "",
+    "icon-position": "inside",
+    "icon-size": 64,
+    "caption-position": "inside",
+    "caption-max-width": 200,
+    "caption-color": "#000000",
+    "caption-font-size": 50,
+    "caption-font-weight": "normal",
+    "label-position": "inside",
+    "label-display": "pill",
+    "label-color": "#000000",
+    "label-background-color": "#ffffff",
+    "label-border-color": "#000000",
+    "label-border-width": 4,
+    "label-font-size": 40,
+    "label-padding": 5,
+    "label-margin": 4,
+    "directionality": "directed",
+    "detail-position": "inline",
+    "detail-orientation": "parallel",
+    "arrow-width": 5,
+    "arrow-color": "#000000",
+    "margin-start": 5,
+    "margin-end": 5,
+    "margin-peer": 20,
+    "attachment-start": "normal",
+    "attachment-end": "normal",
+    "relationship-icon-image": "",
+    "type-color": "#000000",
+    "type-background-color": "#ffffff",
+    "type-border-color": "#000000",
+    "type-border-width": 0,
+    "type-font-size": 16,
+    "type-padding": 5,
+    "property-position": "outside",
+    "property-alignment": "colon",
+    "property-color": "#000000",
+    "property-font-size": 16,
+    "property-font-weight": "normal"
+  },
+  "nodes": [
+    {
+      "id": "n0",
+      "position": {
+        "x": 75,
+        "y": 213.54032602630474
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "derive_test_filter_multiple"
+      },
+      "style": {}
+    },
+    {
+      "id": "n1",
+      "position": {
+        "x": 293.4708987322276,
+        "y": 709.5573404962169
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "get_data",
+        "type": "get_data"
+      },
+      "style": {}
+    },
+    {
+      "id": "n2",
+      "position": {
+        "x": 477.88517399672025,
+        "y": 118.06445440624196
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "link",
+        "type": "link"
+      },
+      "style": {}
+    },
+    {
+      "id": "n3",
+      "position": {
+        "x": 970.4298033341759,
+        "y": 676.7700045961784
+      },
+      "caption": "",
+      "labels": [
+        "Relationship"
+      ],
+      "properties": {
+        "relationship_type": "HAS NUMERIC RESULT"
+      },
+      "style": {}
+    },
+    {
+      "id": "n4",
+      "position": {
+        "x": 799.8294053624593,
+        "y": 854.5835305011749
+      },
+      "caption": "",
+      "labels": [
+        "Relationship"
+      ],
+      "properties": {
+        "relationship_type": "HAS TEST NAME"
+      },
+      "style": {}
+    },
+    {
+      "id": "n5",
+      "position": {
+        "x": 835.3688181361483,
+        "y": 268.170488646378
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Test Name",
+        "short_label": "TS"
+      },
+      "style": {}
+    },
+    {
+      "id": "n6",
+      "position": {
+        "x": 1053.5300855179491,
+        "y": 927.245967416618
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Vital Signs",
+        "short_label": "VS"
+      },
+      "style": {}
+    },
+    {
+      "id": "n7",
+      "position": {
+        "x": 1142.0950132592018,
+        "y": 379.4371391140563
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Numeric Result",
+        "short_label": "NR"
+      },
+      "style": {}
+    },
+    {
+      "id": "n8",
+      "position": {
+        "x": 765.1007719393559,
+        "y": 50
+      },
+      "caption": "",
+      "labels": [
+        "Relationship"
+      ],
+      "properties": {
+        "relationship_type": "HAS NUMERIC RESULT"
+      },
+      "style": {}
+    },
+    {
+      "id": "n9",
+      "position": {
+        "x": 329.56034535949766,
+        "y": 293.4046842161303
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "filter",
+        "type": "filter"
+      },
+      "style": {}
+    },
+    {
+      "id": "n10",
+      "position": {
+        "x": 542.4989930594448,
+        "y": 379.4371391140563
+      },
+      "caption": "",
+      "labels": [
+        "Term"
+      ],
+      "properties": {
+        "rdfs:label": "Height",
+        "Term Code": "Height",
+        "Codelist Code": "TS"
+      },
+      "style": {}
+    },
+    {
+      "id": "n11",
+      "position": {
+        "x": 542.4989930594448,
+        "y": 561.0403137230815
+      },
+      "caption": "",
+      "style": {},
+      "labels": [
+        "Term"
+      ],
+      "properties": {
+        "rdfs:label": "BMI",
+        "Term Code": "BMI",
+        "Codelist Code": "TS"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "id": "n0",
+      "fromId": "n0",
+      "toId": "n1",
+      "type": "METHOD_ACTION",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n1",
+      "fromId": "n0",
+      "toId": "n2",
+      "type": "METHOD_ACTION",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n2",
+      "fromId": "n1",
+      "toId": "n3",
+      "type": "SOURCE_RELATIONSHIP",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n3",
+      "fromId": "n1",
+      "toId": "n4",
+      "type": "SOURCE_RELATIONSHIP",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n4",
+      "fromId": "n4",
+      "toId": "n5",
+      "type": "TO",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n5",
+      "fromId": "n4",
+      "toId": "n6",
+      "type": "FROM",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n6",
+      "fromId": "n3",
+      "toId": "n6",
+      "type": "FROM",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n7",
+      "fromId": "n3",
+      "toId": "n7",
+      "type": "TO",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n8",
+      "fromId": "n2",
+      "toId": "n8",
+      "type": "LINK",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n9",
+      "fromId": "n8",
+      "toId": "n7",
+      "type": "TO",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n10",
+      "fromId": "n8",
+      "toId": "n5",
+      "type": "FROM",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n11",
+      "fromId": "n1",
+      "toId": "n9",
+      "type": "NEXT",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n12",
+      "fromId": "n9",
+      "toId": "n2",
+      "type": "NEXT",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n13",
+      "fromId": "n0",
+      "toId": "n9",
+      "type": "METHOD_ACTION",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n14",
+      "fromId": "n9",
+      "toId": "n5",
+      "type": "ON",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n15",
+      "fromId": "n5",
+      "toId": "n10",
+      "type": "HAS_CONTROLLED_TERM",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n16",
+      "fromId": "n9",
+      "toId": "n10",
+      "type": "ON_VALUE",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n17",
+      "type": "HAS_CONTROLLED_TERM",
+      "style": {},
+      "properties": {},
+      "fromId": "n5",
+      "toId": "n11"
+    },
+    {
+      "id": "n18",
+      "type": "ON_VALUE",
+      "style": {},
+      "properties": {},
+      "fromId": "n9",
+      "toId": "n11"
+    }
+  ]
+}

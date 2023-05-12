@@ -7,7 +7,6 @@ from model_appliers import ModelApplier
 from data_providers import DataProvider
 from derivation_method import derivation_method_factory
 from derivation_method.super_method import SuperMethod
-from analysis_metadata.controlled_terms import ControlledTerms
 
 filepath = os.path.dirname(__file__)
 study = 'test_study'
@@ -15,15 +14,23 @@ study = 'test_study'
 
 def load_schema_and_terms(interface):
 
+    mm = ModelManager()
+
     # Load Schema Metadata
     with open(os.path.join(filepath, 'data', 'schemas', 'schema.json')) as jsonfile:
         dct = json.load(jsonfile)
     interface.load_arrows_dict(dct)
 
     # Load Controlled Terms
-    controlled_terms = ControlledTerms(os.path.join(filepath, 'data', 'controlled_terms', 'controlled_terms.tsv'))
-    controlled_terms.load_from_dataframe(interface, derived=True)
-
+    mm.create_ct(controlled_terminology={
+        'Age Group': [
+            {'Codelist Code': 'AGEGR2C', 'Term Code': '65-84 Years', 'rdfs:label': '65-84 Years', 'data_type': 'str'}, 
+            {'Codelist Code': 'AGEGR2C', 'Term Code': '>=85 Years', 'rdfs:label': '>=85 Years', 'data_type': 'str'}
+            ],
+        'Age Group A': [
+            {'Codelist Code': 'AGEGRA', 'Term Code': 'age group 2', 'rdfs:label': 'age group 2', 'data_type': 'str'}
+            ]
+    })
     # Load Term relationship Schema
     with open(os.path.join(filepath, 'data', 'controlled_terms', 'term_schema.json')) as jsonfile:
         dct = json.load(jsonfile)

@@ -1,0 +1,591 @@
+{
+    "nodes": [
+        {
+            "id": "core0",
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "caption": "",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "id": "derive_full_method"
+            },
+            "style": {
+                "border-color": "#68bc00"
+            }
+        },
+        {
+            "id": "n0",
+            "position": {
+                "x": 0,
+                "y": 300
+            },
+            "caption": "",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "id": "get_data",
+                "type": "get_data"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "id": "n1",
+            "position": {
+                "x": 0,
+                "y": 600
+            },
+            "caption": "",
+            "labels": [
+                "Relationship"
+            ],
+            "properties": {
+                "relationship_type": "HAS NUMERIC RESULT"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "id": "n2",
+            "position": {
+                "x": 300,
+                "y": 600
+            },
+            "caption": "",
+            "labels": [
+                "Relationship"
+            ],
+            "properties": {
+                "relationship_type": "HAS TEST NAME"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "id": "n3",
+            "position": {
+                "x": 0,
+                "y": 900
+            },
+            "caption": "",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Vital Signs"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "id": "n4",
+            "position": {
+                "x": 300,
+                "y": 900
+            },
+            "caption": "",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Numeric Result"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "id": "n5",
+            "position": {
+                "x": 600,
+                "y": 900
+            },
+            "caption": "",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Test Name"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "id": "n6",
+            "position": {
+                "x": 300,
+                "y": 300
+            },
+            "caption": "",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "id": "filter",
+                "type": "filter"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "id": "n7",
+            "position": {
+                "x": 0,
+                "y": 1200
+            },
+            "caption": "",
+            "labels": [
+                "Term"
+            ],
+            "properties": {
+                "Term Code": "Height",
+                "Codelist Code": "TS"
+            },
+            "style": {
+                "border-color": "#666666"
+            }
+        },
+        {
+            "id": "n8",
+            "position": {
+                "x": 300,
+                "y": 1200
+            },
+            "caption": "",
+            "labels": [
+                "Term"
+            ],
+            "properties": {
+                "Term Code": "Weight",
+                "Codelist Code": "TS"
+            },
+            "style": {
+                "border-color": "#666666"
+            }
+        },
+        {
+            "id": "head_tail",
+            "position": {
+                "x": 600,
+                "y": 300
+            },
+            "caption": "",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "type": "call_api",
+                "id": "head_tail",
+                "script": "head_tail",
+                "lang": "python",
+                "package": "test_df_ops",
+                "version": null,
+                "github_repo": null,
+                "repo_scripts_path": null,
+                "params": "{\"n\": 1}"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "id": "ln0",
+            "position": {
+                "x": 600,
+                "y": 1200
+            },
+            "caption": "",
+            "labels": [
+                "Term"
+            ],
+            "properties": {
+                "Term Code": "0001",
+                "Codelist Code": "USUBJID"
+            },
+            "style": {
+                "border-color": "#666666"
+            }
+        },
+        {
+            "id": "ln2",
+            "position": {
+                "x": 900,
+                "y": 300
+            },
+            "caption": "",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "id": "link",
+                "type": "link"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "id": "ln3",
+            "position": {
+                "x": 600,
+                "y": 600
+            },
+            "caption": "",
+            "labels": [
+                "Relationship"
+            ],
+            "properties": {
+                "relationship_type": "Subject"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "id": "ln4",
+            "position": {
+                "x": 900,
+                "y": 900
+            },
+            "caption": "",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Subject"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "caption": "",
+            "style": {
+                "border-color": "#9f0500"
+            },
+            "id": "n-208",
+            "position": {
+                "x": 1200,
+                "y": 300
+            },
+            "properties": {
+                "id": "build_uri1",
+                "type": "build_uri"
+            },
+            "labels": [
+                "Method"
+            ]
+        },
+        {
+            "caption": "",
+            "style": {
+                "border-color": "#000000"
+            },
+            "id": "n-209",
+            "position": {
+                "x": 1200,
+                "y": 900
+            },
+            "properties": {
+                "label": "Merge Result"
+            },
+            "labels": [
+                "Class"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "id": "ma_rel_n0",
+            "fromId": "core0",
+            "toId": "n0",
+            "type": "METHOD_ACTION",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "id": "ma_rel_n6",
+            "fromId": "core0",
+            "toId": "n6",
+            "type": "METHOD_ACTION",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "id": "n0",
+            "fromId": "n0",
+            "toId": "n1",
+            "type": "SOURCE_RELATIONSHIP",
+            "properties": {},
+            "style": {
+                "arrow-color": "#009ce0"
+            }
+        },
+        {
+            "id": "n1",
+            "fromId": "n0",
+            "toId": "n2",
+            "type": "SOURCE_RELATIONSHIP",
+            "properties": {},
+            "style": {
+                "arrow-color": "#009ce0"
+            }
+        },
+        {
+            "id": "n2",
+            "fromId": "n1",
+            "toId": "n3",
+            "type": "FROM",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n3",
+            "fromId": "n1",
+            "toId": "n4",
+            "type": "TO",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n4",
+            "fromId": "n2",
+            "toId": "n5",
+            "type": "TO",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n5",
+            "fromId": "n2",
+            "toId": "n3",
+            "type": "FROM",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n6",
+            "fromId": "n6",
+            "toId": "n7",
+            "type": "ON_VALUE",
+            "properties": {},
+            "style": {
+                "arrow-color": "#666666"
+            }
+        },
+        {
+            "id": "n7",
+            "fromId": "n6",
+            "toId": "n8",
+            "type": "ON_VALUE",
+            "properties": {},
+            "style": {
+                "arrow-color": "#666666"
+            }
+        },
+        {
+            "id": "n8",
+            "fromId": "n6",
+            "toId": "n5",
+            "type": "ON",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n9",
+            "fromId": "n5",
+            "toId": "n7",
+            "type": "HAS_CONTROLLED_TERM",
+            "properties": {},
+            "style": {
+                "arrow-color": "#666666"
+            }
+        },
+        {
+            "id": "n10",
+            "fromId": "n5",
+            "toId": "n8",
+            "type": "HAS_CONTROLLED_TERM",
+            "properties": {},
+            "style": {
+                "arrow-color": "#666666"
+            }
+        },
+        {
+            "id": "n11",
+            "fromId": "n0",
+            "toId": "n6",
+            "type": "NEXT",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            }
+        },
+        {
+            "id": "ma_rel_head_tail",
+            "fromId": "core0",
+            "toId": "head_tail",
+            "type": "METHOD_ACTION",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "id": "next_rel_head_tail",
+            "fromId": "n6",
+            "toId": "head_tail",
+            "type": "NEXT",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            }
+        },
+        {
+            "id": "ma_rel_ln2",
+            "fromId": "core0",
+            "toId": "ln2",
+            "type": "METHOD_ACTION",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "id": "next_rel_ln2",
+            "fromId": "head_tail",
+            "toId": "ln2",
+            "type": "NEXT",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            }
+        },
+        {
+            "id": "ln0",
+            "fromId": "ln4",
+            "toId": "ln0",
+            "type": "HAS_CONTROLLED_TERM",
+            "properties": {},
+            "style": {
+                "arrow-color": "#666666"
+            }
+        },
+        {
+            "id": "ln2",
+            "fromId": "ln2",
+            "toId": "ln0",
+            "type": "TO_VALUE",
+            "properties": {},
+            "style": {
+                "arrow-color": "#666666"
+            }
+        },
+        {
+            "id": "ln3",
+            "fromId": "ln2",
+            "toId": "n8",
+            "type": "FROM_VALUE",
+            "properties": {},
+            "style": {
+                "arrow-color": "#666666"
+            }
+        },
+        {
+            "id": "ln4",
+            "fromId": "ln2",
+            "toId": "ln3",
+            "type": "LINK",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "ln5",
+            "fromId": "ln3",
+            "toId": "ln4",
+            "type": "TO",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "ln6",
+            "fromId": "ln3",
+            "toId": "n5",
+            "type": "FROM",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "ma_rel_n-208",
+            "fromId": "core0",
+            "toId": "n-208",
+            "type": "METHOD_ACTION",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "id": "next_rel_n-208",
+            "fromId": "ln2",
+            "toId": "n-208",
+            "type": "NEXT",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            }
+        },
+        {
+            "toId": "n-209",
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "id": "r-1141",
+            "type": "URI_FOR",
+            "fromId": "n-208",
+            "properties": {}
+        },
+        {
+            "toId": "n3",
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "id": "r-1142",
+            "type": "URI_BY",
+            "fromId": "n-208",
+            "properties": {}
+        }
+    ],
+    "style": {}
+}

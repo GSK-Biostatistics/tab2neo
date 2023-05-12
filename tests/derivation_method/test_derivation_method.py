@@ -3,16 +3,25 @@ import os
 import pandas as pd
 import pytest
 from data_providers import DataProvider
-from derivation_method import derivation_method_factory, OnlineDerivationMethod
+from model_managers import ModelManager
+from derivation_method import derivation_method_factory, OnlineDerivationMethod, DerivationMethod
 from derivation_method.action import GetData, Link, CallAPI
+from tests.test_comparison_utilities import compare_recordsets, format_json
+from derivation_method.utils import visualise_json, topological_sort
 
 filepath = os.path.dirname(__file__)
 study = 'test_study'
 
 
+def read_json_file(path):
+    with open(path, 'r') as jsonfile:
+        json_ = json.load(jsonfile)
+    return json_
+
+
 @pytest.fixture
 def interface():
-    return DataProvider(rdf=True)
+    return DataProvider(rdf=True, verbose=False)
 
 
 class TestDelete:
@@ -199,19 +208,95 @@ class TestExplicitPrerequisites:
 
 class TestDerivationJson:
 
-    def test_merge_action_json_from_empty(self, interface):
+    action_json_path = os.path.join(filepath, 'data', 'merge_method_test_derivations', 'action_json')
+    method_json_path = os.path.join(filepath, 'data', 'merge_method_test_derivations', 'method_json')
+    expected_json_path = os.path.join(filepath, 'data', 'merge_method_test_derivations', 'expected_method_json')
+
+    @property
+    def dict_derivation_method(self) -> DerivationMethod:
+        return derivation_method_factory(interface=DataProvider(rdf=True), data=os.path.join(self.method_json_path, f'derive_partial_method.json'), study=study)
+
+    def test_merge_one_action_json(self, interface):
+        interface.clean_slate()
+        
+        # start with a base derivation method and add a link action to it.
+        link_action_json = read_json_file(os.path.join(self.action_json_path, f'link_action.json'))
+        
+        action_json_list = [link_action_json]
+        
+        method_json = format_json(self.dict_derivation_method.merge_action_json(name="derive_partial_method", action_json_list=action_json_list, derivation_method_json=self.dict_derivation_method.content))
+        expected_json = format_json(read_json_file(os.path.join(self.expected_json_path, f'expected_method_with_link.json')))
+        
+        assert method_json == expected_json, f'\n\n{method_json=}\n\n{expected_json=}'
+
+    def test_merge_multiple_action_json(self, interface):
+        interface.clean_slate()
+
+        # This time start with an empty derivation method which we will fill up with actions.
+        get_data_filter_action_json = read_json_file(os.path.join(self.action_json_path, f'get_data_filter_action.json'))
+        call_api_action_json = read_json_file(os.path.join(self.action_json_path, f'call_api_action.json'))
+        link_value_action_json = read_json_file(os.path.join(self.action_json_path, f'link_value_action.json'))
+        build_uri_action_json = read_json_file(os.path.join(self.action_json_path, f'build_uri_action.json'))
+
+        action_json_list = [get_data_filter_action_json, call_api_action_json, link_value_action_json, build_uri_action_json]
+        
+        method_json = format_json(self.dict_derivation_method.merge_action_json(name="derive_full_method", action_json_list=action_json_list, derivation_method_json=None))
+        expected_json = format_json(read_json_file(os.path.join(self.expected_json_path, f'expected_method_full.json')))
+        
+        assert method_json == expected_json, f'\n\n{method_json=}\n\n{expected_json=}\n\n'
+        
+    def test_build_derivation_method_json(self, interface):
+
+        mm = ModelManager()
+
+        for file in os.listdir(self.method_json_path):
+            interface.clean_slate()
+            # load classes that require terms
+            mm.create_class(classes=[{'label': 'Test Name', 'short_label': 'TS'}, {'label': 'Subject', 'short_label': 'USUBJID'}])
+            # Load Controlled Terms
+            mm.create_ct(controlled_terminology={
+                'Test Name': [
+                    {'Codelist Code': 'TS', 'Term Code': 'Weight', 'rdfs:label': 'Weight'},
+                    {'Codelist Code': 'TS', 'Term Code': 'Height', 'rdfs:label': 'Height'},
+                    {'Codelist Code': 'TS', 'Term Code': 'BMI', 'rdfs:label': 'BMI'}
+                    ],
+                'Subject': [
+                    {'Codelist Code': 'USUBJUD', 'Term Code': '0001', 'rdfs:label': '0001'}
+                    ]
+            })
+
+            test_file_path = os.path.join(self.method_json_path, file)
+            original_method_json = read_json_file(test_file_path)
+            
+            method = derivation_method_factory(data=original_method_json, interface=interface, study=study, overwrite_db=True)
+            method_json = method.build_derivation_method_json(json_str=False)
+
+            comp_method_json = format_json(method_json)
+            comp_original_method_json = format_json(original_method_json)
+
+            assert comp_method_json == comp_original_method_json, f'Failed method: {method.name}\n\ncomp_method_json=\n{json.dumps(comp_method_json, indent=4, sort_keys=True)}\n\ncomp_original_method_json=\n{json.dumps(comp_original_method_json, indent=4, sort_keys=True)}'
+
+
+class TestMergeLinks:
+
+    def test_predict_output_classes(self, interface):
         pass
 
-    def test_merge_action_json_from_partial(self, interface):
+    def test_predict_links(self, interface):
         pass
 
-    def test_build_derivation_method_json_from_empty(self, interface):
+    def test_predict_link_actions(self, interface):
         pass
 
-    def test_build_derivation_method_json_from_partial(self, interface):
+    def test_generate_link_actions(self, interface):
         pass
 
+    def test_merge_predicted_links(self, interface):
+        pass
 
-# class TestMergeLinks:
+    def test_create_build_uri_actions(self, interface):
+        pass
+        pass
 
-#     def test_
+    def test_merge_build_uri_from_schema(self, interface):
+        pass
