@@ -1653,11 +1653,11 @@ class Link(AppliesChanges):
                 CALL apoc.create.vRelationship(method, "LINK", 
                     CASE $link_how 
                         WHEN 'merge' THEN {how: 'merge'} 
-                        WHEN 'merge from' THEN {how: 'merge_from'} 
+                        WHEN 'merge_from' THEN {how: 'merge_from'} 
                         WHEN 'create' THEN {how: 'create'} 
-                        WHEN 'create from' THEN {how: 'create_from'} 
-                        WHEN 'merge on uri' THEN {how: 'merge_on_uri'}
-                        WHEN 'merge from on uri' THEN {how: 'merge_from_on_uri'}
+                        WHEN 'create_from' THEN {how: 'create_from'} 
+                        WHEN 'merge_on_uri' THEN {how: 'merge_on_uri'}
+                        WHEN 'merge_from_on_uri' THEN {how: 'merge_from_on_uri'}
                         ELSE {} END, r) YIELD rel
                 CALL apoc.create.vRelationship(method, "FROM_VALUE", {}, from_term_) YIELD rel as from_val_rel
                 CALL apoc.create.vRelationship(method, "TO_VALUE", {}, to_term_) YIELD rel as to_val_rel                
@@ -1689,11 +1689,11 @@ class Link(AppliesChanges):
                 CALL apoc.create.vRelationship(method, "LINK", 
                     CASE $link_how 
                         WHEN 'merge' THEN {how: 'merge'} 
-                        WHEN 'merge from' THEN {how: 'merge_from'} 
+                        WHEN 'merge_from' THEN {how: 'merge_from'} 
                         WHEN 'create' THEN {how: 'create'} 
-                        WHEN 'create from' THEN {how: 'create_from'}
-                        WHEN 'merge on uri' THEN {how: 'merge_on_uri'}
-                        WHEN 'merge from on uri' THEN {how: 'merge_from_on_uri'}
+                        WHEN 'create_from' THEN {how: 'create_from'} 
+                        WHEN 'merge_on_uri' THEN {how: 'merge_on_uri'}
+                        WHEN 'merge_from_on_uri' THEN {how: 'merge_from_on_uri'}
                         ELSE {} END, r) YIELD rel
                 CALL apoc.create.vRelationship(method, "FROM_VALUE", {}, from_term_) YIELD rel as from_val_rel
                 WITH [[r,rf_,x_],[r,rt_,y_],[method, rel, r], [from_term_, rft_, x_], [method, from_val_rel, from_term_]] as coll
@@ -1723,11 +1723,11 @@ class Link(AppliesChanges):
                 CALL apoc.create.vRelationship(method, "LINK", 
                     CASE $link_how 
                         WHEN 'merge' THEN {how: 'merge'} 
-                        WHEN 'merge from' THEN {how: 'merge_from'} 
+                        WHEN 'merge_from' THEN {how: 'merge_from'} 
                         WHEN 'create' THEN {how: 'create'} 
-                        WHEN 'create from' THEN {how: 'create_from'} 
-                        WHEN 'merge on uri' THEN {how: 'merge_on_uri'}
-                        WHEN 'merge from on uri' THEN {how: 'merge_from_on_uri'}
+                        WHEN 'create_from' THEN {how: 'create_from'} 
+                        WHEN 'merge_on_uri' THEN {how: 'merge_on_uri'}
+                        WHEN 'merge_from_on_uri' THEN {how: 'merge_from_on_uri'}
                         ELSE {} END, r) YIELD rel
                 CALL apoc.create.vRelationship(method, "TO_VALUE", {}, to_term_) YIELD rel as to_val_rel
                 WITH [[r,rf_,x_],[r,rt_,y_],[method, rel, r], [to_term_, rtt_, y_], [method, to_val_rel, to_term_]] as coll
@@ -1753,13 +1753,13 @@ class Link(AppliesChanges):
                 CALL apoc.create.vRelationship(r, "TO", {}, y_) YIELD rel as rt_
                 CALL apoc.create.vRelationship(method, "LINK", 
                     CASE $link_how 
-                    WHEN 'merge' THEN {how: 'merge'} 
-                    WHEN 'merge from' THEN {how: 'merge_from'} 
-                    WHEN 'create' THEN {how: 'create'} 
-                    WHEN 'create from' THEN {how: 'create_from'}
-                    WHEN 'merge on uri' THEN {how: 'merge_on_uri'}
-                    WHEN 'merge from on uri' THEN {how: 'merge_from_on_uri'}
-                    ELSE {} END, r) YIELD rel
+                        WHEN 'merge' THEN {how: 'merge'} 
+                        WHEN 'merge_from' THEN {how: 'merge_from'} 
+                        WHEN 'create' THEN {how: 'create'} 
+                        WHEN 'create_from' THEN {how: 'create_from'} 
+                        WHEN 'merge_on_uri' THEN {how: 'merge_on_uri'}
+                        WHEN 'merge_from_on_uri' THEN {how: 'merge_from_on_uri'}
+                        ELSE {} END, r) YIELD rel
                 WITH [[r,rf_,x_],[r,rt_,y_],[method, rel, r]] as coll
                 UNWIND coll as item
                 WITH item[0] as x, item[1] as r, item[2] as y
