@@ -97,8 +97,7 @@
                 "Class"
             ],
             "properties": {
-                "label": "Analysis Age",
-                "short_label": "AAGE"
+                "label": "Analysis Age"
             },
             "style": {
                 "border-color": "#000000"
@@ -115,8 +114,7 @@
                 "Class"
             ],
             "properties": {
-                "label": "Population",
-                "short_label": "POP"
+                "label": "Population"
             },
             "style": {
                 "border-color": "#000000"
@@ -133,8 +131,7 @@
                 "Class"
             ],
             "properties": {
-                "label": "Analysis Act Stratum and Act Treatment",
-                "short_label": "ASTA"
+                "label": "Analysis Act Stratum and Act Treatment"
             },
             "style": {
                 "border-color": "#000000"
@@ -189,9 +186,7 @@
                 "Class"
             ],
             "properties": {
-                "short_label": "n",
-                "label": "Number of observations",
-                "derived": "true"
+                "label": "Number of observations"
             },
             "style": {
                 "border-color": "#000000"
@@ -208,9 +203,7 @@
                 "Class"
             ],
             "properties": {
-                "short_label": "MEAN",
-                "label": "Mean Value of Analysis Parameter",
-                "derived": "true"
+                "label": "Mean Value of Analysis Parameter"
             },
             "style": {
                 "border-color": "#000000"

@@ -42,8 +42,7 @@
         "Class"
       ],
       "properties": {
-        "label": "Merge Result",
-        "short_label": "MR"
+        "label": "Merge Result"
       },
       "style": {}
     },
