@@ -40,7 +40,7 @@ class DataProvider(NeoInterface):
         A typical get_data_generic call with nodes with multiple parameters and repeating property names btw labels
         :return: pd.DataFrame
         """
-        self.get_data_generic(
+        return self.get_data_generic(
             labels=labels,
             rels=rels,
             infer_rels=False,

@@ -1,8 +1,8 @@
-# ModelApplier Class (schema_Class mode)
+# ModelApplier Class
 ModelApplier - Python class to restructure data in Neo4j database using Class-Relationship model 
 (which as well resides in Neo4j). 
 
-The best way to describe the main urpose of ModelApplier is to look at what happens when running
+The best way to describe the main purpose of ModelApplier is to look at what happens when running
 [examples/refactor_small_example.py](../examples/refactor_small_example.py)
 
 Before using Method Applier data should be loaded in the database along with its metadata. [DataLoaders](../data_loaders/README.md) 
@@ -17,17 +17,17 @@ The example data+metadata is as follows:
 
 After running the script, given the metadata, we would expect the following result:
 ![refactor_small_example_result](../examples/data/refactor_small_example_result.png)
-- 2 nodes with label 'Subject' and `rdfs:label` = '001' and '002' would be created as
-(:`Source Data Column`{_columnname_: 'USUBJID'})-[:MAPS_TO_CLASS]->(:Class{label:'Subject'})
-- 3 nodes with label 'Name of Treatment' and `rdfs:label` = 'DRUG A', 'DRUG B' and 'DRUG C' would be created as
-(:`Source Data Column`{_columnname_: 'EXTRT'})-[:MAPS_TO_CLASS]->(:Class{label:'Name of Treatment'})
-- The above nodes would be linked with a [:FROM_DATA] relationship to the `Source Data Row` now from which the data came from
-- The node (:Subject) nodes would have relationship [:`Name of Treatment`] to the (:`Name of Treatment`) nodes if they come from the same `Source Data Row` node
+- 2 nodes with label 'Subject' and \`rdfs:label\` = '001' and '002' would be created as
+(:\`Source Data Column\`{_columnname_: 'USUBJID'})-[:MAPS_TO_CLASS]->(:Class{label:'Subject'})
+- 3 nodes with label 'Name of Treatment' and \`rdfs:label\` = 'DRUG A', 'DRUG B' and 'DRUG C' would be created as
+(:\`Source Data Column\`{_columnname_: 'EXTRT'})-[:MAPS_TO_CLASS]->(:Class{label:'Name of Treatment'})
+- The above nodes would be linked with a [:FROM_DATA] relationship to the \`Source Data Row\` now from which the data came from
+- The node (:Subject) nodes would have relationship [:\`Name of Treatment\`] to the (:\`Name of Treatment\`) nodes if they come from the same \`Source Data Row\` node
 since the following path of metadata nodes exists: (:Class{label:'Subject'})<-[:FROM]-(:Relationship{relationship_type:'Name of Treatment'})-[:TO]->(:Class{label:'Name of Treatment'})
 
 
 
-# ModelApplier Class (schema_PROPERTY mode - used before 12.2021)
+# ModelApplier Class (schema_PROPERTY mode - to be deprecated - used before 12.2021)
 ModelApplier - Class to restructure data in Neo4j database using Class-Property model 
 (which as well resides in Neo4j). 
 
