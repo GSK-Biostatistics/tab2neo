@@ -76,9 +76,9 @@ def format_nodes(method_json: dict, keep_id=False):
     nodes = []
     for i in method_json['nodes']:
         temp = {}
-        for j in i:
-            if j not in keys_to_remove:
-                temp[j] = i[j]
+        for k, v in i.items():
+            if (k not in keys_to_remove) and v:  # also remove empty entries e.g. properties: {}
+                temp[k] = v
         nodes.append(temp)
         del temp
     return nodes
@@ -89,9 +89,9 @@ def format_relationships(method_json: dict, keep_id=False):
     relationships = []
     for i in method_json['relationships']:
         temp = {}
-        for j in i:
-            if j not in keys_to_remove:
-                temp[j] = i[j]
+        for k, v in i.items():
+            if (k not in keys_to_remove) and v:  # also remove empty entries e.g. properties: {}
+                temp[k] = v
         relationships.append(temp)
         del temp
     return relationships
@@ -100,8 +100,47 @@ def format_relationships(method_json: dict, keep_id=False):
 def format_json(method_json: dict, keep_id=False) -> dict:
     method_json['nodes'] = format_nodes(method_json, keep_id=keep_id)
     method_json['relationships'] = format_relationships(method_json, keep_id=keep_id)
-    del method_json['style']
+    if 'style' in method_json:
+        del method_json['style']
     return method_json
+
+
+def compare_method_json(method_json, compare_method_json):
+    # remove ids, style and captions from json
+    method_json = format_json(method_json)
+    compare_method_json = format_json(compare_method_json)
+
+    nodes = method_json['nodes']
+    compare_nodes = compare_method_json['nodes']
+    rels = method_json['relationships']
+    compare_rels = compare_method_json['relationships']
+
+    # Datasets of different sizes will never match
+    assert len(nodes) == len(compare_nodes)
+    assert len(rels) == len(compare_rels)
+
+    # sort keys of node and rel dicts
+    sorted_nodes = [{key: sorted(value.items()) if isinstance(value, dict) else value for key, value in sorted(node.items())} for node in nodes]
+    sorted_rels = [{key: sorted(value.items()) if isinstance(value, dict) else value for key, value in sorted(rel.items())} for rel in rels]
+    sorted_compare_nodes = [{key: sorted(value.items()) if isinstance(value, dict) else value for key, value in sorted(node.items())} for node in compare_nodes]
+    sorted_compare_rels = [{key: sorted(value.items()) if isinstance(value, dict) else value for key, value in sorted(rel.items())} for rel in compare_rels]
+
+    # Consider each element (i.e. a dictionary) in turn in the first list:
+    #   attempt to remove it from the other list; if the removal fails, then it means
+    #   that we have an element in the 1st list that is not present in the 2nd one (hence a mismatch)
+    for node in sorted_nodes:
+        try:
+            sorted_compare_nodes.remove(node)
+        except Exception:
+            return False  # The remove failed - i.e. there is a difference in the node lists
+
+    for rel in sorted_rels:
+        try:
+            sorted_compare_rels.remove(rel)
+        except Exception:
+            return False  # The remove failed - i.e. there is a difference in the rel lists
+
+    return True
 
 
 
