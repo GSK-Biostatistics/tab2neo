@@ -6,7 +6,7 @@ from data_providers import DataProvider
 from model_managers import ModelManager
 from derivation_method import derivation_method_factory, OnlineDerivationMethod, DerivationMethod
 from derivation_method.action import GetData, Link, CallAPI
-from tests.test_comparison_utilities import compare_recordsets, format_json
+from tests.test_comparison_utilities import compare_recordsets, format_json, compare_method_json
 from derivation_method.utils import visualise_json, topological_sort
 
 filepath = os.path.dirname(__file__)
@@ -252,7 +252,15 @@ class TestDerivationJson:
         for file in os.listdir(self.method_json_path):
             interface.clean_slate()
             # load classes that require terms
-            mm.create_class(classes=[{'label': 'Test Name', 'short_label': 'TS'}, {'label': 'Subject', 'short_label': 'USUBJID'}])
+            mm.create_class(classes=[
+                {'label': 'Test Name', 'short_label': 'TS'},
+                {'label': 'Subject', 'short_label': 'USUBJID'},
+                {'label': 'Population', 'short_label': 'POP'},
+                {'label': 'Analysis Age', 'short_label': 'AAGE'},
+                {'label': 'Analysis Act Stratum and Act Treatment', 'short_label': 'ASTA'},
+                {'label': 'Number of observations', 'short_label': 'n'},
+                {'label': 'Mean Value of Analysis Parameter', 'short_label': 'MEAN'},
+                ])
             # Load Controlled Terms
             mm.create_ct(controlled_terminology={
                 'Test Name': [
@@ -261,7 +269,7 @@ class TestDerivationJson:
                     {'Codelist Code': 'TS', 'Term Code': 'BMI', 'rdfs:label': 'BMI'}
                     ],
                 'Subject': [
-                    {'Codelist Code': 'USUBJUD', 'Term Code': '0001', 'rdfs:label': '0001'}
+                    {'Codelist Code': 'USUBJID', 'Term Code': '0001', 'rdfs:label': '0001'}
                     ]
             })
 
@@ -271,10 +279,9 @@ class TestDerivationJson:
             method = derivation_method_factory(data=original_method_json, interface=interface, study=study, overwrite_db=True)
             method_json = method.build_derivation_method_json(json_str=False)
 
-            comp_method_json = format_json(method_json)
-            comp_original_method_json = format_json(original_method_json)
+            compare_method_json(method_json, original_method_json)
 
-            assert comp_method_json == comp_original_method_json, f'Failed method: {method.name}\n\ncomp_method_json=\n{json.dumps(comp_method_json, indent=4, sort_keys=True)}\n\ncomp_original_method_json=\n{json.dumps(comp_original_method_json, indent=4, sort_keys=True)}'
+            assert compare_method_json(method_json, original_method_json), f'Failed method: {method.name}\n\ncomp_method_json=\n{json.dumps(format_json(method_json), indent=4, sort_keys=True)}\n\ncomp_original_method_json=\n{json.dumps(format_json(original_method_json), indent=4, sort_keys=True)}'
 
 
 class TestMergeLinks:
