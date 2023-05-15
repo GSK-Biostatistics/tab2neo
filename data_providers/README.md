@@ -16,7 +16,7 @@ And the following data nodes:
 a call of 
    
     dp = DataProvider()
-    dp.dp.get_data_generic(["Subject","RECORD","Sex"],infer_rels=True,return_propname=False) 
+    dp.get_data_generic(["Subject","RECORD","Sex"],infer_rels=True,return_propname=False) 
     
 will return a dataframe
     
@@ -25,7 +25,7 @@ will return a dataframe
              _id_RECORD Sex  _id_Sex  _id_Subject Subject
     0               96   M       91           93    S001
     1               97   F       92           94    S002
-where columns 'id.\_Sex_', 'id.\_RECORD_'and 'id.\_Treatment_' would contain unique identifiers of the corresponding nodes in the database (Neo4j node ids) and the rest of the columns will contain values of properties of the corresponding nodes.
+where columns 'id\_Sex_', 'id\_RECORD_'and 'id\_Subject_' would contain unique identifiers of the corresponding nodes in the database (Neo4j node ids) and the rest of the columns will contain values of properties of the corresponding nodes.
     
 # Detailed technical description
 ### __init__()
