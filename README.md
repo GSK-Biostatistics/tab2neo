@@ -34,7 +34,7 @@ The example code below runs through a use case of data loader, model manager, mo
 
 #### Importing the data 
 
-The call to FileDataLoader in the code below connects to the database using environment variables for your host and log-in credentials. Alternatively you can use the format `FileDataLoader(host="bolt://...",credentials=("username","password"))` to connect. The call to clean_slate() empties the database, and then load_file reads in your data from the specified filepath.
+The call to FileDataLoader in the code below connects to the database using environment variables for your host and log-in credentials. Alternatively you can use the format `FileDataLoader(host="bolt://...",credentials=("username","password"))` to connect. The call to clean_slate() empties the database, and then load_file reads in your data from the specified filepath. See our example data [here](examples/data/Record.csv).
 
 ```python
 from model_managers import ModelManager
@@ -77,13 +77,14 @@ Now we have our data set up, we can call it back in a tabular way using DataProv
 As we have not specified any relationships, we must set `infer_rels=True`. The argument `return_propname = False` ensures that we see the label name in our output, and `return_nodeid = False` removes the id values generated for each unique node in Neo4j from your output.
 
 ```python
+dp = DataProvider()
 dp.get_data_generic(["Subject","Record","Age"],infer_rels=True,return_propname=False,return_nodeid=False) 
 ```
 
 ```
             Subject  Age 
     0            S001      30
-    1            s002      40
+    1            S002      40
 ```
     
 
