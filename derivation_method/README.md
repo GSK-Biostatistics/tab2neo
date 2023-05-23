@@ -45,6 +45,10 @@ for action in method.actions:
 Alternatively once loaded, the method can be accessed using the OnlineDerivationMethod() class ensuring the name parameter 
 matches the name of the loaded derivation. The derivation can then be applied using OnlineDerivationMethod.apply().
 
+An example derivation and script can be found in the derivation_method/examples folder. The `apply_derivation_method.py` script runs the derivation, `test_data.csv` contains a small set of data for the derivation, `load_data.py` has a function for loading this data/setting up the schema and `example_derivation_method.json` contains the derivation method itself. An image of this derivation method is included below:
+
+![Example DerivationMethod](readme_assets/example_derivation_method.png)
+
 ## Python class Method 
 
 This class is the super class of DerivationMethod.
