@@ -230,12 +230,12 @@ in the query through the **"$data"** parameter in a ```df.to_dict(orient='record
 with the result of a RunCypher action.
 
 ## Action Type: CallAPI
+### Currently this REST API used for this action is not opensourced. However a link will be added here when it is available!
 
 ![Action_type_call_api](readme_assets/method_type_call_api.png)
 
 CallApi method actions are similar to RunScript method actions and consist of a single node and are defined by the properties of this 
-node. Instead of running functions locally like RunScript, CallApi method actions send requests to a [REST API](https://github.com/gsk-tech/cldapi) which runs the 
-requested function.
+node. Instead of running functions locally like RunScript, CallApi method actions send requests to a REST API which runs the requested function.
 
 - The REST API is capable of running _both_ Python and R scripts using the Reticulate package.
 - Similarly to RunScript, API requests are are converted to an expression which is evaluated by Python eval().
