@@ -490,3 +490,32 @@ In this example, there are 6 terms from the class `Age Group` that are being map
 The actions this super method generates are:
    - CallAPI - Runs the `remap_term_values` function found in basic_df_ops
    - Link - Creates the links between the terms
+
+#### SubjectLevelLinkSuperMethod
+
+Used to combine [AssignLabel](#action-type-assignlabel-aka-assignclass) and [Link](#action-type-link) actions that add the required labels and relationships to classes that are defined as *Subject Level*.
+
+The json for such an action would look like:
+
+![SL Action](readme_assets/SL_action.png)
+
+Where the green relationship and node are optional. They allow a user to select a specific parameter term to link to whereas the default process is to link to the parameter term with the same label as the *Subject Level* class.
+The actions included are as follows:
+- AssignLabel - where we assign the Analysis Value class label onto *Subject Level* class.
+- BuildUri - with format:
+    - prefix: Subject_level_{parameter_term}
+    - uris for: [RECORD]
+    - uris by: [SUBJECT]
+    - uris label: []
+- Link 1
+    - FROM: SUBJECT
+    - TO: RECORD
+    - Use URI = True
+- Link 2
+    - FROM: RECORD
+    - TO: PARAMETER
+    - TO VALUE: Parameter term with rdfs:label that matches *Subject Level* class label (or defined in action metadata)
+- Link 3
+    - FROM: RECORD
+    - TO: AVAL
+    - Merge = True
