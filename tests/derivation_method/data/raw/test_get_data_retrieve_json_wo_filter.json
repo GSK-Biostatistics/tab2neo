@@ -215,16 +215,13 @@
             "caption": "",
             "id": "n72",
             "labels": [
-                "Class",
-                "Term"
+                "Class"
             ],
             "position": {
                 "x": 200,
                 "y": 600
             },
             "properties": {
-                "Codelist Code": "S989298",
-                "Term Code": "S2004310",
                 "label": "Original Collected race code (RACEOR1)",
                 "short_label": "RACEOR1"
             },

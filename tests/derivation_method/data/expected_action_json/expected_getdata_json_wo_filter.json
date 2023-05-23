@@ -97,12 +97,9 @@
             "y":400
          },
          "properties":{
-            "Term Code":"S2004310",
-            "label":"Original Collected race code (RACEOR1)",
-            "Codelist Code":"S989298"
+            "label":"Original Collected race code (RACEOR1)"
          },
          "labels":[
-            "Term",
             "Class"
          ]
       },
