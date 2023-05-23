@@ -899,7 +899,7 @@ class DictDerivationMethod(DerivationMethod):
                         "from_short_label": from_class.get('short_label'),
                         "to_class": cls.get('label'),
                         "to_short_label": cls.get('short_label'),
-                        "relationship_type": cls.get('label')
+                        "relationship_type": cls.get('label')  # todo this should be rel type from schema
                     }
                 )
             for to_class in to_classes:
@@ -909,7 +909,7 @@ class DictDerivationMethod(DerivationMethod):
                         "from_short_label": cls.get('short_label'),
                         "to_class": to_class.get('label'),
                         "to_short_label": to_class.get('short_label'),
-                        "relationship_type": to_class.get('label')
+                        "relationship_type": to_class.get('label')  # todo this should be rel type from schema
                     }
                 )
 
@@ -948,7 +948,7 @@ class DictDerivationMethod(DerivationMethod):
                 ).retrieve_json()
             )
 
-        for i, cls in enumerate(subject_level_classes):
+        for i, cls in enumerate(subject_level_classes, start=1):
             new_link_jsons.append(
                 SubjectLevelLinkSuperMethod(
                     method=self,
