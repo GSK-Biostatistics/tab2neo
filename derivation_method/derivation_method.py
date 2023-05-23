@@ -342,6 +342,9 @@ class DerivationMethod(Method):  # common variables
     def fetch_metadata(self):
         pass
 
+    def _get_derivation_node_id(self):
+        raise NotImplementedError
+
     def merge_action_json(self, name, action_json_list: list, derivation_method_json: dict = None):
         """
         Merge actions from action_json_list into provided derivation_method_json OR create a new derivation_method_json if not provided.
@@ -435,7 +438,7 @@ class DerivationMethod(Method):  # common variables
                         derivation_method_json['relationships'].append(
                             {
                                 'id': f'ma_rel_{node["id"]}',
-                                'fromId': self.get_derivation_node_id(derivation_method_json),
+                                'fromId': self._get_derivation_node_id(),
                                 'toId': node['id'],
                                 'type': 'METHOD_ACTION',
                                 'properties': {},
@@ -617,6 +620,10 @@ class OnlineDerivationMethod(DerivationMethod):
         #     logger.warning(f"{self.available_methods}")
         return [method.get("method_id") for method in res]
 
+    def _get_derivation_node_id(self):
+        """All core id nodes in OnlineDerivationMethod will be `core0`"""
+        return 'core0'
+
     def rollback(self):
         if self.applied:
             detached_nodes_dct = []
@@ -676,21 +683,13 @@ class OnlineDerivationMethod(DerivationMethod):
         MATCH (m:Method)
         {wh} 
         MATCH (m)-[:METHOD_INPUT]->(r:Relationship)-[:FROM|TO]->(c:Class)
-        WHERE c.derived = "true" AND NOT (m)-[:METHOD_INPUT]->(c)
+        WHERE NOT (m)-[:METHOD_INPUT]->(c)
         OPTIONAL MATCH (c)-[:HAS_CONTROLLED_TERM]->(t:Term)<-[:METHOD_INPUT]-(m)
         WHERE EXISTS ( ()-[:METHOD_OUTPUT]->(t) )
         WITH m, coalesce(t, r) as input
         MATCH (prereq:Method)
-        WHERE (m.type IS NULL AND NOT (m)<-[:METHOD_ACTION]-())
-        AND
-            (
-                (prereq)-[:METHOD_OUTPUT]->(input) 
-            OR
-                EXISTS {{
-                    (prereq)-[:METHOD_OUTPUT]->(c2:Class)<-[:FROM|TO]-(input)
-                    WHERE NOT (prereq)-[:METHOD_INPUT]->(c2)
-                }}
-            )
+        MATCH (prereq:Method)-[:METHOD_OUTPUT]->()<-[:FROM|TO*0..1]-(input)
+        WHERE (prereq.type IS NULL AND NOT (prereq)<-[:METHOD_ACTION]-())
         WITH DISTINCT m, collect(DISTINCT prereq) as coll
         UNWIND coll as prereq
         MERGE (m)-[:METHOD_PREREQ]->(prereq)
@@ -775,11 +774,11 @@ class DictDerivationMethod(DerivationMethod):
         logger.warning(f"Cannot identify derivation method name from JSON dictionary.")
         raise KeyError
 
-    def get_derivation_node_id(self, content):
-        next_rels = reduce(add, [[rel["fromId"], rel["toId"]] for rel in content["relationships"] if
+    def _get_derivation_node_id(self):
+        next_rels = reduce(add, [[rel["fromId"], rel["toId"]] for rel in self.content["relationships"] if
                                  rel["type"] == "NEXT"], [])
 
-        for node in content["nodes"]:
+        for node in self.content["nodes"]:
             if "Method" in node["labels"] and list(node["properties"].keys()) == ["id"] and node["id"] not in next_rels:
                 return node["id"]
         logger.warning(f"Cannot identify derivation method id from JSON dictionary.")

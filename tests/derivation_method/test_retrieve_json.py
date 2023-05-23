@@ -25,12 +25,12 @@ class TestRetrieveJson:
         test_file_path = os.path.join(filepath, 'data', 'raw', f'{filename}.json')
         expected_file_path = os.path.join(filepath, 'data', 'expected_action_json', f'{exp_filename}.json')
 
-        with open(test_file_path) as jsonfile:
+        with open(test_file_path, 'r') as jsonfile:
             inline_dct = json.load(jsonfile)
             method = derivation_method_factory(data=inline_dct, interface=interface, study=study, overwrite_db=False)
             method_json = method.actions[1].retrieve_json()
         
-        with open(expected_file_path) as exp_json_file:
+        with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
             assert compare_recordsets([method_json], [expected_json])
 
@@ -41,20 +41,16 @@ class TestRetrieveJson:
         test_file_path = os.path.join(filepath, 'data', 'raw', f'{filename}.json')
         expected_file_path = os.path.join(filepath, 'data', 'expected_action_json', f'{exp_filename}.json')
         
-        with open(test_file_path) as jsonfile:
+        with open(test_file_path, 'r') as jsonfile:
             inline_dct = json.load(jsonfile)
             method = derivation_method_factory(data=inline_dct, interface=interface, study=study, overwrite_db=False)
             method_json = method.actions[0].retrieve_json()
 
-        with open(expected_file_path) as exp_json_file:
+        with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
             expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
             method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
 
-        print('---------------')
-        print(method_json)
-        print('---------------')
-        print(expected_json)
         assert compare_recordsets(method_json, expected_json)
 
     def test_get_data_retrieve_json_with_filter_and_source_rels(self, interface):
@@ -64,12 +60,12 @@ class TestRetrieveJson:
         test_file_path = os.path.join(filepath, 'data', 'raw', f'{filename}.json')
         expected_file_path = os.path.join(filepath, 'data', 'expected_action_json', f'{exp_filename}.json')
         
-        with open(test_file_path) as jsonfile:
+        with open(test_file_path, 'r') as jsonfile:
             inline_dct = json.load(jsonfile)
             method = derivation_method_factory(data=inline_dct, interface=interface, study=study, overwrite_db=False)
             method_json = method.actions[0].retrieve_json()
 
-        with open(expected_file_path) as exp_json_file:
+        with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
             expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
             method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
@@ -83,12 +79,12 @@ class TestRetrieveJson:
         test_file_path = os.path.join(filepath, 'data', 'raw', f'{filename}.json')
         expected_file_path = os.path.join(filepath, 'data', 'expected_action_json', f'{exp_filename}.json')
 
-        with open(test_file_path) as jsonfile:
+        with open(test_file_path, 'r') as jsonfile:
             inline_dct = json.load(jsonfile)
             method = derivation_method_factory(data=inline_dct, interface=interface, study=study, overwrite_db=False)
             method_json = method.actions[0].retrieve_json()
 
-        with open(expected_file_path) as exp_json_file:
+        with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
             expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
             method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
@@ -101,12 +97,12 @@ class TestRetrieveJson:
         test_file_path = os.path.join(filepath, 'data', 'raw', f'{filename}.json')
         expected_file_path = os.path.join(filepath, 'data', 'expected_action_json', f'{exp_filename}.json')
 
-        with open(test_file_path) as jsonfile:
+        with open(test_file_path, 'r') as jsonfile:
             inline_dct = json.load(jsonfile)
             method = derivation_method_factory(data=inline_dct, interface=interface, study=study, overwrite_db=False)
             method_json = method.actions[0].retrieve_json()
 
-        with open(expected_file_path) as exp_json_file:
+        with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
             expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
             method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
@@ -119,12 +115,12 @@ class TestRetrieveJson:
         test_file_path = os.path.join(filepath, 'data', 'raw', f'{filename}.json')
         expected_file_path = os.path.join(filepath, 'data', 'expected_action_json', f'{exp_filename}.json')
 
-        with open(test_file_path) as jsonfile:
+        with open(test_file_path, 'r') as jsonfile:
             inline_dct = json.load(jsonfile)
             method = derivation_method_factory(data=inline_dct, interface=interface, study=study, overwrite_db=False)
             method_json = method.actions[1].retrieve_json()
 
-        with open(expected_file_path) as exp_json_file:
+        with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
             assert compare_recordsets([method_json], [expected_json])
 
@@ -135,12 +131,12 @@ class TestRetrieveJson:
         test_file_path = os.path.join(filepath, 'data', 'raw', f'{filename}.json')
         expected_file_path = os.path.join(filepath, 'data', 'expected_action_json', f'{exp_filename}.json')
 
-        with open(test_file_path) as jsonfile:
+        with open(test_file_path, 'r') as jsonfile:
             inline_dct = json.load(jsonfile)
             method = derivation_method_factory(data=inline_dct, interface=interface, study=study, overwrite_db=False)
             method_json = method.actions[1].retrieve_json()
 
-        with open(expected_file_path) as exp_json_file:
+        with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
             expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
             method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
@@ -153,12 +149,12 @@ class TestRetrieveJson:
         test_file_path = os.path.join(filepath, 'data', 'raw', f'{filename}.json')
         expected_file_path = os.path.join(filepath, 'data', 'expected_action_json', f'{exp_filename}.json')
 
-        with open(test_file_path) as jsonfile:
+        with open(test_file_path, 'r') as jsonfile:
             inline_dct = json.load(jsonfile)
             method = derivation_method_factory(data=inline_dct, interface=interface, study=study, overwrite_db=False)
             method_json = method.actions[1].retrieve_json()
         
-        with open(expected_file_path) as exp_json_file:
+        with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
             expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
             method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
@@ -171,12 +167,12 @@ class TestRetrieveJson:
         test_file_path = os.path.join(filepath, 'data', 'raw', f'{filename}.json')
         expected_file_path = os.path.join(filepath, 'data', 'expected_action_json', f'{exp_filename}.json')
 
-        with open(test_file_path) as jsonfile:
+        with open(test_file_path, 'r') as jsonfile:
             inline_dct = json.load(jsonfile)
             method = derivation_method_factory(data=inline_dct, interface=interface, study=study, overwrite_db=False)
             method_json = method.actions[2].retrieve_json()
 
-        with open(expected_file_path) as exp_json_file:
+        with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
             expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
             method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
@@ -190,14 +186,53 @@ class TestRetrieveJson:
         test_file_path = os.path.join(filepath, 'data', 'raw', f'{filename}.json')
         expected_file_path = os.path.join(filepath, 'data', 'expected_action_json', f'{exp_filename}.json')
 
-        with open(test_file_path) as jsonfile:
+        with open(test_file_path, 'r') as jsonfile:
             inline_dct = json.load(jsonfile)
             method = derivation_method_factory(data=inline_dct, interface=interface, study=study, overwrite_db=False)
             method_json = method.actions[1].retrieve_json()
 
-        with open(expected_file_path) as exp_json_file:
+        with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
             expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
             method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
         assert compare_recordsets(method_json, expected_json)
+
+    def test_assign_retrieve_json(self, interface):
+
+        interface.clean_slate()
+        filename = 'derive_test_assign'
+        exp_filename = 'expected_assign_json'
+        test_file_path = os.path.join(filepath, 'data', 'raw', f'{filename}.json')
+        expected_file_path = os.path.join(filepath, 'data', 'expected_action_json', f'{exp_filename}.json')
+
+        with open(test_file_path, 'r') as jsonfile:
+            inline_dct = json.load(jsonfile)
+            method = derivation_method_factory(data=inline_dct, interface=interface, study=study, overwrite_db=False)
+            method_json = method.actions[1].retrieve_json()
+
+        with open(expected_file_path, 'r') as exp_json_file:
+            expected_json = json.load(exp_json_file)
+            expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
+            method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
+        assert compare_recordsets(method_json, expected_json), f"\n{method_json=}\n{expected_json=}"
+
+    def test_run_cypher_retrieve_json(self, interface):
+
+        interface.clean_slate()
+        filename = 'derive_run_cypher_with_data'
+        exp_filename = 'expected_run_cypher_json'
+        test_file_path = os.path.join(filepath, 'data', 'raw', f'{filename}.json')
+        expected_file_path = os.path.join(filepath, 'data', 'expected_action_json', f'{exp_filename}.json')
+
+        with open(test_file_path, 'r') as jsonfile:
+            inline_dct = json.load(jsonfile)
+            method = derivation_method_factory(data=inline_dct, interface=interface, study=study, overwrite_db=False)
+            method_json = method.actions[1].retrieve_json()
+
+        with open(expected_file_path, 'r') as exp_json_file:
+            expected_json = json.load(exp_json_file)
+            expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
+            method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
+
+        assert compare_recordsets(method_json, expected_json), f"\n{method_json=}\n{expected_json=}"
 

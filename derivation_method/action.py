@@ -12,7 +12,7 @@ from datetime import date as DatetimeDate
 from logger.logger import logger
 from model_managers import ModelManager
 from query_builders import QueryBuilder
-from derivation_method.utils import get_arrows_json_cypher, merge_dicts_on_node_keys, add_warn_log_if_column_missing
+from derivation_method.utils import get_arrows_json_cypher, merge_dicts_on_node_keys, add_warn_log_if_column_missing, extract_classes_from_query
 from neointerface.neointerface import NeoInterface
 
 logger.setLevel(logging.DEBUG)
@@ -817,6 +817,7 @@ class RunCypher(Action):
                 raise AttributeError('RunCypher Action unable to include data because self.df is None')
 
         res = self.method.interface.query(query, params, return_type='pd')
+        params['action_node_id'] = self.action_node_id
 
         if self.meta.get('update_df') == 'true':
             new_column_name_map = {col: col.split('.')[-1] for col in res.columns}
@@ -825,6 +826,36 @@ class RunCypher(Action):
             logger.debug(f"DataFrame: \n{res.to_string(max_rows=10)}")
 
         return res
+
+    def retrieve_json(self):
+        logger.info(f"Building json: {self.action_id}")
+
+        method_json = {
+            "nodes":
+                [
+                    {
+                        "id": self.meta.get('id'),
+                        "position": {},
+                        "caption": "",
+                        "labels": ["Method"],
+                        "properties": {
+                            "type": self.meta.get('type'),
+                            "id": self.meta.get('id'),
+                            "classes": extract_classes_from_query(self.meta.get('query', '')),  # ToDo currently is not used. Should this be removed?
+                            "query": self.meta.get('query', ''),
+                            "include_data": self.meta.get('include_data'),
+                            "update_df": self.meta.get('update_df'),
+                            'params': self.meta.get('params')
+                        }
+                    }
+                ],
+            "relationships": [],
+            'style': {}
+        }
+
+        # remove any empty parameters
+        method_json['nodes'][0]['properties'] = {key: value for key, value in method_json['nodes'][0]['properties'].items() if value}
+        return method_json
 
 
 class CallAPI(AppliesChanges):

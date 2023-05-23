@@ -1,3 +1,4 @@
+import re
 from neointerface.neointerface import NeoInterface
 import networkx as nx
 from collections import defaultdict
@@ -247,3 +248,16 @@ def topological_sort(dependency_pairs):
                 ordered.append(t)
     cyclic = [n for n, heads in num_heads.items() if heads]
     return ordered, cyclic
+
+
+def extract_classes_from_query(query: str):
+    pattern = r'\((\`?)(?:(?:\w|\s)+)?\1\:(.+?)\)'
+    classes = sum(
+        [re.sub(
+            r'(`)|(\{.+?\}$)',
+            '',
+            x[1].replace("\n", "").strip()
+        ).split(":") for x in re.findall(pattern, query, re.DOTALL)],
+        []
+    )
+    return classes

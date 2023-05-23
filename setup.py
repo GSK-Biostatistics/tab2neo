@@ -45,6 +45,8 @@ setuptools.setup(
         "model_managers",
         "query_builders"
     ]),    # List of all python modules to be installed
+    include_package_data=True,
+    package_data={"derivation_method": ["*.cql"]},
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
