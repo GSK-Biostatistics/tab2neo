@@ -258,7 +258,7 @@ class TestDerivationJson:
         method_json = format_json(self.dict_derivation_method.merge_action_json(name="derive_partial_method", action_json_list=action_json_list, derivation_method_json=self.dict_derivation_method.content))
         expected_json = format_json(read_json_file(os.path.join(self.expected_json_path, f'expected_method_with_link.json')))
         
-        assert method_json == expected_json, f'\n\n{method_json=}\n\n{expected_json=}'
+        assert compare_method_json(method_json, expected_json), f'\n\n{method_json=}\n\n{expected_json=}'
 
     def test_merge_multiple_action_json(self, interface):
         interface.clean_slate()
@@ -419,7 +419,7 @@ class TestDerivationJson:
                 {'short_label': 'NR', 'label': 'Numeric Result'}
             ]
         }]
-        assert uri_meta == expected_uri_meta, f'\n{uri_meta=}\n{expected_uri_meta=}'
+        assert compare_recordsets(uri_meta, expected_uri_meta), f'\n{uri_meta=}\n{expected_uri_meta=}'
 
     def test_create_build_uri_actions(self, interface):
         method = self.setup_merge_db_content(interface, uri=True)
