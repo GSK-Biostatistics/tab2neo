@@ -5,7 +5,7 @@ import pytest
 from data_providers import DataProvider
 from model_managers import ModelManager
 from derivation_method import derivation_method_factory, OnlineDerivationMethod, DerivationMethod
-from derivation_method.action import GetData, Link, CallAPI
+from derivation_method.action import GetData, Link, CallAPI, BuildUri
 from derivation_method.super_method import SubjectLevelLinkSuperMethod
 from tests.test_comparison_utilities import compare_recordsets, format_json, compare_method_json
 from derivation_method.utils import visualise_json, topological_sort
@@ -213,7 +213,7 @@ class TestDerivationJson:
     method_json_path = os.path.join(filepath, 'data', 'merge_method_test_derivations', 'method_json')
     expected_json_path = os.path.join(filepath, 'data', 'merge_method_test_derivations', 'expected_method_json')
 
-    def setup_merge_db_content(self, interface):
+    def setup_merge_db_content(self, interface, uri=False):
         '''
         Set up schema and load method to db. Also create a dummy changes node to use for predicting.
         :param interface: DataProvider instance
@@ -226,6 +226,7 @@ class TestDerivationJson:
                 {'label': 'Vital Signs', 'short_label': 'VS'},
                 {'label': 'Numeric Result', 'short_label': 'NR'},
                 {'label': 'Parameter', 'short_label': 'PARAM'},
+                {'label': 'New Class', 'short_label': 'NEW', 'classes_for_uri': 'VS|NR', 'derived': 'true'} if uri else 
                 {'label': 'New Class', 'short_label': 'NEW', 'aval_repr': 'true', 'derived': 'true'}
                 ])
         mm.create_relationship(rel_list=[['NR', 'NEW', 'New Class']], identifier='short_label')
@@ -344,15 +345,15 @@ class TestDerivationJson:
         predicted_link_jsons = method._generate_link_actions()
         expected_link_json = {
             'nodes': [
-                {'caption': '', 'style': {}, 'id': 'n-34', 'position': {'x': 0, 'y': 0}, 'properties': {'type': 'link', 'id': 'link1'}, 'labels': ['Method']}, 
-                {'caption': '', 'style': {}, 'id': 'n11', 'position': {'x': 0, 'y': 200}, 'properties': {'relationship_type': 'New Class'}, 'labels': ['Relationship']}, 
-                {'caption': '', 'style': {}, 'id': 'n-36', 'position': {'x': 200, 'y': 0}, 'properties': {'label': 'New Class'}, 'labels': ['Class']}, 
-                {'caption': '', 'style': {}, 'id': 'n-35', 'position': {'x': 200, 'y': 200}, 'properties': {'label': 'Numeric Result'}, 'labels': ['Class']}
+                {'id': 'n-34', 'position': {'x': 0, 'y': 0}, 'properties': {'type': 'link', 'id': 'link1'}, 'labels': ['Method']}, 
+                {'id': 'n11', 'position': {'x': 0, 'y': 200}, 'properties': {'relationship_type': 'New Class'}, 'labels': ['Relationship']}, 
+                {'id': 'n-36', 'position': {'x': 200, 'y': 0}, 'properties': {'label': 'New Class'}, 'labels': ['Class']}, 
+                {'id': 'n-35', 'position': {'x': 200, 'y': 200}, 'properties': {'label': 'Numeric Result'}, 'labels': ['Class']}
                 ], 
             'relationships': [
-                {'toId': 'n11', 'style': {}, 'id': 'r-32', 'type': 'LINK', 'fromId': 'n-34', 'properties': {'how': 'merge'}}, 
-                {'toId': 'n-36', 'style': {}, 'id': 'r-31', 'type': 'TO', 'fromId': 'n11', 'properties': {}}, 
-                {'toId': 'n-35', 'style': {}, 'id': 'r-30', 'type': 'FROM', 'fromId': 'n11', 'properties': {}}
+                {'toId': 'n11', 'id': 'r-32', 'type': 'LINK', 'fromId': 'n-34', 'properties': {'how': 'merge'}}, 
+                {'toId': 'n-36', 'id': 'r-31', 'type': 'TO', 'fromId': 'n11', 'properties': {}}, 
+                {'toId': 'n-35', 'id': 'r-30', 'type': 'FROM', 'fromId': 'n11', 'properties': {}}
                 ], 
             'style': {}}
         expected_sl_link_json = {
@@ -388,8 +389,49 @@ class TestDerivationJson:
         assert method.actions[3].meta.get('class') == {'label': 'New Class', 'short_label': 'NEW', 'aval_repr': 'true', 'derived': 'true'}
         assert not method.actions[2].meta.get('term', False)
 
+    def test_fetch_uri_meta_from_db(self, interface):
+        method = self.setup_merge_db_content(interface, uri=True)
+        uri_meta = method._fetch_uri_meta_from_db()
+        expected_uri_meta = [{
+            'class': {'short_label': 'NEW', 'label': 'New Class', 'derived': 'true', 'classes_for_uri': 'VS|NR'}, 
+            'uri_labels': [
+                {'short_label': 'VS', 'label': 'Vital Signs'}, 
+                {'short_label': 'NR', 'label': 'Numeric Result'}
+            ]
+        }]
+        assert uri_meta == expected_uri_meta, f'\n{uri_meta=}\n{expected_uri_meta=}'
+
     def test_create_build_uri_actions(self, interface):
-        pass
+        method = self.setup_merge_db_content(interface, uri=True)
+        build_uri_actions = method._create_build_uri_actions()
+
+        expected_build_uri_action = {
+            'nodes': [
+                {'id': 'n-55', 'position': {'x': 0, 'y': 0}, 'properties': {'type': 'build_uri', 'id': 'build_uri1'}, 'labels': ['Method']}, 
+                {'id': 'n-56', 'position': {'x': 0, 'y': 200}, 'properties': {'label': 'New Class'}, 'labels': ['Class']}, 
+                {'id': 'n-59', 'position': {'x': 0, 'y': 200}, 'properties': {'label': 'Numeric Result'}, 'labels': ['Class']}, 
+                {'id': 'n-58', 'position': {'x': 200, 'y': 0}, 'properties': {'label': 'Vital Signs'}, 'labels': ['Class']}
+            ], 
+            'relationships': [
+                {'toId': 'n-56', 'id': 'r-51', 'type': 'URI_FOR', 'fromId': 'n-55', 'properties': {}}, 
+                {'toId': 'n-59', 'id': 'r-53', 'type': 'URI_BY', 'fromId': 'n-55', 'properties': {}}, 
+                {'toId': 'n-58', 'id': 'r-52', 'type': 'URI_BY', 'fromId': 'n-55', 'properties': {}}
+            ], 
+            'style': {}
+        }
+        
+        assert len(build_uri_actions) == 1
+        assert compare_method_json(build_uri_actions[0], expected_build_uri_action), f'\n{build_uri_actions[0]=}\n{expected_build_uri_action=}'
 
     def test_merge_build_uri_from_schema(self, interface):
-        pass
+        method = self.setup_merge_db_content(interface, uri=True)
+        method.merge_build_uri_from_schema()
+
+        assert len(method.actions) == 3
+        assert isinstance(method.actions[2], BuildUri)
+
+        assert method.actions[2].meta.get('uri_fors') == ['NEW']
+        assert method.actions[2].meta.get('uri_bys') == ['VS', 'NR']
+        assert method.actions[2].meta.get('uri_labels') == []
+        assert not method.actions[2].meta.get('prefix')
+
