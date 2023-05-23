@@ -15,9 +15,8 @@ from query_builders import QueryBuilder
 from derivation_method.utils import get_arrows_json_cypher, merge_dicts_on_node_keys, add_warn_log_if_column_missing, extract_classes_from_query
 from neointerface.neointerface import NeoInterface
 
-logger.setLevel(logging.DEBUG)
-
 RDFSLABEL = ModelManager.RDFSLABEL
+SCRIPT_PATH = 'derivation_method.scripts'
 
 
 class Action:
@@ -724,7 +723,7 @@ class RunScript(AppliesChanges):
         params_str = ", ".join([key + f"=params['{key}']" for key, item in params.items()])
         logger.info(f"Running {self.meta.get('package')}.{self.meta.get('script')}")
         call_str = f"{self.meta.get('script')}({params_str})"
-        exec(f"from src.utils.{self.meta.get('package')} import *")
+        exec(f"from {SCRIPT_PATH}.{self.meta.get('package')} import *")
         modified_data = eval(call_str)
 
         logger.info(f"Params: {call_str}")
