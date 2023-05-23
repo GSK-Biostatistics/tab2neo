@@ -132,13 +132,13 @@ def compare_method_json(method_json, compare_method_json):
         try:
             sorted_compare_nodes.remove(node)
         except Exception:
-            return False  # The remove failed - i.e. there is a difference in the node lists
+            raise KeyError(f'Could not remove node from json: {node} \n\n{sorted_nodes=} \n{sorted_compare_nodes=} \n\n{sorted_rels=} \n{sorted_compare_rels=}') # The remove failed - i.e. there is a difference in the node lists
 
     for rel in sorted_rels:
         try:
             sorted_compare_rels.remove(rel)
         except Exception:
-            return False  # The remove failed - i.e. there is a difference in the rel lists
+            raise KeyError(f'Could not remove rel from json: {rel} \n\n{sorted_nodes=} \n{sorted_compare_nodes=} \n\n{sorted_rels=} \n{sorted_compare_rels=}') # The remove failed - i.e. there is a difference in the node lists
 
     return True
 
