@@ -6,6 +6,7 @@ from data_providers import DataProvider
 from model_managers import ModelManager
 from derivation_method import derivation_method_factory, OnlineDerivationMethod, DerivationMethod
 from derivation_method.action import GetData, Link, CallAPI
+from derivation_method.super_method import SubjectLevelLinkSuperMethod
 from tests.test_comparison_utilities import compare_recordsets, format_json, compare_method_json
 from derivation_method.utils import visualise_json, topological_sort
 
@@ -212,6 +213,35 @@ class TestDerivationJson:
     method_json_path = os.path.join(filepath, 'data', 'merge_method_test_derivations', 'method_json')
     expected_json_path = os.path.join(filepath, 'data', 'merge_method_test_derivations', 'expected_method_json')
 
+    def setup_merge_db_content(self, interface):
+        '''
+        Set up schema and load method to db. Also create a dummy changes node to use for predicting.
+        :param interface: DataProvider instance
+
+        :return: DictDerivationMethod instance
+        '''
+        interface.clean_slate()
+        mm = ModelManager()
+        mm.create_class(classes=[
+                {'label': 'Vital Signs', 'short_label': 'VS'},
+                {'label': 'Numeric Result', 'short_label': 'NR'},
+                {'label': 'Parameter', 'short_label': 'PARAM'},
+                {'label': 'New Class', 'short_label': 'NEW', 'aval_repr': 'true', 'derived': 'true'}
+                ])
+        mm.create_relationship(rel_list=[['NR', 'NEW', 'New Class']], identifier='short_label')
+        mm.create_ct(controlled_terminology={'Parameter': {'rdfs:label': 'New Class'}})
+        
+        method = self.dict_derivation_method
+
+        interface.query("""
+        MATCH (m:Method) WHERE m.id = 'add_col'
+        MERGE (m)-[:APPLIED]->(changes:Changes)
+        SET changes.cols_before = ['VS', 'NR']
+        SET changes.cols_after = ['VS', 'NR', 'NEW']
+        """)
+
+        return method
+
     @property
     def dict_derivation_method(self) -> DerivationMethod:
         return derivation_method_factory(interface=DataProvider(rdf=True), data=os.path.join(self.method_json_path, f'derive_partial_method.json'), study=study)
@@ -284,25 +314,81 @@ class TestDerivationJson:
             assert compare_method_json(method_json, original_method_json), f'Failed method: {method.name}\n\ncomp_method_json=\n{json.dumps(format_json(method_json), indent=4, sort_keys=True)}\n\ncomp_original_method_json=\n{json.dumps(format_json(original_method_json), indent=4, sort_keys=True)}'
 
 
-class TestMergeLinks:
-
     def test_predict_output_classes(self, interface):
-        pass
+        method = self.setup_merge_db_content(interface)
+
+        predicted_output_class_info = method.predict_output_classes
+        expected_class_info = {'ASSIGN_CLASSES': [], 'CLASSES AFTER RUNSCRIPT': ['VS', 'NR'], 'NEW RUNSCRIPT CLASSES': ['NEW'], 'PREDICTED CLASSES': ['NEW']}
+
+        assert predicted_output_class_info == expected_class_info, f'\n{predicted_output_class_info=}\n{expected_class_info=}'
 
     def test_predict_links(self, interface):
-        pass
+        method = self.setup_merge_db_content(interface)
 
-    def test_predict_link_actions(self, interface):
-        pass
+        predicted_links, sl_classes = method._predict_links()
+        expected_links = [{
+                        "from_class": "Numeric Result",
+                        "from_short_label": "NR",
+                        "to_class": "New Class",
+                        "to_short_label": "NEW",
+                        "relationship_type": "New Class"
+                    }]
+        expected_sl = [{'short_label': 'NEW', 'label': 'New Class', 'aval_repr': 'true', 'derived': 'true'}]
+
+        assert predicted_links == expected_links, f'\n{predicted_links=}\n{expected_links=}'
+        assert sl_classes == expected_sl, f'\n{sl_classes=}\n{expected_sl=}'
 
     def test_generate_link_actions(self, interface):
-        pass
+        method = self.setup_merge_db_content(interface)
+
+        predicted_link_jsons = method._generate_link_actions()
+        expected_link_json = {
+            'nodes': [
+                {'caption': '', 'style': {}, 'id': 'n-34', 'position': {'x': 0, 'y': 0}, 'properties': {'type': 'link', 'id': 'link1'}, 'labels': ['Method']}, 
+                {'caption': '', 'style': {}, 'id': 'n11', 'position': {'x': 0, 'y': 200}, 'properties': {'relationship_type': 'New Class'}, 'labels': ['Relationship']}, 
+                {'caption': '', 'style': {}, 'id': 'n-36', 'position': {'x': 200, 'y': 0}, 'properties': {'label': 'New Class'}, 'labels': ['Class']}, 
+                {'caption': '', 'style': {}, 'id': 'n-35', 'position': {'x': 200, 'y': 200}, 'properties': {'label': 'Numeric Result'}, 'labels': ['Class']}
+                ], 
+            'relationships': [
+                {'toId': 'n11', 'style': {}, 'id': 'r-32', 'type': 'LINK', 'fromId': 'n-34', 'properties': {'how': 'merge'}}, 
+                {'toId': 'n-36', 'style': {}, 'id': 'r-31', 'type': 'TO', 'fromId': 'n11', 'properties': {}}, 
+                {'toId': 'n-35', 'style': {}, 'id': 'r-30', 'type': 'FROM', 'fromId': 'n11', 'properties': {}}
+                ], 
+            'style': {}}
+        expected_sl_link_json = {
+            'nodes': [
+                {'id': 'subject_level_link1', 'labels': ['Method'], 'properties': {'type': 'subject_level_link', 'id': 'subject_level_link1'}}, 
+                {'id': 'New Class', 'labels': ['Class'], 'properties': {'label': 'New Class'}}
+                ], 
+            'relationships': [
+                {'id': 'New Class_SUBJECT_LEVEL_rel', 'toId': 'New Class', 'fromId': 'subject_level_link1', 'type': 'SUBJECT_LEVEL'}
+                ]
+                }
+        
+        expected_json = [expected_link_json, expected_sl_link_json]
+
+        assert len(predicted_link_jsons) == len(expected_json)
+
+        for pred, comp in zip(predicted_link_jsons, expected_json):
+            assert compare_method_json(pred, comp), f'\n{pred=}\n{comp=}'
 
     def test_merge_predicted_links(self, interface):
-        pass
+        method = self.setup_merge_db_content(interface)
+
+        method.merge_predicted_links()
+
+        assert len(method.actions) == 4
+        assert isinstance(method.actions[2], Link)
+        assert isinstance(method.actions[3], SubjectLevelLinkSuperMethod)
+
+        assert method.actions[2].meta.get('from_class') == 'Numeric Result'
+        assert method.actions[2].meta.get('to_class') == 'New Class'
+        assert method.actions[2].meta.get('relationship_type') == 'New Class'
+
+        assert method.actions[3].meta.get('class') == {'label': 'New Class', 'short_label': 'NEW', 'aval_repr': 'true', 'derived': 'true'}
+        assert not method.actions[2].meta.get('term', False)
 
     def test_create_build_uri_actions(self, interface):
-        pass
         pass
 
     def test_merge_build_uri_from_schema(self, interface):
