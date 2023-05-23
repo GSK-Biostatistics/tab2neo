@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 from pathlib import Path
 from data_providers import DataProvider
-from tests.test_comparison_utilities import compare_recordsets, format_nodes, format_relationships
+from tests.test_comparison_utilities import compare_recordsets, format_nodes, format_relationships, compare_method_json
 from derivation_method import derivation_method_factory
 
 filepath = os.path.dirname(__file__)
@@ -48,10 +48,8 @@ class TestRetrieveJson:
 
         with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
-            expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
-            method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
 
-        assert compare_recordsets(method_json, expected_json)
+        assert compare_method_json(method_json, expected_json)
 
     def test_get_data_retrieve_json_with_filter_and_source_rels(self, interface):
         interface.clean_slate()
@@ -67,9 +65,7 @@ class TestRetrieveJson:
 
         with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
-            expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
-            method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
-        assert compare_recordsets(method_json, expected_json)
+        assert compare_method_json(method_json, expected_json)
         
 
     def test_get_data_retrieve_json_with_range_filter(self, interface):
@@ -86,9 +82,7 @@ class TestRetrieveJson:
 
         with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
-            expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
-            method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
-        assert compare_recordsets(method_json, expected_json)
+        assert compare_method_json(method_json, expected_json)
 
     def test_get_data_retrieve_json_with_source_classes(self, interface):
         interface.clean_slate()
@@ -104,9 +98,7 @@ class TestRetrieveJson:
 
         with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
-            expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
-            method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
-        assert compare_recordsets(method_json, expected_json)            
+        assert compare_method_json(method_json, expected_json)            
 
     def test_call_api_retrieve_json(self, interface):
         filename = 'test_call_api_retrieve_json'
@@ -138,9 +130,7 @@ class TestRetrieveJson:
 
         with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
-            expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
-            method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
-        assert compare_recordsets(method_json, expected_json)
+        assert compare_method_json(method_json, expected_json)
 
     def test_link_retrieve_json_to_from_value(self, interface):
         interface.clean_slate()
@@ -156,9 +146,7 @@ class TestRetrieveJson:
         
         with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
-            expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
-            method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
-        assert compare_recordsets(method_json, expected_json)    
+        assert compare_method_json(method_json, expected_json)    
 
     def test_link_retrieve_json_to_merge(self, interface):
         interface.clean_slate()
@@ -174,9 +162,7 @@ class TestRetrieveJson:
 
         with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
-            expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
-            method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
-        assert compare_recordsets(method_json, expected_json)    
+        assert compare_method_json(method_json, expected_json)    
 
     def test_build_uri_retrieve_json(self, interface):
 
@@ -193,9 +179,7 @@ class TestRetrieveJson:
 
         with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
-            expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
-            method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
-        assert compare_recordsets(method_json, expected_json)
+        assert compare_method_json(method_json, expected_json)
 
     def test_assign_retrieve_json(self, interface):
 
@@ -212,9 +196,7 @@ class TestRetrieveJson:
 
         with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
-            expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
-            method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
-        assert compare_recordsets(method_json, expected_json), f"\n{method_json=}\n{expected_json=}"
+        assert compare_method_json(method_json, expected_json), f"\n{method_json=}\n{expected_json=}"
 
     def test_run_cypher_retrieve_json(self, interface):
 
@@ -231,8 +213,6 @@ class TestRetrieveJson:
 
         with open(expected_file_path, 'r') as exp_json_file:
             expected_json = json.load(exp_json_file)
-            expected_json = [{"nodes": format_nodes(expected_json), "relationships": format_relationships(expected_json)}]
-            method_json = [{"nodes": format_nodes(method_json), "relationships": format_relationships(method_json)}]
 
-        assert compare_recordsets(method_json, expected_json), f"\n{method_json=}\n{expected_json=}"
+        assert compare_method_json(method_json, expected_json), f"\n{method_json=}\n{expected_json=}"
 

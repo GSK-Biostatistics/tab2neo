@@ -288,10 +288,13 @@ class TestDerivationJson:
                 {'label': 'Subject', 'short_label': 'USUBJID'},
                 {'label': 'Population', 'short_label': 'POP'},
                 {'label': 'Analysis Age', 'short_label': 'AAGE'},
+                {'label': 'Age Group', 'short_label': 'AGEGR'},
+                {'label': 'Age Group A', 'short_label': 'AGEGRA'},
                 {'label': 'Analysis Act Stratum and Act Treatment', 'short_label': 'ASTA'},
                 {'label': 'Number of observations', 'short_label': 'n'},
-                {'label': 'Mean Value of Analysis Parameter', 'short_label': 'MEAN'},
+                {'label': 'Mean Value of Analysis Parameter', 'short_label': 'MEAN'}
                 ])
+            mm.create_relationship(rel_list=[['Age Group', 'Age Group A', 'Age Group A']])
             # Load Controlled Terms
             mm.create_ct(controlled_terminology={
                 'Test Name': [
@@ -301,8 +304,25 @@ class TestDerivationJson:
                     ],
                 'Subject': [
                     {'Codelist Code': 'USUBJID', 'Term Code': '0001', 'rdfs:label': '0001'}
+                    ],
+                'Age Group': [
+                    {'Codelist Code': 'AGEGR', 'Term Code': 'group1', 'rdfs:label': 'group1'}
+                    ],
+                'Age Group A': [
+                    {'Codelist Code': 'AGEGRA', 'Term Code': 'A', 'rdfs:label': 'A'}
                     ]
             })
+
+            mm.create_same_as_ct(
+                same_as_terms=[
+                    {
+                    'from_class': 'Age Group', 'to_class': 'Age Group A', # Class identifiers
+                    'from_codelist_code': 'AGEGR', 'from_term_code': 'group1', # Term 1 identifier
+                    'to_codelist_code': 'AGEGRA', 'to_term_code': 'A' # Term 2 identifier
+                    }
+                ],
+                term_identifiers=['Codelist Code', 'Term Code']
+                )
 
             test_file_path = os.path.join(self.method_json_path, file)
             original_method_json = read_json_file(test_file_path)

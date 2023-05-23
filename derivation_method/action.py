@@ -1316,6 +1316,40 @@ class AssignLabel(AppliesChanges):
             self.applied = False
         return detached_nodes_dct
 
+    def retrieve_json(self):
+        logger.info(f"Building json: {self.action_id}")
+
+        q = """
+            CALL apoc.create.vNode(["Method"], {id: $method_id, type: 'assign_class'}) YIELD node as method
+            WITH *
+            MATCH (x:Class), (y:Class)
+            WHERE (x.label = $class) AND (y.label = $class_on)
+            CALL apoc.create.vNode(["Class"], apoc.map.submap(x, ['label'])) YIELD node as x_                
+            CALL apoc.create.vNode(["Class"], apoc.map.submap(y, ['label'])) YIELD node as y_
+            CALL apoc.create.vRelationship(method, "CLASS", {}, x_) YIELD rel as class_rel
+            CALL apoc.create.vRelationship(method, "ON", {}, y_) YIELD rel as on_rel
+            WITH [[method, class_rel, x_], [method, on_rel, y_]] as coll
+            UNWIND coll as item
+            WITH item[0] as x, item[1] as r, item[2] as y
+            """
+        params = {
+            'class': self.meta.get('assign_label'),
+            'class_on': self.meta.get('on_class'),
+            'method_id': self.action_id
+        }
+
+        res = get_arrows_json_cypher(
+            neo=self.interface,
+            q=q,
+            params=params,
+            hide_labels=self.hide_labels,
+            hide_props=self.hide_props
+        )
+
+        res = res[0]
+
+        return res
+
 
 class Link(AppliesChanges):
     def __init__(self, *args, **kwargs):

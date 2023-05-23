@@ -124,8 +124,7 @@
         "Class"
       ],
       "properties": {
-        "label": "Vital Signs",
-        "short_label": "VS"
+        "label": "Vital Signs"
       },
       "style": {}
     },
@@ -140,8 +139,7 @@
         "Class"
       ],
       "properties": {
-        "label": "Numeric Result",
-        "short_label": "NR"
+        "label": "Numeric Result"
       },
       "style": {}
     },
@@ -161,7 +159,10 @@
         "lang": "python",
         "package": "test_df_ops",
         "params": "{\"n\": 1}",
-        "script": "head_tail"
+        "script": "head_tail",
+        "version": null,
+        "github_repo": null,
+        "repo_scripts_path": null
       },
       "style": {}
     },
@@ -207,8 +208,7 @@
         "Class"
       ],
       "properties": {
-        "label": "Test Name",
-        "short_label": "TS"
+        "label": "Test Name"
       }
     }
   ],

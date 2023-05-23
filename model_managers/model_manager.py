@@ -836,7 +836,7 @@ class ModelManager(NeoInterface):
             and same_as_terms = [
                 {'from_class': 'class1', 'to_class': 'class2', # Class identifiers
                  'from_codelist_code': 'code_1', 'from_term_code': 'code_2', # Term 1 identifier
-                 'to_codelist_code: 'code_3', 'to_term_code': 'code_4' # Term 2 identifier
+                 'to_codelist_code': 'code_3', 'to_term_code': 'code_4' # Term 2 identifier
                 }
             ]
             A same as relationship would be created from a term of 'class1' with properties:

@@ -352,6 +352,39 @@ class DecodeSuperMethod(SuperMethod):
         ]
         return actions
 
+    def retrieve_json(self):
+        q1 = """
+        CALL apoc.create.vNode(["Method"], {id: $method_id, type: 'decode'}) YIELD node as method
+        WITH method
+        MATCH (from_class:Class) WHERE from_class.label = $from_class
+        WITH method, from_class
+        MATCH (to_class:Class) WHERE to_class.label = $to_class
+        CALL apoc.create.vNode(["Class"], apoc.map.submap(from_class, ['label'])) YIELD node as from_class_
+        CALL apoc.create.vNode(["Class"], apoc.map.submap(to_class, ['label'])) YIELD node as to_class_
+        CALL apoc.create.vRelationship(method, "FROM_CLASS", {}, from_class_) YIELD rel as from_rel
+        CALL apoc.create.vRelationship(method, "TO_CLASS", {}, to_class_) YIELD rel as to_rel
+        WITH [[method, from_rel, from_class_], [method, to_rel, to_class_]] as coll
+        UNWIND coll as item
+        WITH item[0] as x, item[1] as r, item[2] as y
+        """
+
+        params = {
+            'from_class': self.meta.get('from_class_label'),
+            'to_class': self.meta.get('to_class_label'),
+            'method_id': self.action_id
+        }
+
+        res1 = get_arrows_json_cypher(
+            neo=self.interface,
+            q=q1,
+            params=params,
+            hide_labels=Action.hide_labels,
+            hide_props=Action.hide_props
+        )
+        res1 = res1[0]
+
+        return res1
+
 
 class ApplyStatSuperMethod(SuperMethod):
     built_terms_for_distinct_values_flag = False

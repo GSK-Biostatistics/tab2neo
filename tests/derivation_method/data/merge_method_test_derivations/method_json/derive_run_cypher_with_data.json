@@ -26,6 +26,9 @@
         "Method"
       ],
       "properties": {
+        "classes": [
+            "Query Column"
+        ],
         "id": "run_cypher1",
         "type": "run_cypher",
         "query": "UNWIND $data as column CREATE (q:`Query Column`) SET q = column RETURN count(q) as new_nodes",

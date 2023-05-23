@@ -54,10 +54,10 @@
   },
   "nodes": [
     {
-      "id": "n6",
+      "id": "n0",
       "position": {
-        "x": 802.4626865386963,
-        "y": 41.20202025355334
+        "x": 75,
+        "y": 50
       },
       "caption": "",
       "labels": [
@@ -71,10 +71,10 @@
       }
     },
     {
-      "id": "n7",
+      "id": "n1",
       "position": {
-        "x": 802.4626865386963,
-        "y": 341.2020202535533
+        "x": 75,
+        "y": 350
       },
       "caption": "",
       "labels": [
@@ -89,10 +89,10 @@
       }
     },
     {
-      "id": "n8",
+      "id": "n2",
       "position": {
-        "x": 802.4626865386963,
-        "y": 641.2020202535533
+        "x": 75,
+        "y": 650
       },
       "caption": "",
       "labels": [
@@ -106,68 +106,44 @@
       }
     },
     {
-      "id": "n9",
+      "id": "n3",
       "position": {
-        "x": 802.4626865386963,
-        "y": 941.2020202535533
+        "x": 75,
+        "y": 950
       },
       "caption": "",
       "labels": [
         "Class"
       ],
       "properties": {
-        "label": "Vital Signs",
-        "short_label": "VS"
+        "label": "Vital Signs"
       },
       "style": {
         "border-color": "#000000"
       }
     },
     {
-      "id": "n10",
+      "id": "n4",
       "position": {
-        "x": 1102.4626865386963,
-        "y": 941.2020202535533
+        "x": 375,
+        "y": 950
       },
       "caption": "",
       "labels": [
         "Class"
       ],
       "properties": {
-        "label": "Numeric Result",
-        "short_label": "NR"
+        "label": "Numeric Result"
       },
       "style": {
         "border-color": "#000000"
       }
     },
     {
-      "id": "n11",
+      "id": "n6",
       "position": {
-        "x": 1102.4626865386963,
-        "y": 341.2020202535533
-      },
-      "caption": "",
-      "labels": [
-        "Method"
-      ],
-      "properties": {
-        "id": "add_number_to_col",
-        "type": "run_script",
-        "lang": "python",
-        "package": "test_df_ops",
-        "params": "{\"column\": \"NR\", \"number\": 10}",
-        "script": "add_number_to_col"
-      },
-      "style": {
-        "border-color": "#9f0500"
-      }
-    },
-    {
-      "id": "n12",
-      "position": {
-        "x": 1402.4626865386963,
-        "y": 341.2020202535533
+        "x": 675,
+        "y": 350
       },
       "caption": "",
       "labels": [
@@ -182,10 +158,10 @@
       }
     },
     {
-      "id": "n13",
+      "id": "n7",
       "position": {
-        "x": 1102.4626865386963,
-        "y": 641.2020202535533
+        "x": 375,
+        "y": 650
       },
       "caption": "",
       "labels": [
@@ -199,10 +175,10 @@
       }
     },
     {
-      "id": "n14",
+      "id": "n8",
       "position": {
-        "x": 1402.4626865386963,
-        "y": 941.2020202535533
+        "x": 675,
+        "y": 950
       },
       "caption": "",
       "labels": [
@@ -216,10 +192,10 @@
       }
     },
     {
-      "id": "n15",
+      "id": "n9",
       "position": {
-        "x": 1702.4626865386963,
-        "y": 941.2020202535533
+        "x": 975,
+        "y": 950
       },
       "caption": "",
       "labels": [
@@ -231,13 +207,34 @@
       "style": {
         "border-color": "#000000"
       }
+    },
+    {
+      "id": "n10",
+      "position": {
+        "x": 375,
+        "y": 350
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "add_col",
+        "type": "run_script",
+        "lang": "python",
+        "package": "test_df_ops",
+        "params": "{\"column\": \"NEW\", \"number\": 10}",
+        "script": "add_col",
+        "version": null
+      },
+      "style": {}
     }
   ],
   "relationships": [
     {
-      "id": "n6",
-      "fromId": "n6",
-      "toId": "n7",
+      "id": "n0",
+      "fromId": "n0",
+      "toId": "n1",
       "type": "METHOD_ACTION",
       "properties": {},
       "style": {
@@ -245,9 +242,9 @@
       }
     },
     {
-      "id": "n7",
-      "fromId": "n7",
-      "toId": "n8",
+      "id": "n1",
+      "fromId": "n1",
+      "toId": "n2",
       "type": "SOURCE_RELATIONSHIP",
       "properties": {},
       "style": {
@@ -255,9 +252,9 @@
       }
     },
     {
-      "id": "n8",
-      "fromId": "n8",
-      "toId": "n9",
+      "id": "n2",
+      "fromId": "n2",
+      "toId": "n3",
       "type": "FROM",
       "properties": {},
       "style": {
@@ -265,9 +262,39 @@
       }
     },
     {
+      "id": "n3",
+      "fromId": "n2",
+      "toId": "n4",
+      "type": "TO",
+      "properties": {},
+      "style": {
+        "arrow-color": "#000000"
+      }
+    },
+    {
+      "id": "n6",
+      "fromId": "n0",
+      "toId": "n6",
+      "type": "METHOD_ACTION",
+      "properties": {},
+      "style": {
+        "arrow-color": "#68bc00"
+      }
+    },
+    {
+      "id": "n8",
+      "fromId": "n6",
+      "toId": "n7",
+      "type": "LINK",
+      "properties": {},
+      "style": {
+        "arrow-color": "#000000"
+      }
+    },
+    {
       "id": "n9",
-      "fromId": "n8",
-      "toId": "n10",
+      "fromId": "n7",
+      "toId": "n8",
       "type": "TO",
       "properties": {},
       "style": {
@@ -277,72 +304,36 @@
     {
       "id": "n10",
       "fromId": "n7",
-      "toId": "n11",
-      "type": "NEXT",
-      "properties": {},
-      "style": {
-        "arrow-color": "#9f0500"
-      }
-    },
-    {
-      "id": "n11",
-      "fromId": "n6",
-      "toId": "n11",
-      "type": "METHOD_ACTION",
-      "properties": {},
-      "style": {
-        "arrow-color": "#68bc00"
-      }
-    },
-    {
-      "id": "n12",
-      "fromId": "n6",
-      "toId": "n12",
-      "type": "METHOD_ACTION",
-      "properties": {},
-      "style": {
-        "arrow-color": "#68bc00"
-      }
-    },
-    {
-      "id": "n13",
-      "fromId": "n11",
-      "toId": "n12",
-      "type": "NEXT",
-      "properties": {},
-      "style": {
-        "arrow-color": "#9f0500"
-      }
-    },
-    {
-      "id": "n14",
-      "fromId": "n12",
-      "toId": "n13",
-      "type": "LINK",
-      "properties": {},
-      "style": {
-        "arrow-color": "#000000"
-      }
-    },
-    {
-      "id": "n15",
-      "fromId": "n13",
-      "toId": "n14",
-      "type": "TO",
-      "properties": {},
-      "style": {
-        "arrow-color": "#000000"
-      }
-    },
-    {
-      "id": "n16",
-      "fromId": "n13",
-      "toId": "n15",
+      "toId": "n9",
       "type": "FROM",
       "properties": {},
       "style": {
         "arrow-color": "#000000"
       }
+    },
+    {
+      "id": "n11",
+      "type": "NEXT",
+      "style": {},
+      "properties": {},
+      "fromId": "n1",
+      "toId": "n10"
+    },
+    {
+      "id": "n12",
+      "type": "METHOD_ACTION",
+      "style": {},
+      "properties": {},
+      "fromId": "n0",
+      "toId": "n10"
+    },
+    {
+      "id": "n13",
+      "type": "NEXT",
+      "style": {},
+      "properties": {},
+      "fromId": "n10",
+      "toId": "n6"
     }
   ]
 }

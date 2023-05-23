@@ -116,8 +116,7 @@
         "Class"
       ],
       "properties": {
-        "label": "Subject",
-        "short_label": "USUBJID"
+        "label": "Subject"
       },
       "style": {
         "border-color": "#000000"
@@ -134,8 +133,7 @@
         "Class"
       ],
       "properties": {
-        "label": "Age Group",
-        "short_label": "AGEGR"
+        "label": "Age Group"
       },
       "style": {
         "border-color": "#000000"
@@ -170,8 +168,7 @@
         "Class"
       ],
       "properties": {
-        "label": "Age Group A",
-        "short_label": "AGEGRA"
+        "label": "Age Group A"
       },
       "style": {
         "border-color": "#000000"
