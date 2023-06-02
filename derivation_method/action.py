@@ -1181,7 +1181,7 @@ class CallAPI(AppliesChanges):
             try:
                 assert commit_resp.status_code == 200, f'Status code {commit_resp.status_code}'
             except AssertionError as err:
-                logger.error(resp.get('detail'))
+                logger.error(response_content.get('detail'))
                 raise err
             else:
                 commit_id = response_content.get('commit_id')
