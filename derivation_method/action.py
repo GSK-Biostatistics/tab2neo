@@ -44,7 +44,6 @@ class Action:
 
     def __init__(self, action_dict, method=None, interface: NeoInterface = None, dont_fetch=False):
         self.dct = action_dict
-        print(f"{type(action_dict)}=")
         self.action_node_id = action_dict.get("node_id")
         self.action_id = action_dict.get("id")
         self.type = action_dict.get('type')
