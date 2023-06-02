@@ -16,7 +16,6 @@ from derivation_method.utils import get_arrows_json_cypher, merge_dicts_on_node_
 from neointerface.neointerface import NeoInterface
 
 RDFSLABEL = ModelManager.RDFSLABEL
-SCRIPT_PATH = 'derivation_method.scripts'
 
 
 class Action:
@@ -45,6 +44,7 @@ class Action:
 
     def __init__(self, action_dict, method=None, interface: NeoInterface = None, dont_fetch=False):
         self.dct = action_dict
+        print(f"{type(action_dict)}=")
         self.action_node_id = action_dict.get("node_id")
         self.action_id = action_dict.get("id")
         self.type = action_dict.get('type')
@@ -689,10 +689,12 @@ class GetData(Action):
 
 class RunScript(AppliesChanges):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, script_path: str = "derivation_method.scripts", **kwargs):
         self.cols_before = []
         self.cols_after = []
         super().__init__(*args, **kwargs)
+
+        self.script_path = script_path
 
     def _fetch_metadata(self, interface):
         q = """
@@ -723,7 +725,7 @@ class RunScript(AppliesChanges):
         params_str = ", ".join([key + f"=params['{key}']" for key, item in params.items()])
         logger.info(f"Running {self.meta.get('package')}.{self.meta.get('script')}")
         call_str = f"{self.meta.get('script')}({params_str})"
-        exec(f"from {SCRIPT_PATH}.{self.meta.get('package')} import *")
+        exec(f"from {self.script_path}.{self.meta.get('package')} import *")
         modified_data = eval(call_str)
 
         logger.info(f"Params: {call_str}")
