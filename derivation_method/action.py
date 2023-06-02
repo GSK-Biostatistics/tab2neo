@@ -1168,7 +1168,7 @@ class CallAPI(AppliesChanges):
             else:
                 raise KeyError(f"Expected property 'lang' to be 'python', 'Python', 'py', 'r' or 'R'. It was {self.meta.get('lang', '')}")
 
-            file_path = f'{self.meta.get("repo_scripts_path")}/{self.meta.get("package")}'
+            file_path = f'{self.meta.get("repo_scripts_path")}/{self.meta.get("package")}.{extension}'
 
             json_ = { 'repo': self.meta.get("github_repo"), 'branch': github_branch, 'base_url': github_base_url, 'file_path': file_path}
 
