@@ -1156,7 +1156,7 @@ class CallAPI(AppliesChanges):
 
         # only do this if the repo exists
         if self.meta.get("github_repo") is not None:
-            token = Fernet(os.environ.get('CLDGITAPI_ENCRYPTION_KEY')).encrypt(os.getenv('GIT_TOKEN').encode())
+            token = Fernet(os.environ.get('CLDGITAPI_ENCRYPTION_KEY')).encrypt(github_token.encode())
             headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
             gitapi_url = os.getenv('CLD_GIT_API_HOST')
             endpoint = 'get_commit'
