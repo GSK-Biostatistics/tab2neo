@@ -1,0 +1,4 @@
+label~Codelist Code~Term Code~rdfs:label~rdfs:label type
+Age Group~AGEGR2C~65-84 Years~65-84 Years~str
+Age Group~AGEGR2C~>=85 Years~>=85 Years~str
+Age Group A~AGEGRA~age group 2~age group 2~str

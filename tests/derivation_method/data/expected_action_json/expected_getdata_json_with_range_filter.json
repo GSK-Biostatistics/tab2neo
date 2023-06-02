@@ -1,0 +1,301 @@
+{
+   "nodes":[
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n-86",
+         "position":{
+            "x":0,
+            "y":0
+         },
+         "properties":{
+            "id":"get_data",
+            "type":"get_data"
+         },
+         "labels":[
+            "Method"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n586",
+         "position":{
+            "x":0,
+            "y":200
+         },
+         "properties":{
+            "relationship_type":"Date/Time of Birth"
+         },
+         "labels":[
+            "Relationship"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n588",
+         "position":{
+            "x":0,
+            "y":400
+         },
+         "properties":{
+            "relationship_type":"Subject"
+         },
+         "labels":[
+            "Relationship"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n612",
+         "position":{
+            "x":200,
+            "y":0
+         },
+         "properties":{
+            "relationship_type":"Date of Screening"
+         },
+         "labels":[
+            "Relationship"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n577",
+         "position":{
+            "x":200,
+            "y":200
+         },
+         "properties":{
+            "label":"Demographics"
+         },
+         "labels":[
+            "Class"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n611",
+         "position":{
+            "x":200,
+            "y":400
+         },
+         "properties":{
+            "label":"Date/Time of Birth"
+         },
+         "labels":[
+            "Class"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n587",
+         "position":{
+            "x":400,
+            "y":0
+         },
+         "properties":{
+            "label":"Subject"
+         },
+         "labels":[
+            "Class"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n613",
+         "position":{
+            "x":400,
+            "y":200
+         },
+         "properties":{
+            "label":"Date of Screening"
+         },
+         "labels":[
+            "Class"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n-88",
+         "position":{
+            "x":1000,
+            "y":0
+         },
+         "properties":{
+            "id":"filter",
+            "type":"filter"
+         },
+         "labels":[
+            "Method"
+         ]
+      }
+   ],
+   "relationships":[
+      {
+         "toId":"n586",
+         "style":{
+
+         },
+         "id":"r-140",
+         "type":"SOURCE_RELATIONSHIP",
+         "fromId":"n-86",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n588",
+         "style":{
+
+         },
+         "id":"r-141",
+         "type":"SOURCE_RELATIONSHIP",
+         "fromId":"n-86",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n612",
+         "style":{
+
+         },
+         "id":"r-142",
+         "type":"SOURCE_RELATIONSHIP",
+         "fromId":"n-86",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n577",
+         "style":{
+
+         },
+         "id":"r6889202",
+         "type":"FROM",
+         "fromId":"n586",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n611",
+         "style":{
+
+         },
+         "id":"r6889203",
+         "type":"TO",
+         "fromId":"n586",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n577",
+         "style":{
+
+         },
+         "id":"r6889201",
+         "type":"FROM",
+         "fromId":"n588",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n587",
+         "style":{
+
+         },
+         "id":"r6889200",
+         "type":"TO",
+         "fromId":"n588",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n587",
+         "style":{
+
+         },
+         "id":"r6889204",
+         "type":"FROM",
+         "fromId":"n612",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n613",
+         "style":{
+
+         },
+         "id":"r6889205",
+         "type":"TO",
+         "fromId":"n612",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n611",
+         "style":{
+
+         },
+         "id":"r-143",
+         "type":"ON",
+         "fromId":"n-88",
+         "properties":{
+               "how":"range",
+               "min":1980,
+               "max":2022,
+               "include_nulls":false,
+               "min_include":true,
+               "max_include":false
+         }
+      },
+      {
+         "id":"r999999998",
+         "fromId":"n-86",
+         "toId":"n-88",
+         "type":"NEXT",
+         "properties":{
+
+         },
+         "style":{
+
+         }
+      }
+   ],
+   "style":{
+
+   }
+}

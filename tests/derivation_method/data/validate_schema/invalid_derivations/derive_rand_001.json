@@ -1,0 +1,351 @@
+{
+    "nodes": [
+        {
+            "id": "n0",
+            "labels": [
+                "Relationship"
+            ],
+            "properties": {
+                "relationship_type": "BELONGS_TO"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            },
+            "position": {
+                "x": 0,
+                "y": 600
+            }
+        },
+        {
+            "id": "n1",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "id": "derive_rand_001"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            },
+            "position": {
+                "x": 0,
+                "y": 300
+            }
+        },
+        {
+            "id": "n2",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Disposition"
+            },
+            "style": {
+                "border-color": "#000000"
+            },
+            "position": {
+                "x": 0,
+                "y": 900
+            }
+        },
+        {
+            "id": "n3",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Dictionary-Derived Term"
+            },
+            "style": {
+                "border-color": "#000000"
+            },
+            "position": {
+                "x": 300,
+                "y": 900
+            }
+        },
+        {
+            "id": "n4",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "id": "link",
+                "type": "link"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            },
+            "position": {
+                "x": 300,
+                "y": 300
+            }
+        },
+        {
+            "id": "n5",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Subject"
+            },
+            "style": {
+                "border-color": "#000000"
+            },
+            "position": {
+                "x": 600,
+                "y": 900
+            }
+        },
+        {
+            "id": "n6",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Population",
+                "short_label": "POP",
+                "derived": "true"
+            },
+            "style": {
+                "border-color": "#000000"
+            },
+            "position": {
+                "x": 900,
+                "y": 900
+            }
+        },
+        {
+            "id": "n7",
+            "labels": [
+                "Term"
+            ],
+            "properties": {
+                "Codelist Code": "POP",
+                "Term Code": "RAND",
+                "rdfs:label": "All Randomized Subjects Population"
+            },
+            "style": {
+                "border-color": "#666666"
+            },
+            "position": {
+                "x": 0,
+                "y": 1200
+            }
+        },
+        {
+            "id": "n8",
+            "labels": [
+                "Term"
+            ],
+            "properties": {
+                "Codelist Code": "C114118",
+                "Term Code": "C114209",
+                "rdfs:label": "RANDOMISED"
+            },
+            "style": {
+                "border-color": "#666666"
+            },
+            "position": {
+                "x": 300,
+                "y": 1200
+            }
+        },
+        {
+            "id": "n9",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "id": "get_data",
+                "type": "get_data"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            },
+            "position": {
+                "x": 600,
+                "y": 300
+            }
+        },
+        {
+            "id": "n10",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "id": "filter",
+                "type": "filter"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            },
+            "position": {
+                "x": 900,
+                "y": 300
+            }
+        }
+    ],
+    "relationships": [
+        {
+            "fromId": "n1",
+            "id": "n0",
+            "properties": {},
+            "toId": "n4",
+            "type": "METHOD_ACTION",
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "fromId": "n4",
+            "id": "n1",
+            "properties": {},
+            "toId": "n7",
+            "type": "TO_VALUE",
+            "style": {
+                "arrow-color": "#666666"
+            }
+        },
+        {
+            "fromId": "n1",
+            "id": "n2",
+            "properties": {},
+            "toId": "n9",
+            "type": "METHOD_ACTION",
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "fromId": "n1",
+            "id": "n3",
+            "properties": {},
+            "toId": "n10",
+            "type": "METHOD_ACTION",
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "fromId": "n9",
+            "id": "n4",
+            "properties": {},
+            "toId": "n10",
+            "type": "NEXT",
+            "style": {
+                "arrow-color": "#9f0500"
+            }
+        },
+        {
+            "fromId": "n10",
+            "id": "n5",
+            "properties": {},
+            "toId": "n4",
+            "type": "NEXT",
+            "style": {
+                "arrow-color": "#9f0500"
+            }
+        },
+        {
+            "fromId": "n9",
+            "id": "n6",
+            "properties": {},
+            "toId": "n2",
+            "type": "SOURCE_CLASS",
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "fromId": "n9",
+            "id": "n7",
+            "properties": {},
+            "toId": "n3",
+            "type": "SOURCE_CLASS",
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "fromId": "n10",
+            "id": "n8",
+            "properties": {},
+            "toId": "n3",
+            "type": "ON",
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "fromId": "n10",
+            "id": "n9",
+            "properties": {},
+            "toId": "n8",
+            "type": "ON_VALUE",
+            "style": {
+                "arrow-color": "#666666"
+            }
+        },
+        {
+            "fromId": "n9",
+            "id": "n10",
+            "properties": {},
+            "toId": "n5",
+            "type": "SOURCE_CLASS",
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "fromId": "n3",
+            "id": "n11",
+            "properties": {},
+            "toId": "n8",
+            "type": "HAS_CONTROLLED_TERM",
+            "style": {
+                "arrow-color": "#666666"
+            }
+        },
+        {
+            "fromId": "n6",
+            "id": "n12",
+            "properties": {},
+            "toId": "n7",
+            "type": "HAS_CONTROLLED_TERM",
+            "style": {
+                "arrow-color": "#666666"
+            }
+        },
+        {
+            "fromId": "n4",
+            "id": "n13",
+            "properties": {},
+            "toId": "n0",
+            "type": "LINK",
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "fromId": "n0",
+            "id": "n14",
+            "properties": {},
+            "toId": "n5",
+            "type": "FROM",
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "fromId": "n0",
+            "id": "n15",
+            "properties": {},
+            "toId": "n6",
+            "type": "TO",
+            "style": {
+                "arrow-color": "#000000"
+            }
+        }
+    ]
+}

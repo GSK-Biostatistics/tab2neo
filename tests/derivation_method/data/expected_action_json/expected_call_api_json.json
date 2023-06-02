@@ -1,0 +1,27 @@
+{
+   "nodes":[
+      {
+         "id":"head_tail",
+         "position":{
+
+         },
+         "caption":"",
+         "labels":[
+            "Method"
+         ],
+         "properties":{
+            "type":"call_api",
+            "id":"head_tail",
+            "script":"head_tail",
+            "lang":"python",
+            "package":"test_df_ops",
+            "version": null,
+            "github_repo": null,
+            "repo_scripts_path": null,
+            "params":"{\"n\": 1}"
+         }
+      }
+   ],
+   "relationships":[],
+   "style":{}
+}

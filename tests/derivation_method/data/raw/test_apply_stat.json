@@ -1,0 +1,447 @@
+{
+    "nodes": [
+        {
+            "id": "n0",
+            "position": {
+                "x": 0,
+                "y": 300
+            },
+            "caption": "",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "type": "get_data",
+                "id": "get_data"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "id": "n1",
+            "position": {
+                "x": 0,
+                "y": 600
+            },
+            "caption": "",
+            "labels": [
+                "Relationship"
+            ],
+            "properties": {
+                "relationship_type": "Analysis Age"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "id": "n2",
+            "position": {
+                "x": 300,
+                "y": 600
+            },
+            "caption": "",
+            "labels": [
+                "Relationship"
+            ],
+            "properties": {
+                "relationship_type": "Population"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "id": "n3",
+            "position": {
+                "x": 600,
+                "y": 600
+            },
+            "caption": "",
+            "labels": [
+                "Relationship"
+            ],
+            "properties": {
+                "relationship_type": "Analysis Act Stratum and Act Treatment"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "id": "n4",
+            "position": {
+                "x": 0,
+                "y": 900
+            },
+            "caption": "",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Subject"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "id": "n5",
+            "position": {
+                "x": 300,
+                "y": 900
+            },
+            "caption": "",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Analysis Age",
+                "short_label": "AAGE"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "id": "n6",
+            "position": {
+                "x": 600,
+                "y": 900
+            },
+            "caption": "",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Population",
+                "short_label": "POP"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "id": "n7",
+            "position": {
+                "x": 900,
+                "y": 900
+            },
+            "caption": "",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Analysis Act Stratum and Act Treatment",
+                "short_label": "ASTA"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "id": "n8",
+            "position": {
+                "x": 300,
+                "y": 300
+            },
+            "caption": "",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "id": "test_apply_stat"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "id": "n9",
+            "position": {
+                "x": 600,
+                "y": 300
+            },
+            "caption": "",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "type": "apply_stat",
+                "id": "apply_stat",
+                "script": "group_by",
+                "lang": "python",
+                "package": "basic_df_ops"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "id": "n10",
+            "position": {
+                "x": 1200,
+                "y": 900
+            },
+            "caption": "",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "short_label": "n",
+                "label": "Number of observations",
+                "derived": "true"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "id": "n11",
+            "position": {
+                "x": 1500,
+                "y": 900
+            },
+            "caption": "",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "short_label": "MEAN",
+                "label": "Mean Value of Analysis Parameter",
+                "derived": "true"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        }
+    ],
+    "relationships": [
+        {
+            "id": "n0",
+            "fromId": "n0",
+            "toId": "n1",
+            "type": "SOURCE_RELATIONSHIP",
+            "properties": {},
+            "style": {
+                "arrow-color": "#009ce0"
+            }
+        },
+        {
+            "id": "n1",
+            "fromId": "n0",
+            "toId": "n2",
+            "type": "SOURCE_RELATIONSHIP",
+            "properties": {},
+            "style": {
+                "arrow-color": "#009ce0"
+            }
+        },
+        {
+            "id": "n2",
+            "fromId": "n0",
+            "toId": "n3",
+            "type": "SOURCE_RELATIONSHIP",
+            "properties": {},
+            "style": {
+                "arrow-color": "#009ce0"
+            }
+        },
+        {
+            "id": "n3",
+            "fromId": "n1",
+            "toId": "n4",
+            "type": "FROM",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n4",
+            "fromId": "n1",
+            "toId": "n5",
+            "type": "TO",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n5",
+            "fromId": "n2",
+            "toId": "n4",
+            "type": "FROM",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n6",
+            "fromId": "n2",
+            "toId": "n6",
+            "type": "TO",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n7",
+            "fromId": "n3",
+            "toId": "n4",
+            "type": "FROM",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n8",
+            "fromId": "n3",
+            "toId": "n7",
+            "type": "TO",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n9",
+            "fromId": "n8",
+            "toId": "n0",
+            "type": "METHOD_ACTION",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "id": "n10",
+            "fromId": "n0",
+            "toId": "n9",
+            "type": "NEXT",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            }
+        },
+        {
+            "id": "n11",
+            "fromId": "n8",
+            "toId": "n9",
+            "type": "METHOD_ACTION",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "id": "n12",
+            "fromId": "n9",
+            "toId": "n7",
+            "type": "Dimension",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n13",
+            "fromId": "n9",
+            "toId": "n6",
+            "type": "Dimension",
+            "properties": {
+                "required": "true"
+            },
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n14",
+            "fromId": "n9",
+            "toId": "n5",
+            "type": "Result",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n15",
+            "fromId": "n9",
+            "toId": "n10",
+            "type": "Statistic",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n16",
+            "fromId": "n9",
+            "toId": "n11",
+            "type": "Statistic",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        }
+    ],
+    "style": {
+        "font-family": "sans-serif",
+        "background-color": "#ffffff",
+        "background-image": "",
+        "background-size": "100%",
+        "node-color": "#ffffff",
+        "border-width": 4,
+        "border-color": "#000000",
+        "radius": 50,
+        "node-padding": 5,
+        "node-margin": 2,
+        "outside-position": "auto",
+        "node-icon-image": "",
+        "node-background-image": "",
+        "icon-position": "inside",
+        "icon-size": 64,
+        "caption-position": "inside",
+        "caption-max-width": 200,
+        "caption-color": "#000000",
+        "caption-font-size": 50,
+        "caption-font-weight": "normal",
+        "label-position": "inside",
+        "label-display": "pill",
+        "label-color": "#000000",
+        "label-background-color": "#ffffff",
+        "label-border-color": "#000000",
+        "label-border-width": 4,
+        "label-font-size": 40,
+        "label-padding": 5,
+        "label-margin": 4,
+        "directionality": "directed",
+        "detail-position": "inline",
+        "detail-orientation": "parallel",
+        "arrow-width": 5,
+        "arrow-color": "#000000",
+        "margin-start": 5,
+        "margin-end": 5,
+        "margin-peer": 20,
+        "attachment-start": "normal",
+        "attachment-end": "normal",
+        "relationship-icon-image": "",
+        "type-color": "#000000",
+        "type-background-color": "#ffffff",
+        "type-border-color": "#000000",
+        "type-border-width": 0,
+        "type-font-size": 16,
+        "type-padding": 5,
+        "property-position": "outside",
+        "property-alignment": "colon",
+        "property-color": "#000000",
+        "property-font-size": 16,
+        "property-font-weight": "normal"
+    }
+}

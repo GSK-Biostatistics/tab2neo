@@ -30,7 +30,7 @@ for line in requirements:
 
 setuptools.setup(
     name="tab2neo",                         # This is the name of the package
-    version="1.2.5.0",                      # Release.Major Feature.Minor Feature.Bug Fix
+    version="1.3.0.0",                      # Release.Major Feature.Minor Feature.Bug Fix
     author="Alexey Kuznetsov",              # Full name of the author
     description="Clinical Linked Data: High-level Python classes to load, model and reshape tabular data imported into Neo4j database",
     long_description=long_description,      # Long description read from the the readme file
@@ -43,9 +43,10 @@ setuptools.setup(
         "data_providers",
         "model_appliers",
         "model_managers",
-        "query_builders",
-        "method_appliers"
+        "query_builders"
     ]),    # List of all python modules to be installed
+    include_package_data=True,
+    package_data={"derivation_method": ["*.cql"]},
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",

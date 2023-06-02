@@ -1,0 +1,345 @@
+{
+  "style": {
+    "font-family": "sans-serif",
+    "background-color": "#ffffff",
+    "background-image": "",
+    "background-size": "100%",
+    "node-color": "#ffffff",
+    "border-width": 4,
+    "border-color": "#000000",
+    "radius": 50,
+    "node-padding": 5,
+    "node-margin": 2,
+    "outside-position": "auto",
+    "node-icon-image": "",
+    "node-background-image": "",
+    "icon-position": "inside",
+    "icon-size": 64,
+    "caption-position": "inside",
+    "caption-max-width": 200,
+    "caption-color": "#000000",
+    "caption-font-size": 50,
+    "caption-font-weight": "normal",
+    "label-position": "inside",
+    "label-display": "pill",
+    "label-color": "#000000",
+    "label-background-color": "#ffffff",
+    "label-border-color": "#000000",
+    "label-border-width": 4,
+    "label-font-size": 40,
+    "label-padding": 5,
+    "label-margin": 4,
+    "directionality": "directed",
+    "detail-position": "inline",
+    "detail-orientation": "parallel",
+    "arrow-width": 5,
+    "arrow-color": "#000000",
+    "margin-start": 5,
+    "margin-end": 5,
+    "margin-peer": 20,
+    "attachment-start": "normal",
+    "attachment-end": "normal",
+    "relationship-icon-image": "",
+    "type-color": "#000000",
+    "type-background-color": "#ffffff",
+    "type-border-color": "#000000",
+    "type-border-width": 0,
+    "type-font-size": 16,
+    "type-padding": 5,
+    "property-position": "outside",
+    "property-alignment": "colon",
+    "property-color": "#000000",
+    "property-font-size": 16,
+    "property-font-weight": "normal"
+  },
+  "nodes": [
+    {
+      "id": "n0",
+      "position": {
+        "x": 75,
+        "y": 50
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "derive_test_decode"
+      },
+      "style": {
+        "border-color": "#68bc00"
+      }
+    },
+    {
+      "id": "n1",
+      "position": {
+        "x": 75,
+        "y": 350
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "type": "get_data",
+        "id": "get_data1"
+      },
+      "style": {
+        "border-color": "#9f0500"
+      }
+    },
+    {
+      "id": "n2",
+      "position": {
+        "x": 75,
+        "y": 650
+      },
+      "caption": "",
+      "labels": [
+        "Relationship"
+      ],
+      "properties": {
+        "relationship_type": "Age Group"
+      },
+      "style": {
+        "border-color": "#009ce0"
+      }
+    },
+    {
+      "id": "n3",
+      "position": {
+        "x": 75,
+        "y": 950
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Subject"
+      },
+      "style": {
+        "border-color": "#000000"
+      }
+    },
+    {
+      "id": "n4",
+      "position": {
+        "x": 375,
+        "y": 950
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Age Group"
+      },
+      "style": {
+        "border-color": "#000000"
+      }
+    },
+    {
+      "id": "n5",
+      "position": {
+        "x": 375,
+        "y": 350
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "type": "decode",
+        "id": "decode1"
+      },
+      "style": {
+        "border-color": "#9f0500"
+      }
+    },
+    {
+      "id": "n6",
+      "position": {
+        "x": 675,
+        "y": 950
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Age Group A"
+      },
+      "style": {
+        "border-color": "#000000"
+      }
+    },
+    {
+      "id": "n10",
+      "position": {
+        "x": 675,
+        "y": 350
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "type": "link",
+        "id": "link1"
+      },
+      "style": {
+        "border-color": "#9f0500"
+      }
+    },
+    {
+      "id": "n11",
+      "position": {
+        "x": 375,
+        "y": 650
+      },
+      "caption": "",
+      "labels": [
+        "Relationship"
+      ],
+      "properties": {
+        "relationship_type": "Age Group A"
+      },
+      "style": {
+        "border-color": "#009ce0"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "id": "n0",
+      "fromId": "n0",
+      "toId": "n1",
+      "type": "METHOD_ACTION",
+      "properties": {},
+      "style": {
+        "arrow-color": "#68bc00"
+      }
+    },
+    {
+      "id": "n1",
+      "fromId": "n1",
+      "toId": "n2",
+      "type": "SOURCE_RELATIONSHIP",
+      "properties": {},
+      "style": {
+        "arrow-color": "#009ce0"
+      }
+    },
+    {
+      "id": "n2",
+      "fromId": "n2",
+      "toId": "n3",
+      "type": "FROM",
+      "properties": {},
+      "style": {
+        "arrow-color": "#000000"
+      }
+    },
+    {
+      "id": "n3",
+      "fromId": "n2",
+      "toId": "n4",
+      "type": "TO",
+      "properties": {},
+      "style": {
+        "arrow-color": "#000000"
+      }
+    },
+    {
+      "id": "n4",
+      "fromId": "n0",
+      "toId": "n5",
+      "type": "METHOD_ACTION",
+      "properties": {},
+      "style": {
+        "arrow-color": "#68bc00"
+      }
+    },
+    {
+      "id": "n5",
+      "fromId": "n1",
+      "toId": "n5",
+      "type": "NEXT",
+      "properties": {},
+      "style": {
+        "arrow-color": "#9f0500"
+      }
+    },
+    {
+      "id": "n6",
+      "fromId": "n5",
+      "toId": "n6",
+      "type": "TO_CLASS",
+      "properties": {},
+      "style": {
+        "arrow-color": "#000000"
+      }
+    },
+    {
+      "id": "n7",
+      "fromId": "n5",
+      "toId": "n4",
+      "type": "FROM_CLASS",
+      "properties": {},
+      "style": {
+        "arrow-color": "#000000"
+      }
+    },
+    {
+      "id": "n13",
+      "fromId": "n0",
+      "toId": "n10",
+      "type": "METHOD_ACTION",
+      "properties": {},
+      "style": {
+        "arrow-color": "#68bc00"
+      }
+    },
+    {
+      "id": "n14",
+      "fromId": "n5",
+      "toId": "n10",
+      "type": "NEXT",
+      "properties": {},
+      "style": {
+        "arrow-color": "#9f0500"
+      }
+    },
+    {
+      "id": "n15",
+      "fromId": "n10",
+      "toId": "n11",
+      "type": "LINK",
+      "properties": {},
+      "style": {
+        "arrow-color": "#000000"
+      }
+    },
+    {
+      "id": "n16",
+      "fromId": "n11",
+      "toId": "n6",
+      "type": "TO",
+      "properties": {},
+      "style": {
+        "arrow-color": "#000000"
+      }
+    },
+    {
+      "id": "n17",
+      "fromId": "n11",
+      "toId": "n3",
+      "type": "FROM",
+      "properties": {},
+      "style": {
+        "arrow-color": "#000000"
+      }
+    }
+  ]
+}
