@@ -1176,7 +1176,7 @@ class CallAPI(AppliesChanges):
             logger.info(f'calling gitapi at {gitapi_url} to request latest commit_id for file {file_path} in repo {self.meta.get("github_repo")}')
 
             # api call 
-            commit_resp = requests.get(url=f'{gitapi_url}/{endpoint}/', params={'token': token}, headers=headers, json=json_)
+            commit_resp = requests.get(url=f'{gitapi_url}{endpoint}/', params={'token': token}, headers=headers, json=json_)
             response_content = commit_resp.json()
             try:
                 assert commit_resp.status_code == 200, f'Status code {commit_resp.status_code}'
