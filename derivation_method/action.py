@@ -1103,6 +1103,11 @@ class CallAPI(AppliesChanges):
         api_url = os.environ.get("CLD_API_HOST")
         api_auth = os.getenv('CLD_API_AUTH')
 
+        if "items" not in api_url:
+            api_url = api_url+"items/" if api_url.endswith('/') else api_url+"/items/"
+        else:
+            api_url = api_url if api_url.endswith('/') else api_url+"/"
+
         logger.info(f"calling api at {api_url} with function: {self.meta.get('script')}")
         if self.meta.get("github_repo"):
             logger.info(
