@@ -1161,7 +1161,7 @@ class CallAPI(AppliesChanges):
 
         # only do this if the repo exists
         if self.meta.get("github_repo") is not None:
-            token = Fernet(os.environ.get('CLDGITAPI_ENCRYPTION_KEY')).encrypt(os.getenv('GIT_TOKEN').encode())
+            token = Fernet(os.environ.get('CLDGITAPI_ENCRYPTION_KEY')).encrypt(github_token.encode())
             headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
             gitapi_url = os.getenv('CLD_GIT_API_HOST')
             endpoint = 'get_commit'
@@ -1173,7 +1173,7 @@ class CallAPI(AppliesChanges):
             else:
                 raise KeyError(f"Expected property 'lang' to be 'python', 'Python', 'py', 'r' or 'R'. It was {self.meta.get('lang', '')}")
 
-            file_path = f'{self.meta.get("repo_scripts_path")}/{self.meta.get("package")}'
+            file_path = f'{self.meta.get("repo_scripts_path")}/{self.meta.get("package")}.{extension}'
 
             json_ = { 'repo': self.meta.get("github_repo"), 'branch': github_branch, 'base_url': github_base_url, 'file_path': file_path}
 
@@ -1181,12 +1181,12 @@ class CallAPI(AppliesChanges):
             logger.info(f'calling gitapi at {gitapi_url} to request latest commit_id for file {file_path} in repo {self.meta.get("github_repo")}')
 
             # api call 
-            commit_resp = requests.get(url=f'{gitapi_url}/{endpoint}/', params={'token': token}, headers=headers, json=json_)
+            commit_resp = requests.get(url=f'{gitapi_url}{endpoint}/', params={'token': token}, headers=headers, json=json_)
             response_content = commit_resp.json()
             try:
                 assert commit_resp.status_code == 200, f'Status code {commit_resp.status_code}'
             except AssertionError as err:
-                logger.error(resp.get('detail'))
+                logger.error(response_content.get('detail'))
                 raise err
             else:
                 commit_id = response_content.get('commit_id')

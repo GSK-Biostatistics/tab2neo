@@ -1,9 +1,6 @@
 import setuptools
 import os
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
-
 def read_text(file_name: str):
     return open(os.path.join(file_name)).read()
 
@@ -30,10 +27,10 @@ for line in requirements:
 
 setuptools.setup(
     name="tab2neo",                         # This is the name of the package
-    version="1.3.0.0",                      # Release.Major Feature.Minor Feature.Bug Fix
+    version="1.3.0.2",                      # Release.Major Feature.Minor Feature.Bug Fix
     author="Alexey Kuznetsov",              # Full name of the author
     description="Clinical Linked Data: High-level Python classes to load, model and reshape tabular data imported into Neo4j database",
-    long_description=long_description,      # Long description read from the the readme file
+    long_description="https://github.com/GSK-Biostatistics/tab2neo/blob/main/README.md",      # Long description read from the the readme file
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(include=[
         "logger",
