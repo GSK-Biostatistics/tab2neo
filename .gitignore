@@ -149,3 +149,4 @@ utils/temp/*
 install_neointerface.bat
 
 .vscode/*
+publish.sh
