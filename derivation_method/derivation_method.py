@@ -78,9 +78,14 @@ class DerivationMethod(Method):  # common variables
         self._db_id = None
         self._actions = None
         if study is None:
-            res = self.interface.query(f"""
-            MATCH (study:Study) 
-            RETURN study.`{RDFSLABEL}` as STUDYID 
+            res = self.db_interface.query(f"""
+            MATCH (s)
+            WHERE s:Study or s:`Study Pool`
+            WITH apoc.text.join(labels(s),'|') as lbl, collect(s) as coll
+            WITH apoc.map.fromPairs(collect([lbl, coll])) as mp
+            WITH coalesce(mp['Study Pool'], mp['Study']) as coll
+            UNWIND coll as study
+            RETURN study`{RDFSLABEL}` as STUDYID 
             ORDER BY STUDYID""")
             assert len(
                 res) == 1, "Provide 'study' id at init of DerivationMethod, as there are 0 or >1 studies in the database"
