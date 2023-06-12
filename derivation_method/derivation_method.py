@@ -85,7 +85,7 @@ class DerivationMethod(Method):  # common variables
             WITH apoc.map.fromPairs(collect([lbl, coll])) as mp
             WITH coalesce(mp['Study Pool'], mp['Study']) as coll
             UNWIND coll as study
-            RETURN study`{RDFSLABEL}` as STUDYID 
+            RETURN study.`{RDFSLABEL}` as STUDYID 
             ORDER BY STUDYID""")
             assert len(
                 res) == 1, "Provide 'study' id at init of DerivationMethod, as there are 0 or >1 studies in the database"
