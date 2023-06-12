@@ -78,7 +78,7 @@ class DerivationMethod(Method):  # common variables
         self._db_id = None
         self._actions = None
         if study is None:
-            res = self.db_interface.query(f"""
+            res = self.interface.query(f"""
             MATCH (s)
             WHERE s:Study or s:`Study Pool`
             WITH apoc.text.join(labels(s),'|') as lbl, collect(s) as coll
