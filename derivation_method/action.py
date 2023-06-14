@@ -2021,6 +2021,7 @@ class BuildUri(Action):
         RETURN 
            action{.*} as m,
            action.prefix as prefix,
+           action.store_on_existing_nodes as store_on_existing_nodes,
            [x in uri_fors | x.short_label] as uri_fors,
            [x in uri_fors | x.label] as uri_fors_long,
            [x in uri_bys | x.short_label] as uri_bys,
@@ -2052,6 +2053,20 @@ class BuildUri(Action):
                     key + ":" + str(item) for key, item in row.items()]), axis=1)
             if self.meta.get("uri_labels"):
                 self.df["_uri_" + f] = self.df["_uri_" + f].map(lambda x: x + "_label_" + "/".join(self.meta.get("uri_labels")))
+
+            if self.meta.get("store_on_existing_nodes") == "true":
+                uri_property_name = "_uri_" + f
+                id_property_name = "_id_" + f
+                df = self.df[[uri_property_name, id_property_name]]
+
+                q = f"""
+                UNWIND $data as row
+                MATCH (node)
+                WHERE id(node) = row['{id_property_name}']
+                SET node.uri = row['{uri_property_name}']
+                """    
+                params = {"data": df.to_dict(orient='records')}
+                self.method.interface.query(q, params)
         return self.df
 
     def retrieve_json(self):
