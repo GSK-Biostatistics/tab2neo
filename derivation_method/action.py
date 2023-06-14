@@ -1511,7 +1511,7 @@ class Link(AppliesChanges):
             if it is not None:    
                 if "_uri_"+self.meta.get(f'{it}_short_label') in list(self.df.columns):
                     uri_col = "_uri_"+self.meta.get(f'{it}_short_label')     
-                    if len(self.df[uri_col])>1 and self.df[uri_col].squeeze().is_unique is False:
+                    if self.df[uri_col].squeeze().is_unique is False:
                         logger.warning(f"More than 1 identical uri exists in column {uri_col}")     
 
         if "from_class" not in self.meta.keys():
