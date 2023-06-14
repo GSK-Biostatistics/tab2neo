@@ -1,0 +1,196 @@
+{
+  "style": {
+    "font-family": "sans-serif",
+    "background-color": "#ffffff",
+    "node-color": "#ffffff",
+    "border-width": 4,
+    "border-color": "#000000",
+    "radius": 50,
+    "node-padding": 5,
+    "node-margin": 2,
+    "outside-position": "auto",
+    "node-icon-image": "",
+    "node-background-image": "",
+    "icon-position": "inside",
+    "icon-size": 64,
+    "caption-position": "inside",
+    "caption-max-width": 200,
+    "caption-color": "#000000",
+    "caption-font-size": 50,
+    "caption-font-weight": "normal",
+    "label-position": "inside",
+    "label-display": "pill",
+    "label-color": "#000000",
+    "label-background-color": "#ffffff",
+    "label-border-color": "#000000",
+    "label-border-width": 4,
+    "label-font-size": 40,
+    "label-padding": 5,
+    "label-margin": 4,
+    "directionality": "directed",
+    "detail-position": "inline",
+    "detail-orientation": "parallel",
+    "arrow-width": 5,
+    "arrow-color": "#000000",
+    "margin-start": 5,
+    "margin-end": 5,
+    "margin-peer": 20,
+    "attachment-start": "normal",
+    "attachment-end": "normal",
+    "relationship-icon-image": "",
+    "type-color": "#000000",
+    "type-background-color": "#ffffff",
+    "type-border-color": "#000000",
+    "type-border-width": 0,
+    "type-font-size": 16,
+    "type-padding": 5,
+    "property-position": "outside",
+    "property-alignment": "colon",
+    "property-color": "#000000",
+    "property-font-size": 16,
+    "property-font-weight": "normal"
+  },
+  "nodes": [
+    {
+      "id": "n0",
+      "position": {
+        "x": 75,
+        "y": 125.1237663092428
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "type": "link",
+        "id": "link"
+      },
+      "style": {}
+    },
+    {
+      "id": "n1",
+      "position": {
+        "x": 645.8685338199666,
+        "y": 125.1237663092428
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Condition",
+        "short_label": "COND"
+      },
+      "style": {}
+    },
+    {
+      "id": "n2",
+      "position": {
+        "x": 1070.7173672669194,
+        "y": 50
+      },
+      "caption": "",
+      "labels": [
+        "Term"
+      ],
+      "properties": {
+        "rdfs:label": "Scheduled Visit",
+        "Codelist Code": "TBD",
+        "Term Code": "TBD"
+      },
+      "style": {}
+    },
+    {
+      "id": "n3",
+      "position": {
+        "x": 645.8685338199666,
+        "y": 289.9193171456651
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Visit Name",
+        "short_label": "VISIT"
+      },
+      "style": {}
+    },
+    {
+      "id": "n4",
+      "position": {
+        "x": 1054.9749060228194,
+        "y": 262.1350350747837
+      },
+      "caption": "",
+      "labels": [
+        "Term"
+      ],
+      "properties": {
+        "rdfs:label": "Unscheduled Visit",
+        "Codelist Code": "TBD",
+        "Term Code": "TBD"
+      },
+      "style": {}
+    },
+    {
+      "id": "n5",
+      "position": {
+        "x": 360.4342669099833,
+        "y": 125.1237663092428
+      },
+      "caption": "",
+      "labels": [
+        "Relationship"
+      ],
+      "properties": {
+        "relationship_type": "SATISFIES_DEFINITION_OF"
+      },
+      "style": {}
+    }
+  ],
+  "relationships": [
+    {
+      "id": "n0",
+      "fromId": "n0",
+      "toId": "n5",
+      "type": "LINK",
+      "properties": {
+        "how": "merge"
+      },
+      "style": {}
+    },
+    {
+      "id": "n1",
+      "fromId": "n5",
+      "toId": "n1",
+      "type": "TO",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n2",
+      "fromId": "n5",
+      "toId": "n3",
+      "type": "FROM",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n3",
+      "fromId": "n1",
+      "toId": "n2",
+      "type": "HAS_CONTROLLED_TERM",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n4",
+      "fromId": "n1",
+      "toId": "n4",
+      "type": "HAS_CONTROLLED_TERM",
+      "properties": {},
+      "style": {}
+    }
+  ]
+}

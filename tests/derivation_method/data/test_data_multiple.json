@@ -1,0 +1,760 @@
+{
+    "style": {
+        "font-family": "sans-serif",
+        "background-color": "#ffffff",
+        "node-color": "#ffffff",
+        "border-width": 4,
+        "border-color": "#000000",
+        "radius": 50,
+        "node-padding": 5,
+        "node-margin": 2,
+        "outside-position": "auto",
+        "node-icon-image": "",
+        "node-background-image": "",
+        "icon-position": "inside",
+        "icon-size": 64,
+        "caption-position": "inside",
+        "caption-max-width": 200,
+        "caption-color": "#000000",
+        "caption-font-size": 50,
+        "caption-font-weight": "normal",
+        "label-position": "inside",
+        "label-display": "pill",
+        "label-color": "#000000",
+        "label-background-color": "#ffffff",
+        "label-border-color": "#000000",
+        "label-border-width": 4,
+        "label-font-size": 40,
+        "label-padding": 5,
+        "label-margin": 4,
+        "directionality": "directed",
+        "detail-position": "inline",
+        "detail-orientation": "parallel",
+        "arrow-width": 5,
+        "arrow-color": "#000000",
+        "margin-start": 5,
+        "margin-end": 5,
+        "margin-peer": 20,
+        "attachment-start": "normal",
+        "attachment-end": "normal",
+        "relationship-icon-image": "",
+        "type-color": "#000000",
+        "type-background-color": "#ffffff",
+        "type-border-color": "#000000",
+        "type-border-width": 0,
+        "type-font-size": 16,
+        "type-padding": 5,
+        "property-position": "outside",
+        "property-alignment": "colon",
+        "property-color": "#000000",
+        "property-font-size": 16,
+        "property-font-weight": "normal"
+    },
+    "nodes": [
+        {
+            "id": "n0",
+            "position": {
+                "x": 0,
+                "y": 900
+            },
+            "caption": "",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Vital Signs",
+                "short_label": "VS"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "id": "n1",
+            "position": {
+                "x": 0,
+                "y": 600
+            },
+            "caption": "",
+            "labels": [
+                "Relationship"
+            ],
+            "properties": {
+                "relationship_type": "HAS NUMERIC RESULT"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "id": "n2",
+            "position": {
+                "x": 300,
+                "y": 900
+            },
+            "caption": "",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Numeric Result",
+                "short_label": "NR"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "id": "n3",
+            "position": {
+                "x": 0,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Vital Signs"
+            ],
+            "properties": {
+                "rdfs:label": "\"100\""
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n4",
+            "position": {
+                "x": 300,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Numeric Result"
+            ],
+            "properties": {
+                "rdfs:label": "100"
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n5",
+            "position": {
+                "x": 600,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Test Name"
+            ],
+            "properties": {
+                "rdfs:label": "Weight"
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n6",
+            "position": {
+                "x": 300,
+                "y": 600
+            },
+            "caption": "",
+            "labels": [
+                "Relationship"
+            ],
+            "properties": {
+                "relationship_type": "HAS TEST NAME"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "id": "n7",
+            "position": {
+                "x": 600,
+                "y": 900
+            },
+            "caption": "",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Test Name",
+                "short_label": "TS"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "id": "n8",
+            "position": {
+                "x": 900,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Vital Signs"
+            ],
+            "properties": {
+                "rdfs:label": "\"120\""
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n9",
+            "position": {
+                "x": 1200,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Numeric Result"
+            ],
+            "properties": {
+                "rdfs:label": "120"
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n10",
+            "position": {
+                "x": 1500,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Test Name"
+            ],
+            "properties": {
+                "rdfs:label": "Weight"
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n11",
+            "position": {
+                "x": 1800,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Vital Signs"
+            ],
+            "properties": {
+                "rdfs:label": "\"110\""
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n12",
+            "position": {
+                "x": 2100,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Numeric Result"
+            ],
+            "properties": {
+                "rdfs:label": "110"
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n13",
+            "position": {
+                "x": 2400,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Test Name"
+            ],
+            "properties": {
+                "rdfs:label": "Height"
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n14",
+            "position": {
+                "x": 2700,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Vital Signs"
+            ],
+            "properties": {
+                "rdfs:label": "\"130\""
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n15",
+            "position": {
+                "x": 3000,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Numeric Result"
+            ],
+            "properties": {
+                "rdfs:label": "130"
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n16",
+            "position": {
+                "x": 3300,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Test Name"
+            ],
+            "properties": {
+                "rdfs:label": "Height"
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n17",
+            "position": {
+                "x": 3600,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Vital Signs"
+            ],
+            "properties": {
+                "rdfs:label": "\"25\""
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n18",
+            "position": {
+                "x": 3900,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Numeric Result"
+            ],
+            "properties": {
+                "rdfs:label": "25"
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n19",
+            "position": {
+                "x": 4200,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Test Name"
+            ],
+            "properties": {
+                "rdfs:label": "BMI"
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n20",
+            "position": {
+                "x": 4500,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Vital Signs"
+            ],
+            "properties": {
+                "rdfs:label": "\"26\""
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n21",
+            "position": {
+                "x": 4800,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Numeric Result"
+            ],
+            "properties": {
+                "rdfs:label": "26"
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n22",
+            "position": {
+                "x": 5100,
+                "y": 1500
+            },
+            "caption": "",
+            "labels": [
+                "Test Name"
+            ],
+            "properties": {
+                "rdfs:label": "BMI"
+            },
+            "style": {
+                "border-color": "#fa28ff"
+            }
+        },
+        {
+            "id": "n23",
+            "position": {
+                "x": 600,
+                "y": 600
+            },
+            "caption": "",
+            "style": {
+                "border-color": "#009ce0"
+            },
+            "labels": [
+                "Relationship"
+            ],
+            "properties": {
+                "relationship_type": "SUBJECT"
+            }
+        },
+        {
+            "id": "n24",
+            "position": {
+                "x": 900,
+                "y": 900
+            },
+            "caption": "",
+            "style": {
+                "border-color": "#000000"
+            },
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Subject",
+                "short_label": "USUBJID"
+            }
+        },
+        {
+            "id": "n26",
+            "position": {
+                "x": 5400,
+                "y": 1500
+            },
+            "caption": "",
+            "style": {
+                "border-color": "#fa28ff"
+            },
+            "labels": [
+                "Subject"
+            ],
+            "properties": {
+                "rdfs:label": "0001"
+            }
+        },
+        {
+            "id": "n27",
+            "position": {
+                "x": 5700,
+                "y": 1500
+            },
+            "caption": "",
+            "style": {
+                "border-color": "#fa28ff"
+            },
+            "labels": [
+                "Subject"
+            ],
+            "properties": {
+                "rdfs:label": "0002"
+            }
+        }
+    ],
+    "relationships": [
+        {
+            "id": "n0",
+            "fromId": "n1",
+            "toId": "n0",
+            "type": "FROM",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n1",
+            "fromId": "n1",
+            "toId": "n2",
+            "type": "TO",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n2",
+            "fromId": "n3",
+            "toId": "n4",
+            "type": "HAS NUMERIC RESULT",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n3",
+            "fromId": "n3",
+            "toId": "n5",
+            "type": "HAS TEST NAME",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n4",
+            "fromId": "n6",
+            "toId": "n0",
+            "type": "FROM",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n5",
+            "fromId": "n6",
+            "toId": "n7",
+            "type": "TO",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n6",
+            "fromId": "n8",
+            "toId": "n9",
+            "type": "HAS NUMERIC RESULT",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n7",
+            "fromId": "n8",
+            "toId": "n10",
+            "type": "HAS TEST NAME",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n8",
+            "fromId": "n11",
+            "toId": "n12",
+            "type": "HAS NUMERIC RESULT",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n9",
+            "fromId": "n11",
+            "toId": "n13",
+            "type": "HAS TEST NAME",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n10",
+            "fromId": "n14",
+            "toId": "n15",
+            "type": "HAS NUMERIC RESULT",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n11",
+            "fromId": "n14",
+            "toId": "n16",
+            "type": "HAS TEST NAME",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n12",
+            "fromId": "n17",
+            "toId": "n18",
+            "type": "HAS NUMERIC RESULT",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n13",
+            "fromId": "n17",
+            "toId": "n19",
+            "type": "HAS TEST NAME",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n14",
+            "fromId": "n20",
+            "toId": "n21",
+            "type": "HAS NUMERIC RESULT",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n15",
+            "fromId": "n20",
+            "toId": "n22",
+            "type": "HAS TEST NAME",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "id": "n16",
+            "type": "FROM",
+            "fromId": "n23",
+            "toId": "n0",
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "properties": {}
+        },
+        {
+            "id": "n17",
+            "type": "TO",
+            "fromId": "n23",
+            "toId": "n24",
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "properties": {}
+        },
+        {
+            "id": "n23",
+            "type": "Subject",
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "properties": {},
+            "fromId": "n11",
+            "toId": "n26"
+        },
+        {
+            "id": "n24",
+            "type": "Subject",
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "properties": {},
+            "fromId": "n3",
+            "toId": "n26"
+        },
+        {
+            "id": "n25",
+            "type": "Subject",
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "properties": {},
+            "fromId": "n17",
+            "toId": "n26"
+        },
+        {
+            "id": "n26",
+            "type": "Subject",
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "properties": {},
+            "fromId": "n20",
+            "toId": "n27"
+        },
+        {
+            "id": "n27",
+            "type": "Subject",
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "properties": {},
+            "fromId": "n8",
+            "toId": "n27"
+        },
+        {
+            "id": "n28",
+            "type": "Subject",
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "properties": {},
+            "fromId": "n14",
+            "toId": "n27"
+        }
+    ]
+}

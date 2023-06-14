@@ -1,9 +1,6 @@
 import setuptools
 import os
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
-
 def read_text(file_name: str):
     return open(os.path.join(file_name)).read()
 
@@ -33,7 +30,7 @@ setuptools.setup(
     version="1.3.1.0",                      # Release.Major Feature.Minor Feature.Bug Fix
     author="Alexey Kuznetsov",              # Full name of the author
     description="Clinical Linked Data: High-level Python classes to load, model and reshape tabular data imported into Neo4j database",
-    long_description=long_description,      # Long description read from the the readme file
+    long_description="https://github.com/GSK-Biostatistics/tab2neo/blob/main/README.md",      # Long description read from the the readme file
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(include=[
         "logger",
@@ -43,9 +40,10 @@ setuptools.setup(
         "data_providers",
         "model_appliers",
         "model_managers",
-        "query_builders",
-        "method_appliers"
+        "query_builders"
     ]),    # List of all python modules to be installed
+    include_package_data=True,
+    package_data={"derivation_method": ["*.cql"]},
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",

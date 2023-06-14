@@ -1,0 +1,333 @@
+{
+    "nodes": [
+        {
+            "id": "n262",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "id": "link",
+                "type": "link"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            },
+            "position": {
+                "x": 0,
+                "y": 300
+            }
+        },
+        {
+            "id": "n263",
+            "labels": [
+                "Relationship"
+            ],
+            "properties": {
+                "relationship_type": "Population"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            },
+            "position": {
+                "x": 0,
+                "y": 600
+            }
+        },
+        {
+            "id": "n264",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Subject"
+            },
+            "style": {
+                "border-color": "#000000"
+            },
+            "position": {
+                "x": 0,
+                "y": 900
+            }
+        },
+        {
+            "id": "n265",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "id": "filter",
+                "type": "filter"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            },
+            "position": {
+                "x": 300,
+                "y": 300
+            }
+        },
+        {
+            "id": "n266",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Datetime of First Exposure to Treatment"
+            },
+            "style": {
+                "border-color": "#000000"
+            },
+            "position": {
+                "x": 300,
+                "y": 900
+            }
+        },
+        {
+            "id": "n267",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "id": "derive_saffl_001"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            },
+            "position": {
+                "x": 600,
+                "y": 300
+            }
+        },
+        {
+            "id": "n268",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "id": "get_data",
+                "type": "get_data"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            },
+            "position": {
+                "x": 900,
+                "y": 300
+            }
+        },
+        {
+            "id": "n269",
+            "labels": [
+                "Class"
+            ],
+            "properties": {
+                "label": "Population"
+            },
+            "style": {
+                "border-color": "#000000"
+            },
+            "position": {
+                "x": 600,
+                "y": 900
+            }
+        },
+        {
+            "id": "n270",
+            "labels": [
+                "Term"
+            ],
+            "properties": {
+                "Codelist Code": "POP",
+                "Term Code": "RAND",
+                "rdfs:label": "All Randomized Subjects Population"
+            },
+            "style": {
+                "border-color": "#666666"
+            },
+            "position": {
+                "x": 0,
+                "y": 1200
+            }
+        },
+        {
+            "id": "n271",
+            "labels": [
+                "Term"
+            ],
+            "properties": {
+                "Codelist Code": "POP",
+                "Term Code": "SAF",
+                "rdfs:label": "Safety Population"
+            },
+            "style": {
+                "border-color": "#666666"
+            },
+            "position": {
+                "x": 300,
+                "y": 1200
+            }
+        }
+    ],
+    "relationships": [
+        {
+            "fromId": "n263",
+            "id": "n479",
+            "properties": {},
+            "toId": "n269",
+            "type": "TO",
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "fromId": "n262",
+            "id": "n480",
+            "properties": {},
+            "toId": "n263",
+            "type": "LINK",
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "fromId": "n267",
+            "id": "n481",
+            "properties": {},
+            "toId": "n262",
+            "type": "METHOD_ACTION",
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "fromId": "n268",
+            "id": "n482",
+            "properties": {},
+            "toId": "n264",
+            "type": "SOURCE_CLASS",
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "fromId": "n265",
+            "id": "n483",
+            "properties": {},
+            "toId": "n262",
+            "type": "NEXT",
+            "style": {
+                "arrow-color": "#9f0500"
+            }
+        },
+        {
+            "fromId": "n268",
+            "id": "n484",
+            "properties": {},
+            "toId": "n269",
+            "type": "SOURCE_CLASS",
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "fromId": "n265",
+            "id": "n485",
+            "properties": {},
+            "toId": "n270",
+            "type": "ON_VALUE",
+            "style": {
+                "arrow-color": "#666666"
+            }
+        },
+        {
+            "fromId": "n268",
+            "id": "n486",
+            "properties": {},
+            "toId": "n265",
+            "type": "NEXT",
+            "style": {
+                "arrow-color": "#9f0500"
+            }
+        },
+        {
+            "fromId": "n265",
+            "id": "n487",
+            "properties": {},
+            "toId": "n269",
+            "type": "ON",
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "fromId": "n269",
+            "id": "n488",
+            "properties": {},
+            "toId": "n271",
+            "type": "HAS_CONTROLLED_TERM",
+            "style": {
+                "arrow-color": "#666666"
+            }
+        },
+        {
+            "fromId": "n263",
+            "id": "n489",
+            "properties": {},
+            "toId": "n264",
+            "type": "FROM",
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "fromId": "n267",
+            "id": "n490",
+            "properties": {},
+            "toId": "n265",
+            "type": "METHOD_ACTION",
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "fromId": "n267",
+            "id": "n491",
+            "properties": {},
+            "toId": "n268",
+            "type": "METHOD_ACTION",
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "fromId": "n268",
+            "id": "n492",
+            "properties": {},
+            "toId": "n266",
+            "type": "SOURCE_CLASS",
+            "style": {
+                "arrow-color": "#000000"
+            }
+        },
+        {
+            "fromId": "n262",
+            "id": "n493",
+            "properties": {},
+            "toId": "n271",
+            "type": "TO_VALUE",
+            "style": {
+                "arrow-color": "#666666"
+            }
+        },
+        {
+            "fromId": "n269",
+            "id": "n494",
+            "properties": {},
+            "toId": "n270",
+            "type": "HAS_CONTROLLED_TERM",
+            "style": {
+                "arrow-color": "#666666"
+            }
+        }
+    ]
+}

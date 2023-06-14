@@ -1,0 +1,494 @@
+{
+    "nodes": [
+        {
+            "caption": "",
+            "id": "n152",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 0,
+                "y": 900
+            },
+            "properties": {
+                "derived": "true",
+                "label": "Analysis Act Stratum and Act Treatment Definition",
+                "short_label": "ASTADEF"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n153",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 0,
+                "y": 300
+            },
+            "properties": {
+                "id": "link2",
+                "type": "link"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n154",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": 0,
+                "y": 600
+            },
+            "properties": {
+                "relationship_type": "Analysis Act Stratum and Act Treatment"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n155",
+            "labels": [
+                "Term"
+            ],
+            "position": {
+                "x": 0,
+                "y": 1200
+            },
+            "properties": {
+                "Codelist Code": "ASTDEF",
+                "Term Code": "ASTDEF",
+                "rdfs:label": "Concatenate ASTRATUM and TRT01A"
+            },
+            "style": {
+                "border-color": "#666666"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n156",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": 300,
+                "y": 600
+            },
+            "properties": {
+                "relationship_type": "Analysis Actual Stratum"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n157",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": 600,
+                "y": 600
+            },
+            "properties": {
+                "relationship_type": "Actual Treatment for Period 01"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n158",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 300,
+                "y": 900
+            },
+            "properties": {
+                "derived": "true",
+                "label": "Actual Treatment for Period 01",
+                "short_label": "TRT01A"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n159",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 600,
+                "y": 900
+            },
+            "properties": {
+                "label": "Subject",
+                "short_label": "USUBJID"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n160",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 300,
+                "y": 300
+            },
+            "properties": {
+                "id": "concatenate",
+                "lang": "python",
+                "package": "basic_df_ops",
+                "params": "{\"in_cols\":[\"ASTRATUM\",\"TRT01A\"], \"out_col\":\"ASTA\", \"sep\":\" - \"}",
+                "script": "concatenate",
+                "type": "run_script",
+                "version": "\"0.1\""
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n161",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 900,
+                "y": 900
+            },
+            "properties": {
+                "derived": "true",
+                "label": "Analysis Actual Stratum",
+                "short_label": "ASTRATUM"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n162",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 600,
+                "y": 300
+            },
+            "properties": {
+                "id": "derive_asta_001"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n163",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": 900,
+                "y": 600
+            },
+            "properties": {
+                "relationship_type": "Analysis Act Stratum and Act Treatment Definition"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n164",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 900,
+                "y": 300
+            },
+            "properties": {
+                "id": "link1",
+                "type": "link"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n165",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 1200,
+                "y": 300
+            },
+            "properties": {
+                "id": "get_data",
+                "type": "get_data"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n166",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 1200,
+                "y": 900
+            },
+            "properties": {
+                "derived": "true",
+                "label": "Analysis Act Stratum and Act Treatment",
+                "short_label": "ASTA"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        }
+    ],
+    "relationships": [
+        {
+            "fromId": "n152",
+            "id": "n337",
+            "properties": {},
+            "style": {
+                "arrow-color": "#666666"
+            },
+            "toId": "n155",
+            "type": "HAS_CONTROLLED_TERM"
+        },
+        {
+            "fromId": "n163",
+            "id": "n346",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n152",
+            "type": "TO"
+        },
+        {
+            "fromId": "n153",
+            "id": "n347",
+            "properties": {},
+            "style": {
+                "arrow-color": "#666666"
+            },
+            "toId": "n155",
+            "type": "TO_VALUE"
+        },
+        {
+            "fromId": "n162",
+            "id": "n345",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            },
+            "toId": "n153",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n153",
+            "id": "n354",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n163",
+            "type": "LINK"
+        },
+        {
+            "fromId": "n164",
+            "id": "n349",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            },
+            "toId": "n153",
+            "type": "NEXT"
+        },
+        {
+            "fromId": "n154",
+            "id": "n341",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n159",
+            "type": "FROM"
+        },
+        {
+            "fromId": "n164",
+            "id": "n342",
+            "properties": {
+                "how": "merge"
+            },
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n154",
+            "type": "LINK"
+        },
+        {
+            "fromId": "n154",
+            "id": "n351",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n166",
+            "type": "TO"
+        },
+        {
+            "fromId": "n156",
+            "id": "n348",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n159",
+            "type": "FROM"
+        },
+        {
+            "fromId": "n156",
+            "id": "n340",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n161",
+            "type": "TO"
+        },
+        {
+            "fromId": "n165",
+            "id": "n343",
+            "properties": {},
+            "style": {
+                "arrow-color": "#009ce0"
+            },
+            "toId": "n156",
+            "type": "SOURCE_RELATIONSHIP"
+        },
+        {
+            "fromId": "n157",
+            "id": "n353",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n158",
+            "type": "TO"
+        },
+        {
+            "fromId": "n157",
+            "id": "n339",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n159",
+            "type": "FROM"
+        },
+        {
+            "fromId": "n165",
+            "id": "n338",
+            "properties": {},
+            "style": {
+                "arrow-color": "#009ce0"
+            },
+            "toId": "n157",
+            "type": "SOURCE_RELATIONSHIP"
+        },
+        {
+            "fromId": "n162",
+            "id": "n350",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            },
+            "toId": "n160",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n160",
+            "id": "n336",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            },
+            "toId": "n164",
+            "type": "NEXT"
+        },
+        {
+            "fromId": "n165",
+            "id": "n356",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            },
+            "toId": "n160",
+            "type": "NEXT"
+        },
+        {
+            "fromId": "n162",
+            "id": "n344",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            },
+            "toId": "n164",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n162",
+            "id": "n352",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            },
+            "toId": "n165",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n163",
+            "id": "n355",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n166",
+            "type": "FROM"
+        }
+    ],
+    "style": {}
+}

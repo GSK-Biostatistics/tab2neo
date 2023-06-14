@@ -1,0 +1,114 @@
+{
+   "nodes":[
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n-74",
+         "position":{
+            "x":0,
+            "y":0
+         },
+         "properties":{
+            "id":"link",
+            "type":"link"
+         },
+         "labels":[
+            "Method"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n25948",
+         "position":{
+            "x":0,
+            "y":200
+         },
+         "properties":{
+            "relationship_type":"HAS NUMERIC RESULT"
+         },
+         "labels":[
+            "Relationship"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n-76",
+         "position":{
+            "x":200,
+            "y":0
+         },
+         "properties":{
+            "label":"Numeric Result"
+         },
+         "labels":[
+            "Class"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n-75",
+         "position":{
+            "x":200,
+            "y":200
+         },
+         "properties":{
+            "label":"Test Name"
+         },
+         "labels":[
+            "Class"
+         ]
+      }
+   ],
+   "relationships":[
+      {
+         "toId":"n25948",
+         "style":{
+
+         },
+         "id":"r-82",
+         "type":"LINK",
+         "fromId":"n-74",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n-76",
+         "style":{
+
+         },
+         "id":"r-81",
+         "type":"TO",
+         "fromId":"n25948",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n-75",
+         "style":{
+
+         },
+         "id":"r-80",
+         "type":"FROM",
+         "fromId":"n25948",
+         "properties":{
+
+         }
+      }
+   ],
+   "style":{
+
+   }
+}

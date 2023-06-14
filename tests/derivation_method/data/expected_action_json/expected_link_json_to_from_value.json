@@ -1,0 +1,198 @@
+{
+   "nodes":[
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n-119",
+         "position":{
+            "x":0,
+            "y":0
+         },
+         "properties":{
+            "Term Code":"0001",
+            "Codelist Code":"USUBJID"
+         },
+         "labels":[
+            "Term"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n-118",
+         "position":{
+            "x":0,
+            "y":200
+         },
+         "properties":{
+            "Term Code":"Weight",
+            "Codelist Code":"TS"
+         },
+         "labels":[
+            "Term"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n-115",
+         "position":{
+            "x":0,
+            "y":400
+         },
+         "properties":{
+            "id":"link",
+            "type":"link"
+         },
+         "labels":[
+            "Method"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n25874",
+         "position":{
+            "x":200,
+            "y":0
+         },
+         "properties":{
+            "relationship_type":"Subject"
+         },
+         "labels":[
+            "Relationship"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n-117",
+         "position":{
+            "x":200,
+            "y":200
+         },
+         "properties":{
+            "label":"Subject"
+         },
+         "labels":[
+            "Class"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n-116",
+         "position":{
+            "x":200,
+            "y":400
+         },
+         "properties":{
+            "label":"Test Name"
+         },
+         "labels":[
+            "Class"
+         ]
+      }
+   ],
+   "relationships":[
+      {
+         "toId":"n-119",
+         "style":{
+            
+         },
+         "id":"r-162",
+         "type":"HAS_CONTROLLED_TERM",
+         "fromId":"n-117",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n-118",
+         "style":{
+            
+         },
+         "id":"r-161",
+         "type":"HAS_CONTROLLED_TERM",
+         "fromId":"n-116",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n-119",
+         "style":{
+            
+         },
+         "id":"r-165",
+         "type":"TO_VALUE",
+         "fromId":"n-115",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n-118",
+         "style":{
+            
+         },
+         "id":"r-164",
+         "type":"FROM_VALUE",
+         "fromId":"n-115",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n25874",
+         "style":{
+            
+         },
+         "id":"r-163",
+         "type":"LINK",
+         "fromId":"n-115",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n-117",
+         "style":{
+            
+         },
+         "id":"r-160",
+         "type":"TO",
+         "fromId":"n25874",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n-116",
+         "style":{
+            
+         },
+         "id":"r-159",
+         "type":"FROM",
+         "fromId":"n25874",
+         "properties":{
+            
+         }
+      }
+   ],
+   "style":{
+      
+   }
+}

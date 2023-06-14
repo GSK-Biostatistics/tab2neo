@@ -1,0 +1,451 @@
+{
+    "nodes": [
+        {
+            "id": "core0",
+            "position": {
+                "x": 0,
+                "y": 0
+            },
+            "caption": "",
+            "labels": [
+                "Method"
+            ],
+            "properties": {
+                "id": "test_get_data_retrieve_json_with_source_class"
+            },
+            "style": {
+                "border-color": "#68bc00"
+            }
+        },
+        {
+            "caption": "",
+            "style": {
+                "border-color": "#9f0500"
+            },
+            "id": "n-74",
+            "position": {
+                "x": 0,
+                "y": 300
+            },
+            "properties": {
+                "id": "get_data",
+                "type": "get_data"
+            },
+            "labels": [
+                "Method"
+            ]
+        },
+        {
+            "caption": "",
+            "style": {
+                "border-color": "#000000"
+            },
+            "id": "n119",
+            "position": {
+                "x": 0,
+                "y": 900
+            },
+            "properties": {
+                "label": "Demographics"
+            },
+            "labels": [
+                "Class"
+            ]
+        },
+        {
+            "caption": "",
+            "style": {
+                "border-color": "#000000"
+            },
+            "id": "n576",
+            "position": {
+                "x": 300,
+                "y": 900
+            },
+            "properties": {
+                "label": "Date/Time of Birth"
+            },
+            "labels": [
+                "Class"
+            ]
+        },
+        {
+            "caption": "",
+            "style": {
+                "border-color": "#000000"
+            },
+            "id": "n33888",
+            "position": {
+                "x": 600,
+                "y": 900
+            },
+            "properties": {
+                "label": "Subject"
+            },
+            "labels": [
+                "Class"
+            ]
+        },
+        {
+            "caption": "",
+            "style": {
+                "border-color": "#000000"
+            },
+            "id": "n820829",
+            "position": {
+                "x": 900,
+                "y": 900
+            },
+            "properties": {
+                "label": "Date of Screening"
+            },
+            "labels": [
+                "Class"
+            ]
+        },
+        {
+            "caption": "",
+            "id": "n289",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 300,
+                "y": 300
+            },
+            "properties": {
+                "id": "run_script1",
+                "lang": "python",
+                "package": "study_specific_ops",
+                "params": "",
+                "script": "aage",
+                "type": "run_script",
+                "version": "\"0.1\""
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n288",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 600,
+                "y": 300
+            },
+            "properties": {
+                "id": "link1",
+                "type": "link"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n280",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": 0,
+                "y": 600
+            },
+            "properties": {
+                "relationship_type": "Analysis Age"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n277",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 1200,
+                "y": 900
+            },
+            "properties": {
+                "label": "Analysis Age",
+                "short_label": "AAGE"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n293",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 900,
+                "y": 300
+            },
+            "properties": {
+                "id": "link2",
+                "type": "link"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n290",
+            "labels": [
+                "Term"
+            ],
+            "position": {
+                "x": 0,
+                "y": 1200
+            },
+            "properties": {
+                "Codelist Code": "AAGEDEF",
+                "Term Code": "AAGEDEF"
+            },
+            "style": {
+                "border-color": "#666666"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n292",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": 300,
+                "y": 600
+            },
+            "properties": {
+                "relationship_type": "Definition"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n291",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 1500,
+                "y": 900
+            },
+            "properties": {
+                "label": "Analysis Age Definition",
+                "short_label": "AAGEDEF"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        }
+    ],
+    "relationships": [
+        {
+            "id": "ma_rel_n-74",
+            "fromId": "core0",
+            "toId": "n-74",
+            "type": "METHOD_ACTION",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "toId": "n119",
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "id": "r-122",
+            "type": "SOURCE_CLASS",
+            "fromId": "n-74",
+            "properties": {}
+        },
+        {
+            "toId": "n576",
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "id": "r-123",
+            "type": "SOURCE_CLASS",
+            "fromId": "n-74",
+            "properties": {}
+        },
+        {
+            "toId": "n33888",
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "id": "r-124",
+            "type": "SOURCE_CLASS",
+            "fromId": "n-74",
+            "properties": {}
+        },
+        {
+            "toId": "n820829",
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "id": "r-125",
+            "type": "SOURCE_CLASS",
+            "fromId": "n-74",
+            "properties": {}
+        },
+        {
+            "id": "ma_rel_n289",
+            "fromId": "core0",
+            "toId": "n289",
+            "type": "METHOD_ACTION",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "id": "next_rel_n289",
+            "fromId": "n-74",
+            "toId": "n289",
+            "type": "NEXT",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            }
+        },
+        {
+            "id": "ma_rel_n288",
+            "fromId": "core0",
+            "toId": "n288",
+            "type": "METHOD_ACTION",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "id": "next_rel_n288",
+            "fromId": "n289",
+            "toId": "n288",
+            "type": "NEXT",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            }
+        },
+        {
+            "fromId": "n288",
+            "id": "n815",
+            "properties": {
+                "how": "merge"
+            },
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n280",
+            "type": "LINK"
+        },
+        {
+            "fromId": "n280",
+            "id": "n809",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n277",
+            "type": "TO"
+        },
+        {
+            "fromId": "n280",
+            "id": "n814",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n33888",
+            "type": "FROM"
+        },
+        {
+            "id": "ma_rel_n293",
+            "fromId": "core0",
+            "toId": "n293",
+            "type": "METHOD_ACTION",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            }
+        },
+        {
+            "id": "next_rel_n293",
+            "fromId": "n288",
+            "toId": "n293",
+            "type": "NEXT",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            }
+        },
+        {
+            "fromId": "n293",
+            "id": "n831",
+            "properties": {},
+            "style": {
+                "arrow-color": "#666666"
+            },
+            "toId": "n290",
+            "type": "TO_VALUE"
+        },
+        {
+            "fromId": "n293",
+            "id": "n832",
+            "properties": {
+                "how": "merge"
+            },
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n292",
+            "type": "LINK"
+        },
+        {
+            "fromId": "n292",
+            "id": "n833",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n277",
+            "type": "FROM"
+        },
+        {
+            "fromId": "n291",
+            "id": "n830",
+            "properties": {},
+            "style": {
+                "arrow-color": "#666666"
+            },
+            "toId": "n290",
+            "type": "HAS_CONTROLLED_TERM"
+        },
+        {
+            "fromId": "n292",
+            "id": "n834",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n291",
+            "type": "TO"
+        }
+    ],
+    "style": {}
+}

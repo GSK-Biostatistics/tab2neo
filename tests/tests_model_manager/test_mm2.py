@@ -4,10 +4,10 @@ import os
 filepath = os.path.dirname(__file__)
 import pytest
 from model_managers.model_manager import ModelManager
-from utils.utils import compare_recordsets
+from utils.utils import compare_recordsets, compare_unordered_lists
 
 
-# Provide a DataProvider object (which contains a database connection)
+# Provide a ModelManager object (which contains a database connection)
 # that can be used by the various tests that need it
 @pytest.fixture(scope="module")
 def mm():
@@ -494,15 +494,12 @@ def test_get_class_ct_map(mm):
     mm.load_arrows_dict(dct)
 
     res = mm.get_class_ct_map('Exposure Name of Treatment')
-    print(res)
     assert res == {'Exposure Name of Treatment': [{'rdfs:label': 'Term1'}]}
 
     res = mm.get_class_ct_map('Exposure Name of Treatment', 'Codelist Code')
-    print(res)
     assert res == {'Exposure Name of Treatment': [{'Codelist Code': 'Codelist1'}]}
 
     res = mm.get_class_ct_map(['USUBJID'], ct_props=['rdfs:label', 'Codelist Code'], identifier='short_label')
-    print(res)
     assert sorted(res.get('USUBJID'), key=lambda d: d['rdfs:label']) == [
         {'rdfs:label': 'Term2', 'Codelist Code': 'Codelist2'}, {'rdfs:label': 'Term3', 'Codelist Code': 'Codelist3'}
     ]
@@ -822,7 +819,7 @@ def test_remove_unmapped_classes(mm):
     '''
     res = mm.query(q2)[0]['class_labels']
 
-    assert res == ['A', 'B', 'F']
+    assert compare_unordered_lists(res, ['A', 'B', 'F'])
 
 
 def test_remove_auxilary_term_labels(mm):

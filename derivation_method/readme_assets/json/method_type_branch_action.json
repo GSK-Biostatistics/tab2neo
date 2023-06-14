@@ -1,0 +1,209 @@
+{
+  "nodes": [
+    {
+      "id": "n14",
+      "position": {
+        "x": 2351.0472207840235,
+        "y": 424.11379689282575
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "type": "get_data",
+        "id": "get_data1"
+      },
+      "style": {
+        "border-color": "#9f0500"
+      }
+    },
+    {
+      "id": "n18",
+      "position": {
+        "x": 2651.0472207840235,
+        "y": 424.11379689282575
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "type": "branch_save",
+        "id": "branch_save1"
+      },
+      "style": {
+        "border-color": "#9f0500"
+      }
+    },
+    {
+      "id": "n19",
+      "position": {
+        "x": 2957.297220784024,
+        "y": 424.11379689282563
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "type": "run_script",
+        "id": "run_script2"
+      },
+      "style": {
+        "border-color": "#9f0500"
+      }
+    },
+    {
+      "id": "n20",
+      "position": {
+        "x": 3254.172220784024,
+        "y": 424.11379689282546
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "type": "branch_save",
+        "id": "branch_save2"
+      },
+      "style": {
+        "border-color": "#9f0500"
+      }
+    },
+    {
+      "id": "n21",
+      "position": {
+        "x": 2952.609720784024,
+        "y": 725.6762968928256
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "type": "branch_combine",
+        "id": "branch_combine1"
+      },
+      "style": {
+        "border-color": "#9f0500"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "id": "n21",
+      "fromId": "n14",
+      "toId": "n18",
+      "type": "NEXT",
+      "properties": {},
+      "style": {
+        "arrow-color": "#9f0500"
+      }
+    },
+    {
+      "id": "n23",
+      "fromId": "n18",
+      "toId": "n19",
+      "type": "NEXT",
+      "properties": {},
+      "style": {
+        "arrow-color": "#9f0500"
+      }
+    },
+    {
+      "id": "n25",
+      "fromId": "n19",
+      "toId": "n20",
+      "type": "NEXT",
+      "properties": {},
+      "style": {
+        "arrow-color": "#9f0500"
+      }
+    },
+    {
+      "id": "n27",
+      "fromId": "n20",
+      "toId": "n21",
+      "type": "NEXT",
+      "properties": {},
+      "style": {
+        "arrow-color": "#9f0500"
+      }
+    },
+    {
+      "id": "n28",
+      "fromId": "n21",
+      "toId": "n18",
+      "type": "METHOD_BRANCH",
+      "properties": {},
+      "style": {
+        "arrow-color": "#000000"
+      }
+    },
+    {
+      "id": "n29",
+      "fromId": "n21",
+      "toId": "n20",
+      "type": "METHOD_BRANCH",
+      "properties": {},
+      "style": {
+        "arrow-color": "#000000"
+      }
+    }
+  ],
+  "style": {
+    "font-family": "sans-serif",
+    "background-color": "#ffffff",
+    "background-image": "",
+    "background-size": "100%",
+    "node-color": "#ffffff",
+    "border-width": 4,
+    "border-color": "#000000",
+    "radius": 50,
+    "node-padding": 5,
+    "node-margin": 2,
+    "outside-position": "auto",
+    "node-icon-image": "",
+    "node-background-image": "",
+    "icon-position": "inside",
+    "icon-size": 64,
+    "caption-position": "inside",
+    "caption-max-width": 200,
+    "caption-color": "#000000",
+    "caption-font-size": 50,
+    "caption-font-weight": "normal",
+    "label-position": "inside",
+    "label-display": "pill",
+    "label-color": "#000000",
+    "label-background-color": "#ffffff",
+    "label-border-color": "#000000",
+    "label-border-width": 4,
+    "label-font-size": 40,
+    "label-padding": 5,
+    "label-margin": 4,
+    "directionality": "directed",
+    "detail-position": "inline",
+    "detail-orientation": "parallel",
+    "arrow-width": 5,
+    "arrow-color": "#000000",
+    "margin-start": 5,
+    "margin-end": 5,
+    "margin-peer": 20,
+    "attachment-start": "normal",
+    "attachment-end": "normal",
+    "relationship-icon-image": "",
+    "type-color": "#000000",
+    "type-background-color": "#ffffff",
+    "type-border-color": "#000000",
+    "type-border-width": 0,
+    "type-font-size": 16,
+    "type-padding": 5,
+    "property-position": "outside",
+    "property-alignment": "colon",
+    "property-color": "#000000",
+    "property-font-size": 16,
+    "property-font-weight": "normal"
+  }
+}

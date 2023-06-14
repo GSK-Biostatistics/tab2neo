@@ -1,0 +1,14 @@
+{"nodes": [
+  {"id": "add_number_to_col",
+    "position": {},
+    "caption": "",
+    "labels": ["Method"],
+    "properties": {"type": "run_script",
+      "id": "add_number_to_col",
+      "script": "add_number_to_col",
+      "lang": "python",
+      "package": "test_df_ops",
+      "version": null,
+      "params": "{\"column\": \"NR\", \"number\": 10}"}}],
+  "relationships": [],
+  "style": {}}

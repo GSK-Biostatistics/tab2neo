@@ -1,0 +1,114 @@
+{
+   "nodes":[
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n-65",
+         "position":{
+            "x":0,
+            "y":0
+         },
+         "properties":{
+            "id":"link1",
+            "type":"link"
+         },
+         "labels":[
+            "Method"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n25839",
+         "position":{
+            "x":0,
+            "y":200
+         },
+         "properties":{
+            "relationship_type":"Analysis Race"
+         },
+         "labels":[
+            "Relationship"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n-67",
+         "position":{
+            "x":200,
+            "y":0
+         },
+         "properties":{
+            "label":"Analysis Race"
+         },
+         "labels":[
+            "Class"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+
+         },
+         "id":"n-66",
+         "position":{
+            "x":200,
+            "y":200
+         },
+         "properties":{
+            "label":"Subject"
+         },
+         "labels":[
+            "Class"
+         ]
+      }
+   ],
+   "relationships":[
+      {
+         "toId":"n25839",
+         "style":{
+
+         },
+         "id":"r-73",
+         "type":"LINK",
+         "fromId":"n-65",
+         "properties":{
+            "how":"merge"
+         }
+      },
+      {
+         "toId":"n-67",
+         "style":{
+
+         },
+         "id":"r-72",
+         "type":"TO",
+         "fromId":"n25839",
+         "properties":{
+
+         }
+      },
+      {
+         "toId":"n-66",
+         "style":{
+
+         },
+         "id":"r-71",
+         "type":"FROM",
+         "fromId":"n25839",
+         "properties":{
+
+         }
+      }
+   ],
+   "style":{
+
+   }
+}

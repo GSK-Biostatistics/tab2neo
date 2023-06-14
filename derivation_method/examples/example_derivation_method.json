@@ -1,0 +1,471 @@
+{
+  "nodes": [
+      {
+          "id": "core0",
+          "position": {
+              "x": 0,
+              "y": 0
+          },
+          "caption": "",
+          "labels": [
+              "Method"
+          ],
+          "properties": {
+              "id": "example_derivation_method"
+          },
+          "style": {
+              "border-color": "#68bc00"
+          }
+      },
+      {
+          "caption": "",
+          "style": {
+              "border-color": "#9f0500"
+          },
+          "id": "n-965",
+          "position": {
+              "x": 0,
+              "y": 300
+          },
+          "properties": {
+              "type": "get_data",
+              "id": "get_data1"
+          },
+          "labels": [
+              "Method"
+          ]
+      },
+      {
+          "caption": "",
+          "style": {
+              "border-color": "#009ce0"
+          },
+          "id": "n126",
+          "position": {
+              "x": 0,
+              "y": 600
+          },
+          "properties": {
+              "relationship_type": "TestValue"
+          },
+          "labels": [
+              "Relationship"
+          ]
+      },
+      {
+          "caption": "",
+          "style": {
+              "border-color": "#009ce0"
+          },
+          "id": "n128",
+          "position": {
+              "x": 300,
+              "y": 600
+          },
+          "properties": {
+              "relationship_type": "Age"
+          },
+          "labels": [
+              "Relationship"
+          ]
+      },
+      {
+          "caption": "",
+          "style": {
+              "border-color": "#009ce0"
+          },
+          "id": "n132",
+          "position": {
+              "x": 600,
+              "y": 600
+          },
+          "properties": {
+              "relationship_type": "Sex"
+          },
+          "labels": [
+              "Relationship"
+          ]
+      },
+      {
+          "caption": "",
+          "style": {
+              "border-color": "#009ce0"
+          },
+          "id": "n134",
+          "position": {
+              "x": 900,
+              "y": 600
+          },
+          "properties": {
+              "relationship_type": "Subject"
+          },
+          "labels": [
+              "Relationship"
+          ]
+      },
+      {
+          "caption": "",
+          "style": {
+              "border-color": "#000000"
+          },
+          "id": "n124",
+          "position": {
+              "x": 0,
+              "y": 900
+          },
+          "properties": {
+              "label": "TEST_DATA"
+          },
+          "labels": [
+              "Class"
+          ]
+      },
+      {
+          "caption": "",
+          "style": {
+              "border-color": "#000000"
+          },
+          "id": "n125",
+          "position": {
+              "x": 300,
+              "y": 900
+          },
+          "properties": {
+              "label": "TestValue"
+          },
+          "labels": [
+              "Class"
+          ]
+      },
+      {
+          "caption": "",
+          "style": {
+              "border-color": "#000000"
+          },
+          "id": "n127",
+          "position": {
+              "x": 600,
+              "y": 900
+          },
+          "properties": {
+              "label": "Age"
+          },
+          "labels": [
+              "Class"
+          ]
+      },
+      {
+          "caption": "",
+          "style": {
+              "border-color": "#000000"
+          },
+          "id": "n131",
+          "position": {
+              "x": 900,
+              "y": 900
+          },
+          "properties": {
+              "label": "Sex"
+          },
+          "labels": [
+              "Class"
+          ]
+      },
+      {
+          "caption": "",
+          "style": {
+              "border-color": "#000000"
+          },
+          "id": "n133",
+          "position": {
+              "x": 1200,
+              "y": 900
+          },
+          "properties": {
+              "label": "Subject"
+          },
+          "labels": [
+              "Class"
+          ]
+      },
+      {
+          "id": "run_script1",
+          "position": {
+              "x": 300,
+              "y": 300
+          },
+          "caption": "",
+          "labels": [
+              "Method"
+          ],
+          "properties": {
+              "type": "run_script",
+              "id": "run_script1",
+              "script": "multiply_cols",
+              "lang": "Python",
+              "package": "basic_df_ops",
+              "params": "{\"values\": [\"AGE\", \"TESTV\"], \"out_col\": \"NEWV\"}"
+          },
+          "style": {
+              "border-color": "#9f0500"
+          }
+      },
+      {
+          "caption": "",
+          "style": {
+              "border-color": "#9f0500"
+          },
+          "id": "n-976",
+          "position": {
+              "x": 600,
+              "y": 300
+          },
+          "properties": {
+              "type": "link",
+              "id": "link1"
+          },
+          "labels": [
+              "Method"
+          ]
+      },
+      {
+          "caption": "",
+          "style": {
+              "border-color": "#009ce0"
+          },
+          "id": "n9",
+          "position": {
+              "x": 1200,
+              "y": 600
+          },
+          "properties": {
+              "relationship_type": "NewValue"
+          },
+          "labels": [
+              "Relationship"
+          ]
+      },
+      {
+          "caption": "",
+          "style": {
+              "border-color": "#000000"
+          },
+          "id": "n-978",
+          "position": {
+              "x": 1500,
+              "y": 900
+          },
+          "properties": {
+              "label": "NewValue"
+          },
+          "labels": [
+              "Class"
+          ]
+      }
+  ],
+  "relationships": [
+      {
+          "id": "ma_rel_n-965",
+          "fromId": "core0",
+          "toId": "n-965",
+          "type": "METHOD_ACTION",
+          "properties": {},
+          "style": {
+              "arrow-color": "#68bc00"
+          }
+      },
+      {
+          "toId": "n126",
+          "style": {
+              "arrow-color": "#009ce0"
+          },
+          "id": "r-897",
+          "type": "SOURCE_RELATIONSHIP",
+          "fromId": "n-965",
+          "properties": {}
+      },
+      {
+          "toId": "n128",
+          "style": {
+              "arrow-color": "#009ce0"
+          },
+          "id": "r-898",
+          "type": "SOURCE_RELATIONSHIP",
+          "fromId": "n-965",
+          "properties": {}
+      },
+      {
+          "toId": "n132",
+          "style": {
+              "arrow-color": "#009ce0"
+          },
+          "id": "r-899",
+          "type": "SOURCE_RELATIONSHIP",
+          "fromId": "n-965",
+          "properties": {}
+      },
+      {
+          "toId": "n134",
+          "style": {
+              "arrow-color": "#009ce0"
+          },
+          "id": "r-900",
+          "type": "SOURCE_RELATIONSHIP",
+          "fromId": "n-965",
+          "properties": {}
+      },
+      {
+          "toId": "n124",
+          "style": {
+              "arrow-color": "#000000"
+          },
+          "id": "r156",
+          "type": "FROM",
+          "fromId": "n126",
+          "properties": {}
+      },
+      {
+          "toId": "n125",
+          "style": {
+              "arrow-color": "#000000"
+          },
+          "id": "r157",
+          "type": "TO",
+          "fromId": "n126",
+          "properties": {}
+      },
+      {
+          "toId": "n124",
+          "style": {
+              "arrow-color": "#000000"
+          },
+          "id": "r159",
+          "type": "FROM",
+          "fromId": "n128",
+          "properties": {}
+      },
+      {
+          "toId": "n127",
+          "style": {
+              "arrow-color": "#000000"
+          },
+          "id": "r160",
+          "type": "TO",
+          "fromId": "n128",
+          "properties": {}
+      },
+      {
+          "toId": "n124",
+          "style": {
+              "arrow-color": "#000000"
+          },
+          "id": "r165",
+          "type": "FROM",
+          "fromId": "n132",
+          "properties": {}
+      },
+      {
+          "toId": "n131",
+          "style": {
+              "arrow-color": "#000000"
+          },
+          "id": "r166",
+          "type": "TO",
+          "fromId": "n132",
+          "properties": {}
+      },
+      {
+          "toId": "n124",
+          "style": {
+              "arrow-color": "#000000"
+          },
+          "id": "r168",
+          "type": "FROM",
+          "fromId": "n134",
+          "properties": {}
+      },
+      {
+          "toId": "n133",
+          "style": {
+              "arrow-color": "#000000"
+          },
+          "id": "r169",
+          "type": "TO",
+          "fromId": "n134",
+          "properties": {}
+      },
+      {
+          "id": "ma_rel_run_script1",
+          "fromId": "core0",
+          "toId": "run_script1",
+          "type": "METHOD_ACTION",
+          "properties": {},
+          "style": {
+              "arrow-color": "#68bc00"
+          }
+      },
+      {
+          "id": "next_rel_run_script1",
+          "fromId": "n-965",
+          "toId": "run_script1",
+          "type": "NEXT",
+          "properties": {},
+          "style": {
+              "arrow-color": "#9f0500"
+          }
+      },
+      {
+          "id": "ma_rel_n-976",
+          "fromId": "core0",
+          "toId": "n-976",
+          "type": "METHOD_ACTION",
+          "properties": {},
+          "style": {
+              "arrow-color": "#68bc00"
+          }
+      },
+      {
+          "id": "next_rel_n-976",
+          "fromId": "run_script1",
+          "toId": "n-976",
+          "type": "NEXT",
+          "properties": {},
+          "style": {
+              "arrow-color": "#9f0500"
+          }
+      },
+      {
+          "toId": "n9",
+          "style": {
+              "arrow-color": "#000000"
+          },
+          "id": "r-912",
+          "type": "LINK",
+          "fromId": "n-976",
+          "properties": {
+              "how": "merge"
+          }
+      },
+      {
+          "toId": "n-978",
+          "style": {
+              "arrow-color": "#000000"
+          },
+          "id": "r-911",
+          "type": "TO",
+          "fromId": "n9",
+          "properties": {}
+      },
+      {
+          "toId": "n133",
+          "style": {
+              "arrow-color": "#000000"
+          },
+          "id": "r-910",
+          "type": "FROM",
+          "fromId": "n9",
+          "properties": {}
+      }
+  ],
+  "style": {}
+}

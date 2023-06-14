@@ -1,0 +1,838 @@
+{
+    "nodes": [
+        {
+            "caption": "",
+            "id": "n289",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": 0,
+                "y": 600
+            },
+            "properties": {
+                "label": "Unique Subject Identifier",
+                "relationship_type": "Subject",
+                "short_label": "USUBJID"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n290",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 0,
+                "y": 900
+            },
+            "properties": {
+                "label": "Dose",
+                "short_label": "--DOSE"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n291",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": 300,
+                "y": 600
+            },
+            "properties": {
+                "relationship_type": "Population"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n292",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 0,
+                "y": 300
+            },
+            "properties": {
+                "id": "filter",
+                "type": "filter"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n293",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": 600,
+                "y": 600
+            },
+            "properties": {
+                "label": "Name of Treatment",
+                "relationship_type": "Name of Treatment",
+                "short_label": "EXTRT"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n294",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 300,
+                "y": 900
+            },
+            "properties": {
+                "label": "Name of Treatment",
+                "short_label": "--TRT"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n295",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 300,
+                "y": 300
+            },
+            "properties": {
+                "id": "head_tail",
+                "lang": "python",
+                "package": "basic_df_ops",
+                "params": "{\"by\":[\"USUBJID\"], \"head\": false, \"n\": 1}",
+                "script": "head_tail",
+                "type": "run_script",
+                "version": "\"0.1\""
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n296",
+            "labels": [
+                "Term"
+            ],
+            "position": {
+                "x": 0,
+                "y": 1200
+            },
+            "properties": {
+                "Codelist Code": "POP",
+                "Term Code": "RAND",
+                "rdfs:label": "All Randomized Subjects Population"
+            },
+            "style": {
+                "border-color": "#666666"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n297",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 600,
+                "y": 900
+            },
+            "properties": {
+                "label": "Dose Units",
+                "short_label": "--DOSU"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n298",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": 900,
+                "y": 600
+            },
+            "properties": {
+                "relationship_type": "Actual Treatment for Period 01"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n299",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 900,
+                "y": 900
+            },
+            "properties": {
+                "label": "Actual Treatment for Period 01",
+                "short_label": "TRT01A"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n300",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 1200,
+                "y": 900
+            },
+            "properties": {
+                "label": "Subject",
+                "short_label": "USUBJID"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n301",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 1500,
+                "y": 900
+            },
+            "properties": {
+                "label": "Exposure",
+                "short_label": "EX"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n302",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 600,
+                "y": 300
+            },
+            "properties": {
+                "id": "group_by_rank_filter"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n303",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 900,
+                "y": 300
+            },
+            "properties": {
+                "id": "concatenate",
+                "lang": "python",
+                "package": "basic_df_ops",
+                "params": "{\"in_cols\":[\"EXTRT\", \"EXDOSE\",\"EXDOSU\"], \"out_col\":\"TRT01A\", \"sep\":\" \"}",
+                "script": "concatenate",
+                "type": "run_script",
+                "version": "\"0.1\""
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n304",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 1200,
+                "y": 300
+            },
+            "properties": {
+                "id": "trt01a",
+                "lang": "python",
+                "package": "study_specific_ops",
+                "params": "",
+                "script": "trt01a",
+                "type": "run_script",
+                "version": "\"0.1\""
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n305",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": 1200,
+                "y": 600
+            },
+            "properties": {
+                "label": "Dose",
+                "relationship_type": "Dose",
+                "short_label": "EXDOSE"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n306",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 1500,
+                "y": 300
+            },
+            "properties": {
+                "id": "get_data",
+                "type": "get_data"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n307",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 1800,
+                "y": 300
+            },
+            "properties": {
+                "id": "link1",
+                "type": "link"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n308",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 2100,
+                "y": 300
+            },
+            "properties": {
+                "id": "group_by",
+                "lang": "python",
+                "package": "basic_df_ops",
+                "params": "{\"by\":[\"_id_USUBJID\",\"USUBJID\",\"EXTRT\", \"EXDOSE\",\"EXDOSU\"], \"agg\":\"COUNT\"}",
+                "script": "group_by",
+                "type": "run_script",
+                "version": "\"0.1\""
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n309",
+            "labels": [
+                "Relationship"
+            ],
+            "position": {
+                "x": 1500,
+                "y": 600
+            },
+            "properties": {
+                "label": "Dose Units",
+                "relationship_type": "Dose Units",
+                "short_label": "EXDOSU"
+            },
+            "style": {
+                "border-color": "#009ce0"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n310",
+            "labels": [
+                "Class"
+            ],
+            "position": {
+                "x": 1800,
+                "y": 900
+            },
+            "properties": {
+                "derived": "true",
+                "label": "Population",
+                "short_label": "POP"
+            },
+            "style": {
+                "border-color": "#000000"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n311",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 2400,
+                "y": 300
+            },
+            "properties": {
+                "id": "derive_trt01a_001"
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        },
+        {
+            "caption": "",
+            "id": "n312",
+            "labels": [
+                "Method"
+            ],
+            "position": {
+                "x": 2700,
+                "y": 300
+            },
+            "properties": {
+                "id": "sort_df",
+                "lang": "python",
+                "package": "basic_df_ops",
+                "params": "{\"by\":[\"USUBJID\", \"COUNT\"]}",
+                "script": "sort_df",
+                "type": "run_script",
+                "version": "\"0.1\""
+            },
+            "style": {
+                "border-color": "#9f0500"
+            }
+        }
+    ],
+    "relationships": [
+        {
+            "fromId": "n289",
+            "id": "n535",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n300",
+            "type": "TO"
+        },
+        {
+            "fromId": "n289",
+            "id": "n560",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n301",
+            "type": "FROM"
+        },
+        {
+            "fromId": "n306",
+            "id": "n546",
+            "properties": {},
+            "style": {
+                "arrow-color": "#009ce0"
+            },
+            "toId": "n289",
+            "type": "SOURCE_RELATIONSHIP"
+        },
+        {
+            "fromId": "n305",
+            "id": "n544",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n290",
+            "type": "TO"
+        },
+        {
+            "fromId": "n291",
+            "id": "n565",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n300",
+            "type": "FROM"
+        },
+        {
+            "fromId": "n306",
+            "id": "n562",
+            "properties": {},
+            "style": {
+                "arrow-color": "#009ce0"
+            },
+            "toId": "n291",
+            "type": "SOURCE_RELATIONSHIP"
+        },
+        {
+            "fromId": "n291",
+            "id": "n554",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n310",
+            "type": "TO"
+        },
+        {
+            "fromId": "n292",
+            "id": "n559",
+            "properties": {},
+            "style": {
+                "arrow-color": "#666666"
+            },
+            "toId": "n296",
+            "type": "ON_VALUE"
+        },
+        {
+            "fromId": "n292",
+            "id": "n534",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            },
+            "toId": "n302",
+            "type": "NEXT"
+        },
+        {
+            "fromId": "n306",
+            "id": "n561",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            },
+            "toId": "n292",
+            "type": "NEXT"
+        },
+        {
+            "fromId": "n292",
+            "id": "n540",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n310",
+            "type": "ON"
+        },
+        {
+            "fromId": "n311",
+            "id": "n537",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            },
+            "toId": "n292",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n293",
+            "id": "n531",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n294",
+            "type": "TO"
+        },
+        {
+            "fromId": "n293",
+            "id": "n564",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n301",
+            "type": "FROM"
+        },
+        {
+            "fromId": "n306",
+            "id": "n555",
+            "properties": {},
+            "style": {
+                "arrow-color": "#009ce0"
+            },
+            "toId": "n293",
+            "type": "SOURCE_RELATIONSHIP"
+        },
+        {
+            "fromId": "n302",
+            "id": "n530",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            },
+            "toId": "n295",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n295",
+            "id": "n541",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            },
+            "toId": "n303",
+            "type": "NEXT"
+        },
+        {
+            "fromId": "n312",
+            "id": "n529",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            },
+            "toId": "n295",
+            "type": "NEXT"
+        },
+        {
+            "fromId": "n310",
+            "id": "n548",
+            "properties": {},
+            "style": {
+                "arrow-color": "#666666"
+            },
+            "toId": "n296",
+            "type": "HAS_CONTROLLED_TERM"
+        },
+        {
+            "fromId": "n309",
+            "id": "n557",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n297",
+            "type": "TO"
+        },
+        {
+            "fromId": "n298",
+            "id": "n542",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n299",
+            "type": "TO"
+        },
+        {
+            "fromId": "n298",
+            "id": "n552",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n300",
+            "type": "FROM"
+        },
+        {
+            "fromId": "n307",
+            "id": "n536",
+            "properties": {
+                "how": "merge"
+            },
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n298",
+            "type": "LINK"
+        },
+        {
+            "fromId": "n305",
+            "id": "n563",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n301",
+            "type": "FROM"
+        },
+        {
+            "fromId": "n309",
+            "id": "n539",
+            "properties": {},
+            "style": {
+                "arrow-color": "#000000"
+            },
+            "toId": "n301",
+            "type": "FROM"
+        },
+        {
+            "fromId": "n302",
+            "id": "n532",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            },
+            "toId": "n304",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n306",
+            "id": "n543",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            },
+            "toId": "n302",
+            "type": "NEXT"
+        },
+        {
+            "fromId": "n302",
+            "id": "n545",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            },
+            "toId": "n307",
+            "type": "NEXT"
+        },
+        {
+            "fromId": "n302",
+            "id": "n538",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            },
+            "toId": "n308",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n311",
+            "id": "n558",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            },
+            "toId": "n302",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n302",
+            "id": "n556",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            },
+            "toId": "n312",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n303",
+            "id": "n547",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            },
+            "toId": "n304",
+            "type": "NEXT"
+        },
+        {
+            "fromId": "n306",
+            "id": "n549",
+            "properties": {},
+            "style": {
+                "arrow-color": "#009ce0"
+            },
+            "toId": "n305",
+            "type": "SOURCE_RELATIONSHIP"
+        },
+        {
+            "fromId": "n306",
+            "id": "n550",
+            "properties": {},
+            "style": {
+                "arrow-color": "#009ce0"
+            },
+            "toId": "n309",
+            "type": "SOURCE_RELATIONSHIP"
+        },
+        {
+            "fromId": "n311",
+            "id": "n553",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            },
+            "toId": "n306",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n311",
+            "id": "n533",
+            "properties": {},
+            "style": {
+                "arrow-color": "#68bc00"
+            },
+            "toId": "n307",
+            "type": "METHOD_ACTION"
+        },
+        {
+            "fromId": "n308",
+            "id": "n551",
+            "properties": {},
+            "style": {
+                "arrow-color": "#9f0500"
+            },
+            "toId": "n312",
+            "type": "NEXT"
+        }
+    ],
+    "style": {}
+}

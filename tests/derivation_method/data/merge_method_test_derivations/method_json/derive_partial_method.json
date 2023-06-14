@@ -1,0 +1,204 @@
+{
+  "style": {
+    "font-family": "sans-serif",
+    "background-color": "#ffffff",
+    "background-image": "",
+    "background-size": "100%",
+    "node-color": "#ffffff",
+    "border-width": 4,
+    "border-color": "#000000",
+    "radius": 50,
+    "node-padding": 5,
+    "node-margin": 2,
+    "outside-position": "auto",
+    "node-icon-image": "",
+    "node-background-image": "",
+    "icon-position": "inside",
+    "icon-size": 64,
+    "caption-position": "inside",
+    "caption-max-width": 200,
+    "caption-color": "#000000",
+    "caption-font-size": 50,
+    "caption-font-weight": "normal",
+    "label-position": "inside",
+    "label-display": "pill",
+    "label-color": "#000000",
+    "label-background-color": "#ffffff",
+    "label-border-color": "#000000",
+    "label-border-width": 4,
+    "label-font-size": 40,
+    "label-padding": 5,
+    "label-margin": 4,
+    "directionality": "directed",
+    "detail-position": "inline",
+    "detail-orientation": "parallel",
+    "arrow-width": 5,
+    "arrow-color": "#000000",
+    "margin-start": 5,
+    "margin-end": 5,
+    "margin-peer": 20,
+    "attachment-start": "normal",
+    "attachment-end": "normal",
+    "relationship-icon-image": "",
+    "type-color": "#000000",
+    "type-background-color": "#ffffff",
+    "type-border-color": "#000000",
+    "type-border-width": 0,
+    "type-font-size": 16,
+    "type-padding": 5,
+    "property-position": "outside",
+    "property-alignment": "colon",
+    "property-color": "#000000",
+    "property-font-size": 16,
+    "property-font-weight": "normal"
+  },
+  "nodes": [
+    {
+      "id": "n0",
+      "position": {
+        "x": 75,
+        "y": 50
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "derive_partial_method"
+      },
+      "style": {}
+    },
+    {
+      "id": "n1",
+      "position": {
+        "x": 293.4708987322276,
+        "y": 546.0170144699122
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "get_data",
+        "type": "get_data"
+      },
+      "style": {}
+    },
+    {
+      "id": "n2",
+      "position": {
+        "x": 616.6142904983527,
+        "y": 454.1388123973526
+      },
+      "caption": "",
+      "labels": [
+        "Relationship"
+      ],
+      "properties": {
+        "relationship_type": "HAS NUMERIC RESULT"
+      },
+      "style": {}
+    },
+    {
+      "id": "n3",
+      "position": {
+        "x": 874.8978439026421,
+        "y": 603.258891482572
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Vital Signs"
+      },
+      "style": {}
+    },
+    {
+      "id": "n4",
+      "position": {
+        "x": 960.9057486916693,
+        "y": 302.2296238624839
+      },
+      "caption": "",
+      "labels": [
+        "Class"
+      ],
+      "properties": {
+        "label": "Numeric Result"
+      },
+      "style": {}
+    },
+    {
+      "id": "n5",
+      "position": {
+        "x": 365.942334052044,
+        "y": 217.97563488360566
+      },
+      "caption": "",
+      "labels": [
+        "Method"
+      ],
+      "properties": {
+        "id": "add_col",
+        "type": "run_script",
+        "lang": "python",
+        "package": "test_df_ops",
+        "params": "{\"column\": \"NEW\", \"number\": 10}",
+        "script": "add_col",
+        "version": null
+      },
+      "style": {}
+    }
+  ],
+  "relationships": [
+    {
+      "id": "n0",
+      "fromId": "n0",
+      "toId": "n1",
+      "type": "METHOD_ACTION",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n1",
+      "fromId": "n1",
+      "toId": "n2",
+      "type": "SOURCE_RELATIONSHIP",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n2",
+      "fromId": "n2",
+      "toId": "n3",
+      "type": "FROM",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n3",
+      "fromId": "n2",
+      "toId": "n4",
+      "type": "TO",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n4",
+      "fromId": "n1",
+      "toId": "n5",
+      "type": "NEXT",
+      "properties": {},
+      "style": {}
+    },
+    {
+      "id": "n5",
+      "fromId": "n0",
+      "toId": "n5",
+      "type": "METHOD_ACTION",
+      "properties": {},
+      "style": {}
+    }
+  ]
+}
