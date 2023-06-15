@@ -538,6 +538,40 @@ def test_get_all_ct(mm):
         mm.get_all_ct(['short_label'], class_prop='short_label')
 
 
+def test_create_subclass(mm):
+    mm.clean_slate()
+
+    q = """
+    MERGE (a:Class{label:"class1", short_label:"C1"})
+    MERGE (z:Class {label: "Apple"})-[:HAS_CONTROLLED_TERM]->(t1:Term {`Codelist Code`: 'term1c', `Term Code`: 'term1t', `Order`:2})
+    MERGE (b:Class{label:"class2", short_label:"C2"})
+    MERGE (c:Class{label:"class3", short_label:"C3"})
+    MERGE (d:Class{label:"class4", short_label:"C4"})
+    """
+    mm.query(q)
+
+    res1 = mm.create_subclass([['class1', 'class3'], ['class2', 'Apple'], ['class4', 'class2']])
+    assert res1 == [['class1', 'class3'],['class2', 'Apple'], ['class4', 'class2']]
+
+    res3 = mm.create_subclass([['class1', 'MISSING CLASS']])
+    assert res3 == []
+
+    #returns list of classes and subclasses - [['parent_class', 'child_class']...]
+    res4 = mm.get_subclasses()
+    assert res4 == [['class1', 'class3'],['class2', 'Apple'], ['class4', 'class2']]
+
+    #propagates terms to parent class
+    res5 = mm.propagate_terms_to_parent_class()
+
+    q2 = '''
+    MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
+    WHERE c.label = 'class4'
+    RETURN [c.label, term.`Term Code`] as res
+    '''
+    res5 = mm.query(q2)[0]['res']
+    assert res5 == ['class4', 'term1t'] 
+
+
 def test_create_relationship(mm):
     mm.clean_slate()
 
@@ -795,6 +829,27 @@ def test_propagate_rels_to_parent_class(mm):
     '''
     res = mm.query(q2)[0]['res']
     assert res == ['C', 'D', 'type1']
+
+
+def test_propagate_rels_to_child_class(mm):
+    mm.clean_slate()
+
+    q1 = '''
+    MERGE (a:Class{label:"A"})-[:SUBCLASS_OF]->(b:Class{label:"B"})-[:SUBCLASS_OF]->(c:Class{label:"C"})
+    MERGE (d:Class{label:"D"})
+    MERGE (b)<-[:FROM]-(:Relationship{relationship_type:"type1"})-[:TO]->(d)
+    '''
+    mm.query(q1)
+
+    mm.propagate_rels_to_child_class()
+
+    q2 = '''
+    MATCH path = (a)<-[:FROM]-(r:Relationship{relationship_type:"type1"})-[:TO]->(d)
+    WHERE a.label = 'A' AND d.label = 'D'
+    RETURN [a.label, d.label, r.relationship_type] as res
+    '''
+    res = mm.query(q2)[0]['res']
+    assert res == ['A', 'D', 'type1']    
 
 
 def test_remove_unmapped_classes(mm):

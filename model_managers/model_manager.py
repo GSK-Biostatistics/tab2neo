@@ -217,6 +217,34 @@ class ModelManager(NeoInterface):
 
         return class_list
 
+    def create_subclass(self, subclass_list: List[List[str]], identifier='label', match_classes=True)-> [str]:
+        """
+        An additional label is added to a class node ('variable') if some of the variables need to be grouped of the class as defined in subclass_list.
+        For example:
+            With subclass_list = [ ['parent', 'child'] ]
+            A new class label with name as "SUBCLASS_OF", as specified by the
+            identifier will be created between "parent" and "child".
+        """
+
+        q= f"""
+        UNWIND $class_list as class_
+        WITH class_[0] as class_label, class_[1] as subclass_label
+        {'MATCH' if match_classes else 'MERGE'} (c1:Class {{`{identifier}`:class_label}})
+        {'MATCH' if match_classes else 'MERGE'} (c2:Class {{`{identifier}`:subclass_label}})   
+        MERGE (c1)<-[:SUBCLASS_OF]-(c2)
+        RETURN collect([c1.`{identifier}`, c2.`{identifier}`]) as classes
+        """
+        res = self.query(q, {
+            "class_list": [sc for sc in subclass_list]
+        })
+
+        if res:
+            self.propagate_rels_to_child_class()
+            self.propagate_terms_to_parent_class()
+            return res[0]['classes']
+        else:
+            return []
+    
     def create_relationship(self, rel_list: List[List[str]], identifier='label', match_classes=True) -> [str]:
         """
         Create relationship nodes between two specified classes as defined in rel_list.
@@ -347,6 +375,17 @@ class ModelManager(NeoInterface):
         """
 
         return self.query(q)
+
+    def get_subclasses(self, where_clause=None, identifier='label') -> [{}]:
+        
+        q=f"""MERGE (c1:Class)<-[:SUBCLASS_OF]-(c2:Class)
+            {where_clause if where_clause else ""}
+            RETURN collect([c1.`{identifier}`, c2.`{identifier}`]) as classes"""
+
+        res = self.query(q)
+
+        return res[0]['classes']        
+
 
     def get_rels_where(self, where_clause=None, return_prop="label") -> [{}]:
         """
@@ -892,21 +931,55 @@ class ModelManager(NeoInterface):
         return self.query(q, {'same_as_terms': same_as_terms}, return_type='neo4j.Result')
 
     def propagate_rels_to_parent_class(self):
+            if self.verbose:
+                logger.info("Copying Relationships to 'parent' Classes where (child)-[:SUBCLASS_OF]->(parent)")
+            self.query("""
+            MATCH (c:Class)<-[r1:TO|FROM]-(r:Relationship)-[r2:TO|FROM]-(target:Class), (c)-[:SUBCLASS_OF*1..50]->(source:Class)
+            WHERE type(r1) <> type(r2)
+            WITH *,
+            "
+                WITH $source as source, $target as target
+                MERGE (source)<-[:`"+type(r1)+"`]-(:Relationship{relationship_type:$type})-[:`"+type(r2)+"`]->(target)
+                RETURN count(*)
+            " as q, 
+            {type: r.relationship_type, source: source , target: target} as params
+            CALL apoc.cypher.doIt(q, params) YIELD value
+            RETURN value, q, params         
+            """)
+
+    def propagate_rels_to_child_class(self):
         if self.verbose:
-            logger.info("Copying Relationships to 'parent' Classes where (child)-[:SUBCLASS_OF]->(parent)")
-        self.query("""
-        MATCH (c:Class)<-[r1:TO|FROM]-(r:Relationship)-[r2:TO|FROM]-(target:Class), (c)-[:SUBCLASS_OF*1..50]->(source:Class)
+            logger.info("Copying Relationships to 'child' Classes where (child)-[:SUBCLASS_OF]->(parent)")
+        
+        match_rel = '(source:Class)-[:SUBCLASS_OF*1..50]->(c)'
+
+        self.query(f"""
+        MATCH (c:Class)<-[r1:TO|FROM]-(r:Relationship)-[r2:TO|FROM]-(target:Class), {match_rel}
         WHERE type(r1) <> type(r2)
         WITH *,
         "
             WITH $source as source, $target as target
-            MERGE (source)<-[:`"+type(r1)+"`]-(:Relationship{relationship_type:$type})-[:`"+type(r2)+"`]->(target)
+            MERGE (source)<-[:`"+type(r1)+"`]-(:Relationship{{relationship_type:$type}})-[:`"+type(r2)+"`]->(target)
             RETURN count(*)
         " as q, 
-        {type: r.relationship_type, source: source , target: target} as params
+        {{type: r.relationship_type, source: source , target: target}} as params
         CALL apoc.cypher.doIt(q, params) YIELD value
         RETURN value, q, params         
+        """)  
+
+
+    def propagate_terms_to_parent_class(self):
+        if self.verbose:
+            logger.info("Copying terms to 'parent' where (child)-[:SUBCLASS_OF]->(parent)")
+        
+        match_rel = '(c)-[:SUBCLASS_OF*1..50]->(source:Class)'
+
+        self.query(f"""
+        MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term), {match_rel}
+        MERGE (source)-[:HAS_CONTROLLED_TERM]->(term) 
+        RETURN term     
         """)
+
 
     def remove_unmapped_classes(self):
         if self.verbose:
