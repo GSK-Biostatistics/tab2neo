@@ -79,7 +79,12 @@ class DerivationMethod(Method):  # common variables
         self._actions = None
         if study is None:
             res = self.interface.query(f"""
-            MATCH (study:Study) 
+            MATCH (s)
+            WHERE s:Study or s:`Study Pool`
+            WITH apoc.text.join(labels(s),'|') as lbl, collect(s) as coll
+            WITH apoc.map.fromPairs(collect([lbl, coll])) as mp
+            WITH coalesce(mp['Study Pool'], mp['Study']) as coll
+            UNWIND coll as study
             RETURN study.`{RDFSLABEL}` as STUDYID 
             ORDER BY STUDYID""")
             assert len(

@@ -1212,3 +1212,90 @@ class ModelManager(NeoInterface):
             "no_domain_label": no_domain_label
         }
         self.query(q, params)
+        
+    def export_model_to_linkml(self):
+        """
+        Read the Class/Relationship/Term model from Neo4j and returns a linkml like dict.
+        More about linkml:
+            https://linkml.io/linkml/
+            https://github.com/linkml/linkml
+        One can then easily create a yaml file from the dict with the following code:
+        import yaml
+        cld_schema_dict = mm.export_model_to_linkml()
+        yaml_serialized = yaml.dump(cld_schema_dict)
+        with open(f"cld.yaml", "w") as f:
+            f.write(yaml_serialized)        
+        """
+        
+        q = """
+        MATCH (c:Class)
+        WITH c, apoc.map.fromPairs(
+                [k in [k in ['label', 'short_label', 'derived', 'data_type', 'is_stat', 'uri'] WHERE NOT c[k] IS NULL] | [k,c[k]]]
+            ) as class_map
+        OPTIONAL MATCH (c)-[:FROM]-(r:Relationship)-[:TO]->(c2:Class)
+        WITH c, class_map, {alias: r.relationship_type, name: c.label + " " + r.relationship_type, uri: r.uri} as _attr, c2
+        ORDER BY c.label, c2.label, r.relationship_type
+        WITH c, class_map, [x in collect( 
+            apoc.map.fromPairs(
+                [k in [k in ['alias', 'name', 'uri'] WHERE NOT _attr[k] IS NULL] | [k, _attr[k]]] + [['range', c2.label]]
+            )
+        ) WHERE NOT x = {range: NULL}]
+        + CASE WHEN c.create = True THEN [] ELSE [{
+            alias: 'rdfs:label', name:c.label + ' rdfs:label', 
+            range: 
+                CASE WHEN EXISTS ((c)-[:HAS_CONTROLLED_TERM]->(:Term)) THEN c.label + ' CT' ELSE coalesce(c.data_type, 'string') END
+        }] END 
+        as attributes
+        WITH c, class_map, attributes
+        WITH collect(apoc.map.merge(class_map, {attributes: attributes})) as classes
+        OPTIONAL MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(t:Term)
+        WITH classes, c, {permissible_values: apoc.map.fromPairs(collect(
+            [t.`rdfs:label`, {description: t.`Codelist Code` + '_' + t.`Term Code`}]
+        ))} as pv
+        WITH classes, apoc.map.fromPairs(collect([c.label + ' CT', pv])) as enums        
+        WITH {classes: classes, enums: enums} as res
+        RETURN apoc.map.fromPairs([k in [k in keys(res) WHERE NOT (res[k] IS NULL or res[k] = {} or res[k] = [])] | [k, res[k]]]) as res
+        """
+        #TODO: currently linkml range for rdfs:label is set to Class.data_type, need to check that these are aligned with linkml types
+        return self.query(q)[0]['res']
+            
+    def create_model_from_linkml(self, linkml_dict: dict):
+        """
+        Create Class/Relationship/Term schema from a linkml-like dict (see export_model_to_linkml above)
+        One can read linkml schema from a yaml file with the following code:
+        
+        import yaml
+        with open("cld.yaml", "r") as stream:
+            cld_schema_dict = yaml.safe_load(stream)
+            
+        Args:
+            linkml_dict (dict): linkml-like dict
+        """
+        classes = linkml_dict.get('classes')
+        for class_ in classes:
+            attrs = class_.pop("attributes")
+            self.create_class([class_], merge_on=["label"])
+            self.create_relationship(
+                [
+                    [class_.get("label"), attr_.get("range"), attr_.get("alias")] 
+                    for attr_ in attrs
+                    if not attr_.get("alias") == "rdfs:label"
+                ]
+            )
+            
+        ct = {}
+        for class_, dct_1 in linkml_dict.get("enums").items():
+            ct[class_[:-3]] = [
+                {
+                    'rdfs:label': rdfs_label,
+                    'Codelist Code': dct_2.get("description").split("_")[0],
+                    'Term Code': dct_2.get("description").split("_")[1]
+                }
+                for rdfs_label, dct_2 in dct_1.get("permissible_values").items()
+            ]
+        self.create_ct(
+            ct,
+            merge_on=['Codelist Code', 'Term Code']
+        )
+    
+    
