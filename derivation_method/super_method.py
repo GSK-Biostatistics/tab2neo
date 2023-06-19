@@ -416,7 +416,8 @@ class ApplyStatSuperMethod(SuperMethod):
                     collect(distinct {
                         dimension: coalesce(dimension.short_label, dimension_rel.short_label), 
                         required: dim_r.required,
-                        denominator: dim_r.denominator
+                        denominator: dim_r.denominator,
+                        all_ct: dim_r.all_ct
                     }) as dimensions,
                     collect(distinct {
                         dimension: dimension.label, 
@@ -444,6 +445,22 @@ class ApplyStatSuperMethod(SuperMethod):
         if res.get('dimensions_long', False):
             for class_dct in res.get('dimensions_long'):
                 self.build_terms_for_distinct_values(class_dct)
+
+        additional_ct_classes = []
+        for dim in res.get('dimensions', []):
+            # TODO: Validation eg cant be all_ct and denominator?
+            if dim.get('all_ct') == 'true':
+                additional_ct_classes.append(dim.get('dimension'))
+
+        if additional_ct_classes:
+            q = """
+            UNWIND $ct_classes as class_short
+            MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(t:Term)
+            WHERE c.short_label = class_short
+            RETURN c.short_label as short_label, collect([id(t), t.`rdfs:label`]) as ct
+            """
+            res1 = self.interface.query(q, {'ct_classes': additional_ct_classes})
+            res["m"]["additional_ct"] = res1
 
         return res
 
@@ -550,6 +567,29 @@ class ApplyStatSuperMethod(SuperMethod):
                     "update_df": "true",
                 }, self, dont_fetch=True)
             )
+
+        additional_ct = self.meta['m'].get('additional_ct', False)
+        if additional_ct:
+            actions.append(
+                CallAPI({
+                    "id": self.meta["m"]["id"] + "_run_script_ct_cartesian_product",
+                    "type": "call_api",
+                    "node_id": self.method_node_id,
+                    "script": 'ct_cartesian_product',
+                    "lang": "python",
+                    "package": "basic_df_ops",
+                    "params": json.dumps(
+                        {
+                            "dimensions": [dim_dict.get('dimension') for dim_dict in self.meta.get("dimensions")],
+                            "dimension_ct": additional_ct
+                        },
+                    ),
+                    "github_repo": "gsk-tech/cldnb",  # TODO: update with open-source (future) repository
+                    "github_branch": "main",
+                    "repo_scripts_path": "src/utils",
+                }, self, dont_fetch=True),
+            )
+
         actions.append(
             BranchSave({
                 "id": self.meta["m"]["id"] + "_branch1",
@@ -877,17 +917,18 @@ class ApplyStatSuperMethod(SuperMethod):
                         END
                     ) YIELD node as method
                 WITH method, $dimensions as dims, $req_dims as req_dims, $denom_dims as denom_dims
+                WITH method, $dimensions as dims 
                 MATCH (x:Class) WHERE x.label IN dims
+                WITH x, method, 
+                    CASE WHEN x.label IN $req_dims THEN 'true' ELSE NULL END as is_required, 
+                    CASE WHEN x.label IN $denom_dims THEN 'true' ELSE NULL END as is_denominator,
+                    CASE WHEN x.label IN $all_ct_dims THEN 'true' ELSE NULL END as should_all_ct
                 CALL apoc.create.vNode(["Class"], apoc.map.submap(x, ['label'])) YIELD node as x_
-                CALL apoc.create.vRelationship(method, "Dimension", 
-                    CASE
-                        WHEN (x.label IN req_dims) AND (x.label IN denom_dims) THEN {required: 'true', denominator: 'true'}
-                        WHEN (x.label IN req_dims) AND NOT (x.label IN denom_dims) THEN {required: 'true'}
-                        WHEN NOT (x.label IN req_dims) AND (x.label IN denom_dims) THEN {denominator: 'true'}
-                        ELSE {}
-                        END
-                    , 
-                    x_) YIELD rel
+                CALL apoc.create.vRelationship(method, "Dimension", {
+                    denominator: is_denominator,
+                    required: is_required,
+                    `all_ct`: should_all_ct
+                }
                 WITH [[method, rel, x_]] as coll
                 UNWIND coll as item
                 WITH item[0] as x, item[1] as r, item[2] as y
@@ -925,6 +966,7 @@ class ApplyStatSuperMethod(SuperMethod):
         dimensions = []
         dimensions_required = []
         dimensions_denominator = []
+        all_ct_dims = []
 
         for dim in self.meta.get('dimensions_long'):
             if dim.get('dimension'):
@@ -933,6 +975,8 @@ class ApplyStatSuperMethod(SuperMethod):
                 dimensions_required.append(dim.get('dimension'))
             if dim.get('denominator'):
                 dimensions_denominator.append(dim.get('dimension'))
+            if dim.get('all_ct'):
+                dimensions_denominator.append(dim.get('dimension'))
 
         params = {
             'dimensions': dimensions,
@@ -940,6 +984,7 @@ class ApplyStatSuperMethod(SuperMethod):
             'result': result,
             'req_dims': dimensions_required,
             'denom_dims': dimensions_denominator,
+            'all_ct_dims': all_ct_dims,
             'percentage_dp': self.meta.get('m').get('percentage_dp') if dimensions_denominator else None,
             'method_id': self.action_id
         }
@@ -986,6 +1031,15 @@ class ApplyStatSuperMethod(SuperMethod):
 
         # go through each res and compile them (without duplicates)
         for res in [res1, res2, res3]:
+            # Cleanup null v-relationship values
+            for rel in res['relationships']:
+                clean_props = {}
+                rel_properties = rel.get('properties')
+                for key, value in rel_properties.items():
+                    if value is not None:
+                        clean_props[key] = value
+                rel['properties'] = clean_props
+
             node_indexes_to_skip = []
             for node_index, node in enumerate(res['nodes']):
                 for label in filter_node_dict.keys():
