@@ -378,7 +378,7 @@ class ModelManager(NeoInterface):
 
     def get_subclasses(self, where_clause=None, identifier='label') -> [{}]:
         
-        q=f"""MERGE (c1:Class)<-[:SUBCLASS_OF]-(c2:Class)
+        q=f"""MATCH (c1:Class)<-[:SUBCLASS_OF]-(c2:Class)
             {where_clause if where_clause else ""}
             RETURN collect([c1.`{identifier}`, c2.`{identifier}`]) as classes"""
 
