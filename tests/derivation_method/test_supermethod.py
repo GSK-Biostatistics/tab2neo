@@ -236,7 +236,8 @@ class TestMethodDecode:
         assert json.loads(decode_meta[1].get('params')) == {
             "original_col": "AGEGR",
             "new_col": "AGEGRA",
-            "term_pairs": [[">=85 Years", "age group 2"], ["65-84 Years", "age group 2"]]
+            "term_pairs": [["65-84 Years", "age group 2"], [">=85 Years", "age group 2"]],
+            "remove_unmapped_rows": True
         }
 
     # decode_link action
