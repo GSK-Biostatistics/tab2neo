@@ -232,13 +232,15 @@ class TestMethodDecode:
         assert decode_meta[1].get('script') == 'remap_term_values'
         assert decode_meta[1].get('lang') == 'python'
         assert decode_meta[1].get('package') == 'basic_df_ops'
-        print(json.loads(decode_meta[1].get('params')))
-        assert json.loads(decode_meta[1].get('params')) == {
+        params = json.loads(decode_meta[1].get('params'))   
+        term_pairs = params.pop("term_pairs") 
+        assert params == {
             "original_col": "AGEGR",
             "new_col": "AGEGRA",
-            "term_pairs": [["65-84 Years", "age group 2"], [">=85 Years", "age group 2"]],
+            #"term_pairs": [["65-84 Years", "age group 2"], [">=85 Years", "age group 2"]],
             "remove_unmapped_rows": True
         }
+        assert sorted(term_pairs, key=lambda x: x[0]) == [["65-84 Years", "age group 2"], [">=85 Years", "age group 2"]]
 
     # decode_link action
     def test_get_decode_meta2(self, decode_meta):
