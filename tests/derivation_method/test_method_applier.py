@@ -527,10 +527,8 @@ class TestApply:
                 f"The following row contained an incomplete uri: {row}"
 
     def test_run_cypher_action_with_remove_col_prefixes(self, interface):
-        # Performs a GetData action followed by a RunCypher action that unwinds data to create new nodes
-
-        # --------------------- test_run_cypher action with data ------------------------------
-        # loading test data and Class-Relationship schema
+        # Performs a GetData action followed by a RunCypher action 
+        
         interface.clean_slate()
         with open(os.path.join(filepath, 'data', 'test_data_multiple.json')) as jsonfile:
             dct = json.load(jsonfile)
