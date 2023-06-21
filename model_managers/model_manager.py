@@ -217,6 +217,34 @@ class ModelManager(NeoInterface):
 
         return class_list
 
+    def create_subclass(self, subclass_list: List[List[str]], identifier='label', match_classes=True)-> [str]:
+        """
+        An additional label is added to a class node ('variable') if some of the variables need to be grouped of the class as defined in subclass_list.
+        For example:
+            With subclass_list = [ ['parent', 'child'] ]
+            A new class label with name as "SUBCLASS_OF", as specified by the
+            identifier will be created between "parent" and "child".
+        """
+
+        q= f"""
+        UNWIND $class_list as class_
+        WITH class_[0] as class_label, class_[1] as subclass_label
+        {'MATCH' if match_classes else 'MERGE'} (c1:Class {{`{identifier}`:class_label}})
+        {'MATCH' if match_classes else 'MERGE'} (c2:Class {{`{identifier}`:subclass_label}})   
+        MERGE (c1)<-[:SUBCLASS_OF]-(c2)
+        RETURN collect([c1.`{identifier}`, c2.`{identifier}`]) as classes
+        """
+        res = self.query(q, {
+            "class_list": [sc for sc in subclass_list]
+        })
+
+        if res:
+            self.propagate_rels_to_child_class()
+            self.propagate_terms_to_parent_class()
+            return res[0]['classes']
+        else:
+            return []
+    
     def create_relationship(self, rel_list: List[List[str]], identifier='label', match_classes=True) -> [str]:
         """
         Create relationship nodes between two specified classes as defined in rel_list.
@@ -347,6 +375,17 @@ class ModelManager(NeoInterface):
         """
 
         return self.query(q)
+
+    def get_subclasses(self, where_clause=None, identifier='label') -> [{}]:
+        
+        q=f"""MATCH (c1:Class)<-[:SUBCLASS_OF]-(c2:Class)
+            {where_clause if where_clause else ""}
+            RETURN collect([c1.`{identifier}`, c2.`{identifier}`]) as classes"""
+
+        res = self.query(q)
+
+        return res[0]['classes']        
+
 
     def get_rels_where(self, where_clause=None, return_prop="label") -> [{}]:
         """
@@ -892,21 +931,55 @@ class ModelManager(NeoInterface):
         return self.query(q, {'same_as_terms': same_as_terms}, return_type='neo4j.Result')
 
     def propagate_rels_to_parent_class(self):
+            if self.verbose:
+                logger.info("Copying Relationships to 'parent' Classes where (child)-[:SUBCLASS_OF]->(parent)")
+            self.query("""
+            MATCH (c:Class)<-[r1:TO|FROM]-(r:Relationship)-[r2:TO|FROM]-(target:Class), (c)-[:SUBCLASS_OF*1..50]->(source:Class)
+            WHERE type(r1) <> type(r2)
+            WITH *,
+            "
+                WITH $source as source, $target as target
+                MERGE (source)<-[:`"+type(r1)+"`]-(:Relationship{relationship_type:$type})-[:`"+type(r2)+"`]->(target)
+                RETURN count(*)
+            " as q, 
+            {type: r.relationship_type, source: source , target: target} as params
+            CALL apoc.cypher.doIt(q, params) YIELD value
+            RETURN value, q, params         
+            """)
+
+    def propagate_rels_to_child_class(self):
         if self.verbose:
-            logger.info("Copying Relationships to 'parent' Classes where (child)-[:SUBCLASS_OF]->(parent)")
-        self.query("""
-        MATCH (c:Class)<-[r1:TO|FROM]-(r:Relationship)-[r2:TO|FROM]-(target:Class), (c)-[:SUBCLASS_OF*1..50]->(source:Class)
+            logger.info("Copying Relationships to 'child' Classes where (child)-[:SUBCLASS_OF]->(parent)")
+        
+        match_rel = '(source:Class)-[:SUBCLASS_OF*1..50]->(c)'
+
+        self.query(f"""
+        MATCH (c:Class)<-[r1:TO|FROM]-(r:Relationship)-[r2:TO|FROM]-(target:Class), {match_rel}
         WHERE type(r1) <> type(r2)
         WITH *,
         "
             WITH $source as source, $target as target
-            MERGE (source)<-[:`"+type(r1)+"`]-(:Relationship{relationship_type:$type})-[:`"+type(r2)+"`]->(target)
+            MERGE (source)<-[:`"+type(r1)+"`]-(:Relationship{{relationship_type:$type}})-[:`"+type(r2)+"`]->(target)
             RETURN count(*)
         " as q, 
-        {type: r.relationship_type, source: source , target: target} as params
+        {{type: r.relationship_type, source: source , target: target}} as params
         CALL apoc.cypher.doIt(q, params) YIELD value
         RETURN value, q, params         
+        """)  
+
+
+    def propagate_terms_to_parent_class(self):
+        if self.verbose:
+            logger.info("Copying terms to 'parent' where (child)-[:SUBCLASS_OF]->(parent)")
+        
+        match_rel = '(c)-[:SUBCLASS_OF*1..50]->(source:Class)'
+
+        self.query(f"""
+        MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term), {match_rel}
+        MERGE (source)-[:HAS_CONTROLLED_TERM]->(term) 
+        RETURN term     
         """)
+
 
     def remove_unmapped_classes(self):
         if self.verbose:
@@ -1139,3 +1212,90 @@ class ModelManager(NeoInterface):
             "no_domain_label": no_domain_label
         }
         self.query(q, params)
+        
+    def export_model_to_linkml(self):
+        """
+        Read the Class/Relationship/Term model from Neo4j and returns a linkml like dict.
+        More about linkml:
+            https://linkml.io/linkml/
+            https://github.com/linkml/linkml
+        One can then easily create a yaml file from the dict with the following code:
+        import yaml
+        cld_schema_dict = mm.export_model_to_linkml()
+        yaml_serialized = yaml.dump(cld_schema_dict)
+        with open(f"cld.yaml", "w") as f:
+            f.write(yaml_serialized)        
+        """
+        
+        q = """
+        MATCH (c:Class)
+        WITH c, apoc.map.fromPairs(
+                [k in [k in ['label', 'short_label', 'derived', 'data_type', 'is_stat', 'uri'] WHERE NOT c[k] IS NULL] | [k,c[k]]]
+            ) as class_map
+        OPTIONAL MATCH (c)-[:FROM]-(r:Relationship)-[:TO]->(c2:Class)
+        WITH c, class_map, {alias: r.relationship_type, name: c.label + " " + r.relationship_type, uri: r.uri} as _attr, c2
+        ORDER BY c.label, c2.label, r.relationship_type
+        WITH c, class_map, [x in collect( 
+            apoc.map.fromPairs(
+                [k in [k in ['alias', 'name', 'uri'] WHERE NOT _attr[k] IS NULL] | [k, _attr[k]]] + [['range', c2.label]]
+            )
+        ) WHERE NOT x = {range: NULL}]
+        + CASE WHEN c.create = True THEN [] ELSE [{
+            alias: 'rdfs:label', name:c.label + ' rdfs:label', 
+            range: 
+                CASE WHEN EXISTS ((c)-[:HAS_CONTROLLED_TERM]->(:Term)) THEN c.label + ' CT' ELSE coalesce(c.data_type, 'string') END
+        }] END 
+        as attributes
+        WITH c, class_map, attributes
+        WITH collect(apoc.map.merge(class_map, {attributes: attributes})) as classes
+        OPTIONAL MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(t:Term)
+        WITH classes, c, {permissible_values: apoc.map.fromPairs(collect(
+            [t.`rdfs:label`, {description: t.`Codelist Code` + '_' + t.`Term Code`}]
+        ))} as pv
+        WITH classes, apoc.map.fromPairs(collect([c.label + ' CT', pv])) as enums        
+        WITH {classes: classes, enums: enums} as res
+        RETURN apoc.map.fromPairs([k in [k in keys(res) WHERE NOT (res[k] IS NULL or res[k] = {} or res[k] = [])] | [k, res[k]]]) as res
+        """
+        #TODO: currently linkml range for rdfs:label is set to Class.data_type, need to check that these are aligned with linkml types
+        return self.query(q)[0]['res']
+            
+    def create_model_from_linkml(self, linkml_dict: dict):
+        """
+        Create Class/Relationship/Term schema from a linkml-like dict (see export_model_to_linkml above)
+        One can read linkml schema from a yaml file with the following code:
+        
+        import yaml
+        with open("cld.yaml", "r") as stream:
+            cld_schema_dict = yaml.safe_load(stream)
+            
+        Args:
+            linkml_dict (dict): linkml-like dict
+        """
+        classes = linkml_dict.get('classes')
+        for class_ in classes:
+            attrs = class_.pop("attributes")
+            self.create_class([class_], merge_on=["label"])
+            self.create_relationship(
+                [
+                    [class_.get("label"), attr_.get("range"), attr_.get("alias")] 
+                    for attr_ in attrs
+                    if not attr_.get("alias") == "rdfs:label"
+                ]
+            )
+            
+        ct = {}
+        for class_, dct_1 in linkml_dict.get("enums").items():
+            ct[class_[:-3]] = [
+                {
+                    'rdfs:label': rdfs_label,
+                    'Codelist Code': dct_2.get("description").split("_")[0],
+                    'Term Code': dct_2.get("description").split("_")[1]
+                }
+                for rdfs_label, dct_2 in dct_1.get("permissible_values").items()
+            ]
+        self.create_ct(
+            ct,
+            merge_on=['Codelist Code', 'Term Code']
+        )
+    
+    
