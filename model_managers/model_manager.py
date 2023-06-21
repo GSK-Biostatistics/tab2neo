@@ -1180,7 +1180,7 @@ class ModelManager(NeoInterface):
             no_domain_label: str = "Thing",
             data_column_label: str = "Source Data Column",
             columnname_property: str = "_columnname_",
-            exclude_properties: list = None,
+            exclude_properties: list = ["_filename_", "_folder_"],
     ):
         """
         Creates Class and Relationship nodes to represent a trivial schema to reshape data ingested e.g. with
@@ -1189,8 +1189,6 @@ class ModelManager(NeoInterface):
         data_labels: labels of the nodes where loaded data is stored (mm with use OR btw labels to fetch data nodes)
         domain_property: property where the name of the table/domain can be found
         """
-        if exclude_properties is None:
-            exclude_properties = ["_filename_", "_folder_"]
         q = f"""
         MATCH (data:`{data_label}`)<-[:HAS_DATA]-(dt:`{data_table_label}`)        
         WITH distinct dt, dt._domain_ as domain, keys(data) as ks
