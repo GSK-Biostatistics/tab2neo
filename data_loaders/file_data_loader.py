@@ -117,7 +117,7 @@ class FileDataLoader(neointerface.NeoInterface):
 
 
     def load_file(self, folder:str, filename:str, sheet_name=0, query=None, metadataonly = False, dataonly = False, test_run = False,
-                        load_to_neo = True, colcharsbl =r'[^A-Za-z0-9_]+'):
+                        load_to_neo = True, colcharsbl =r'[^A-Za-z0-9_]+', extended_sdc:bool = False):
         """
         Read in an external file as a Pandas data frame.
 
@@ -151,6 +151,7 @@ class FileDataLoader(neointerface.NeoInterface):
                                     EXAMPLE: r'[^A-Za-z0-9_]+' will only keep A-Z, a-z, 0-9 and the underscore
                                     TODO: Perhaps default it to None, and if not None, then apply it
                                           regardless of the file extension (currently, only applied to Excel files)
+        :param extended_sdc:    If True also creates `Source Data Colomn` nodes for _domain_, _filename_ and _folder_
 
         :return:                 A Pandas data frame.  EXAMPLE:
                                              STUDYID    SITEID    USUBJID  ...        TRTETM   BRTHDT      BRTHDTC
@@ -198,6 +199,8 @@ class FileDataLoader(neointerface.NeoInterface):
         if not dataonly:
             if 'column_names' in meta.keys() and load_to_neo:
                 self.load_file_metadata(folder, filename, meta['column_names'], domain)
+                if extended_sdc:
+                    self.load_file_metadata(folder, filename, ['_domain_', '_filename_', '_folder_'], domain)
 
         # Create the 'HAS_DATA' relationships between the 'Source Data Table' node and all the 'Source Data Row' nodes
         self.link_nodes_on_matching_property_value(label1='Source Data Table', label2='Source Data Row',
