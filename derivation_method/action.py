@@ -809,6 +809,8 @@ class RunCypher(Action):
         else:
             params = {}
 
+        remove_col_prefixes = params.get('remove_col_prefixes', 'true')
+
         if self.meta.get('include_data') == 'true':
             if df is not None:
                 if df.empty:
@@ -821,8 +823,9 @@ class RunCypher(Action):
         params['action_node_id'] = self.action_node_id
 
         if self.meta.get('update_df') == 'true':
-            new_column_name_map = {col: col.split('.')[-1] for col in res.columns}
-            res.rename(columns=new_column_name_map, inplace=True)
+            if remove_col_prefixes == 'true':
+                new_column_name_map = {col: col.split('.')[-1] for col in res.columns}
+                res.rename(columns=new_column_name_map, inplace=True)
             self.df = res
             logger.debug(f"DataFrame: \n{res.to_string(max_rows=10)}")
 

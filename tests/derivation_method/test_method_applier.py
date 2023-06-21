@@ -525,3 +525,23 @@ class TestApply:
         for index, row in df.iterrows():
             assert row['_uri_NR'] == f'_NR_by_TS:{row["TS"]}/NR:{row["NR"]}', \
                 f"The following row contained an incomplete uri: {row}"
+
+    def test_run_cypher_action_with_remove_col_prefixes(self, interface):
+        # Performs a GetData action followed by a RunCypher action that unwinds data to create new nodes
+
+        # --------------------- test_run_cypher action with data ------------------------------
+        # loading test data and Class-Relationship schema
+        interface.clean_slate()
+        with open(os.path.join(filepath, 'data', 'test_data_multiple.json')) as jsonfile:
+            dct = json.load(jsonfile)
+        interface.load_arrows_dict(dct)
+
+        with open(os.path.join(filepath, 'data', 'raw', 'derive_run_cypher_with_remove_col_prefixes.json')) as jsonfile:
+            inline = json.load(jsonfile)
+        method = derivation_method_factory(data=inline, interface=interface, study=study)
+
+        df = pd.DataFrame
+        for action in method.actions:
+            df = action.apply(df)
+        
+        assert list(df.columns)==['label', 'relationship_type', 'short_label']
