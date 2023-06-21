@@ -247,7 +247,7 @@ class FileDataLoader(neointerface.NeoInterface):
             logger.debug(f"        Query parameters: {params}")
 
 
-    def load_folder(self, folder="", only_files=None, metadataonly = False, test_run = False):
+    def load_folder(self, folder="", only_files=None, metadataonly = False, test_run = False, extended_sdc:bool = False):
         """
         Loop over all files in the folder, and load them as detailed in load_file()
 
@@ -255,6 +255,7 @@ class FileDataLoader(neointerface.NeoInterface):
         :param only_files:
         :param metadataonly:
         :param test_run:
+        :param extended_sdc
         :return:
         """
         if not only_files:
@@ -266,7 +267,7 @@ class FileDataLoader(neointerface.NeoInterface):
             if (not only_files) or filename in only_files:
                 if self.verbose:
                     logger.info(f"Loading {filename}")
-                self.load_file(folder, filename, metadataonly = metadataonly, test_run = test_run)
+                self.load_file(folder, filename, metadataonly = metadataonly, test_run = test_run, extended_sdc=extended_sdc)
 
     def delete_source_data(self):
         """
