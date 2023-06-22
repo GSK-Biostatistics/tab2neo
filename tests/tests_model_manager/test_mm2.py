@@ -557,9 +557,9 @@ def test_create_subclass(mm):
     assert res3 == []
 
     #returns list of classes and subclasses - [['parent_class', 'child_class']...]
-    res4 = mm.get_subclasses()
-    assert res4 == [['class1', 'class3'],['class2', 'Apple'], ['class4', 'class2']]
-
+    res4 = mm.get_subclasses_where()
+    assert res4 == [{'parent':'class1', 'child':'class3'},{'parent':'class2', 'child':'Apple'}, {'parent':'class4', 'child':'class2'}]
+    
     #propagates terms to parent class
     res5 = mm.propagate_terms_to_parent_class()
 

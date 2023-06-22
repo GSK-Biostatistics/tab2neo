@@ -1,6 +1,10 @@
 Change Log
 All notable changes to the tab2neo package will be documented in this file.
 
+[1.3.6.1]
+
+Fix get_subclass() to return value as required by cld_schema_api
+
 [1.3.6.0]
 
 Enabled decode derivation method to keep unmapped values without change
