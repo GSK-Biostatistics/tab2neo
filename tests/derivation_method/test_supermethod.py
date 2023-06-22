@@ -7,6 +7,8 @@ from model_appliers import ModelApplier
 from data_providers import DataProvider
 from derivation_method import derivation_method_factory
 from derivation_method.super_method import SuperMethod
+from tests.test_comparison_utilities import compare_method_json
+
 
 filepath = os.path.dirname(__file__)
 study = 'test_study'
@@ -252,6 +254,25 @@ class TestMethodDecode:
         assert decode_meta[2].get('to_short_label') == 'AGEGRA'
         assert decode_meta[2].get('to_class_property') == 'rdfs:label'
         assert decode_meta[2].get('merge')
+
+    def test_decode_retrieve_json(self):
+        interface = DataProvider(rdf=True)
+        interface.clean_slate()
+        load_schema_and_terms(interface)
+        exp_filename = 'expected_decode_json'
+        expected_file_path = os.path.join(filepath, 'data', 'expected_action_json', f'{exp_filename}.json')
+
+        with open(os.path.join(filepath, 'data', 'raw', 'derive_test_decode.json')) as jsonfile:
+            inline = json.load(jsonfile)
+        method = derivation_method_factory(data=inline, interface=interface, study=study)
+        method_json = method.actions[1].retrieve_json()
+
+        with open(expected_file_path, 'r') as exp_json_file:
+            expected_json = json.load(exp_json_file)
+
+        assert compare_method_json(method_json, expected_json), f"\n{method_json=}\n{expected_json=}"
+         
+    
 
 
 @pytest.fixture

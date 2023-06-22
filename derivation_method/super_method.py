@@ -331,7 +331,7 @@ class DecodeSuperMethod(SuperMethod):
                         "original_col": self.meta['from_class_short_label'],
                         "new_col": self.meta['to_class_short_label'],
                         "term_pairs": self.meta['term_pairs'],
-                        "remove_unmapped_rows": True if self.meta["m"]["remove_unmapped_rows"]=='true' else False
+                        "remove_unmapped_rows": True if self.meta["m"].get("remove_unmapped_rows") is None or self.meta["m"].get("remove_unmapped_rows")=='true' else False
                     }
                 ),
                 "github_repo": "gsk-tech/cldnb",  # TODO: update with open-source (future) repository 
@@ -373,7 +373,7 @@ class DecodeSuperMethod(SuperMethod):
             'from_class': self.meta.get('from_class_label'),
             'to_class': self.meta.get('to_class_label'),
             'method_id': self.action_id,
-            'remove_unmapped_rows': self.meta['m'].get('remove_unmapped_rows')
+            'remove_unmapped_rows': self.meta['m'].get('remove_unmapped_rows') if self.meta['m'].get('remove_unmapped_rows') is not None else 'true'
         }
 
         res1 = get_arrows_json_cypher(
