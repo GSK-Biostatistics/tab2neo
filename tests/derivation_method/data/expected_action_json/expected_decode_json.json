@@ -1,0 +1,86 @@
+{
+   "nodes":[
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n-113",
+         "position":{
+            "x":0,
+            "y":0
+         },
+         "properties":{
+            "remove_unmapped_rows":"true",
+            "id":"decode1",
+            "type":"decode"
+         },
+         "labels":[
+            "Method"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n-115",
+         "position":{
+            "x":0,
+            "y":200
+         },
+         "properties":{
+            "label":"Age Group A"
+         },
+         "labels":[
+            "Class"
+         ]
+      },
+      {
+         "caption":"",
+         "style":{
+            
+         },
+         "id":"n-114",
+         "position":{
+            "x":200,
+            "y":0
+         },
+         "properties":{
+            "label":"Age Group"
+         },
+         "labels":[
+            "Class"
+         ]
+      }
+   ],
+   "relationships":[
+      {
+         "toId":"n-115",
+         "style":{
+            
+         },
+         "id":"r-73",
+         "type":"TO_CLASS",
+         "fromId":"n-113",
+         "properties":{
+            
+         }
+      },
+      {
+         "toId":"n-114",
+         "style":{
+            
+         },
+         "id":"r-72",
+         "type":"FROM_CLASS",
+         "fromId":"n-113",
+         "properties":{
+            
+         }
+      }
+   ],
+   "style":{
+      
+   }
+}
