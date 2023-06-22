@@ -27,7 +27,7 @@ for line in requirements:
 
 setuptools.setup(
     name="tab2neo",                         # This is the name of the package
-    version="1.3.5.0",                      # Release.Major Feature.Minor Feature.Bug Fix
+    version="1.3.6.0",                      # Release.Major Feature.Minor Feature.Bug Fix
     author="Alexey Kuznetsov",              # Full name of the author
     description="Clinical Linked Data: High-level Python classes to load, model and reshape tabular data imported into Neo4j database",
     long_description="https://github.com/GSK-Biostatistics/tab2neo/blob/main/README.md",      # Long description read from the the readme file

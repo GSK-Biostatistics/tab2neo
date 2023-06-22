@@ -153,7 +153,8 @@
       ],
       "properties": {
         "type": "decode",
-        "id": "decode1"
+        "id": "decode1",
+        "remove_unmapped_rows": "true"
       },
       "style": {
         "border-color": "#9f0500"
