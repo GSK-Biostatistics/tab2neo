@@ -376,15 +376,15 @@ class ModelManager(NeoInterface):
 
         return self.query(q)
 
-    def get_subclasses(self, where_clause=None, identifier='label') -> [{}]:
+    def get_subclasses_where(self, where_clause=None, identifier='label') -> [{}]:
         
         q=f"""MATCH (c1:Class)<-[:SUBCLASS_OF]-(c2:Class)
             {where_clause if where_clause else ""}
-            RETURN collect([c1.`{identifier}`, c2.`{identifier}`]) as classes"""
+            RETURN {{parent: c1.`{identifier}`, child: c2.`{identifier}`}} as classes"""
 
         res = self.query(q)
 
-        return res[0]['classes']        
+        return [x['classes'] for x in res]       
 
 
     def get_rels_where(self, where_clause=None, return_prop="label") -> [{}]:
