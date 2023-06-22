@@ -1,6 +1,10 @@
 Change Log
 All notable changes to the tab2neo package will be documented in this file.
 
+[1.3.5.0]
+
+Include filename in meta in data loaders
+
 [1.3.4.0]
 
 Added functionality in RunCypher action to force rename columns in dataframe if parameter "remove_col_prefixes" is set to true

@@ -151,7 +151,7 @@ class FileDataLoader(neointerface.NeoInterface):
                                     EXAMPLE: r'[^A-Za-z0-9_]+' will only keep A-Z, a-z, 0-9 and the underscore
                                     TODO: Perhaps default it to None, and if not None, then apply it
                                           regardless of the file extension (currently, only applied to Excel files)
-        :param extended_sdc:    If True also creates `Source Data Colomn` nodes for _domain_, _filename_ and _folder_
+        :param extended_sdc:    If True also creates `Source Data Column` nodes for _domain_, _filename_ and _folder_
 
         :return:                 A Pandas data frame.  EXAMPLE:
                                              STUDYID    SITEID    USUBJID  ...        TRTETM   BRTHDT      BRTHDTC
