@@ -809,6 +809,8 @@ class RunCypher(Action):
         else:
             params = {}
 
+        remove_col_prefixes = params.get('remove_col_prefixes', 'true')
+
         if self.meta.get('include_data') == 'true':
             if df is not None:
                 if df.empty:
@@ -821,8 +823,9 @@ class RunCypher(Action):
         params['action_node_id'] = self.action_node_id
 
         if self.meta.get('update_df') == 'true':
-            new_column_name_map = {col: col.split('.')[-1] for col in res.columns}
-            res.rename(columns=new_column_name_map, inplace=True)
+            if remove_col_prefixes == 'true':
+                new_column_name_map = {col: col.split('.')[-1] for col in res.columns}
+                res.rename(columns=new_column_name_map, inplace=True)
             self.df = res
             logger.debug(f"DataFrame: \n{res.to_string(max_rows=10)}")
 
@@ -1511,7 +1514,7 @@ class Link(AppliesChanges):
             if it is not None:    
                 if "_uri_"+self.meta.get(f'{it}_short_label') in list(self.df.columns):
                     uri_col = "_uri_"+self.meta.get(f'{it}_short_label')     
-                    if self.df[uri_col].squeeze().is_unique is False:
+                    if len(self.df[uri_col])>1 and self.df[uri_col].squeeze().is_unique is False:
                         logger.warning(f"More than 1 identical uri exists in column {uri_col}")     
 
         if "from_class" not in self.meta.keys():
@@ -2021,6 +2024,7 @@ class BuildUri(Action):
         RETURN 
            action{.*} as m,
            action.prefix as prefix,
+           action.store_on_existing_nodes as store_on_existing_nodes,
            [x in uri_fors | x.short_label] as uri_fors,
            [x in uri_fors | x.label] as uri_fors_long,
            [x in uri_bys | x.short_label] as uri_bys,
@@ -2052,6 +2056,20 @@ class BuildUri(Action):
                     key + ":" + str(item) for key, item in row.items()]), axis=1)
             if self.meta.get("uri_labels"):
                 self.df["_uri_" + f] = self.df["_uri_" + f].map(lambda x: x + "_label_" + "/".join(self.meta.get("uri_labels")))
+
+            if self.meta.get("store_on_existing_nodes") == "true":
+                uri_property_name = "_uri_" + f
+                id_property_name = "_id_" + f
+                df = self.df[[uri_property_name, id_property_name]]
+                
+                q = f"""
+                UNWIND $data as row
+                MATCH (node)
+                WHERE id(node) = row['{id_property_name}']
+                SET node.uri = row['{uri_property_name}']
+                """    
+                params = {"data": df.to_dict(orient='records')}
+                self.method.interface.query(q, params)
         return self.df
 
     def retrieve_json(self):
