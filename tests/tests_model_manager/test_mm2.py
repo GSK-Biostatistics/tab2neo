@@ -263,6 +263,102 @@ def test_delete_relationship(mm):
     assert res == expected_res
 
 
+def test_delete_subclasses(mm):
+    mm.clean_slate()
+
+    q = """
+    MERGE (a:Class{label:"class1", short_label:"C1"})
+    MERGE (z:Class {label: "Apple", short_label:"A"})-[:HAS_CONTROLLED_TERM]->(t1:Term {`Codelist Code`: 'term1c', `Term Code`: 'term1t', `Order`:2})
+    MERGE (b:Class{label:"class2", short_label:"C2"})
+    MERGE (c:Class{label:"class3", short_label:"C3"})
+    MERGE (d:Class{label:"class4", short_label:"C4"})
+    MERGE (e:Class{label:"class5", short_label:"C5"})
+    MERGE (b)-[:HAS_CONTROLLED_TERM]->(t2:Term {`Codelist Code`: 'term2c', `Term Code`: 'term2t', `Order`:2})
+    MERGE (d)<-[:FROM]-(:Relationship{relationship_type:"typeE"})-[:TO]->(e)
+    """
+    mm.query(q)
+
+    res1 = mm.create_subclass([['class1', 'class3'], ['class2', 'Apple'], ['class4', 'class2']])
+    assert res1 == [['class1', 'class3'],['class2', 'Apple'], ['class4', 'class2']]
+
+    # test if SUBCLASS_OF rels are deleted as per the list
+    mm.delete_subclasses([['class4','class2'],['class2','Apple']])
+
+    q2 = '''
+    MATCH (c1:Class)<-[:SUBCLASS_OF]-(c2:Class)
+    RETURN [c1.label, c2.label] as subclasses
+    '''
+    res = mm.query(q2)[0]['subclasses']
+    assert res == ['class1', 'class3']
+
+
+def test_delete_propagated_terms_from_parent(mm):
+    mm.clean_slate()
+
+    # Deleting propgated terms of 'parent' classes where (child)-[:SUBCLASS_OF]->(parent) and the  subclass rel no longer exists
+    q = """
+    MERGE (a:Class{label:"class1", short_label:"C1"})
+    MERGE (z:Class {label: "Apple", short_label:"A"})-[:HAS_CONTROLLED_TERM]->(t1:Term {`Codelist Code`: 'term1c', `Term Code`: 'term1t', `Order`:2})
+    MERGE (b:Class{label:"class2", short_label:"C2"})
+    MERGE (c:Class{label:"class3", short_label:"C3"})
+    MERGE (d:Class{label:"class4", short_label:"C4"})
+    MERGE (e:Class{label:"class5", short_label:"C5"})
+    MERGE (b)-[:HAS_CONTROLLED_TERM]->(t2:Term {`Codelist Code`: 'term2c', `Term Code`: 'term2t', `Order`:2})
+    MERGE (d)<-[:FROM]-(:Relationship{relationship_type:"typeE"})-[:TO]->(e)
+    """
+    mm.query(q)
+
+    res1 = mm.create_subclass([['class1', 'class3'], ['class2', 'Apple'], ['class4', 'class2']])
+    assert res1 == [['class1', 'class3'],['class2', 'Apple'], ['class4', 'class2']]  
+
+    q2 = """
+    MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
+    WHERE term.`Term Code`='term1t'
+    RETURN collect([c.label]) as res
+    """
+
+    res2 = mm.query(q2)[0]['res']
+    assert res2 == [['class4'], ['class2'], ['Apple']]
+
+    mm.delete_terms_of_parent_class([['class2','Apple']]) 
+
+    res3 = mm.query(q2)[0]['res']
+    assert res3 == [['Apple']]
+
+
+def test_delete_propagated_rels_from_child(mm):
+    mm.clean_slate()
+
+    #Deleting propagated relationships from 'child' classes where (child)-[:SUBCLASS_OF]->(parent) and the subclass rel no longer exists
+    q = """
+    MERGE (a:Class{label:"class1", short_label:"C1"})
+    MERGE (z:Class {label: "Apple", short_label:"A"})-[:HAS_CONTROLLED_TERM]->(t1:Term {`Codelist Code`: 'term1c', `Term Code`: 'term1t', `Order`:2})
+    MERGE (b:Class{label:"class2", short_label:"C2"})
+    MERGE (c:Class{label:"class3", short_label:"C3"})
+    MERGE (d:Class{label:"class4", short_label:"C4"})
+    MERGE (e:Class{label:"class5", short_label:"C5"})
+    MERGE (b)-[:HAS_CONTROLLED_TERM]->(t2:Term {`Codelist Code`: 'term2c', `Term Code`: 'term2t', `Order`:2})
+    MERGE (d)<-[:FROM]-(:Relationship{relationship_type:"typeE"})-[:TO]->(e)
+    """
+    mm.query(q)
+
+    res1 = mm.create_subclass([['class1', 'class3'], ['class2', 'Apple'], ['class4', 'class2']])
+    assert res1 == [['class1', 'class3'],['class2', 'Apple'], ['class4', 'class2']]  
+
+    q2 = """
+    MATCH (c1:Class)<-[:FROM]-(:Relationship{relationship_type:"typeE"})-[:TO]->(c2:Class)
+    RETURN collect([c1.label, c2.label]) as res
+    """
+
+    res2 = mm.query(q2)[0]['res']
+    assert res2 == [['class4', 'class5'], ['class2', 'class5'], ['Apple', 'class5']]
+
+    mm.delete_rels_of_child_class([['class4','class2']]) 
+
+    res3 = mm.query(q2)[0]['res']
+    assert res3 == [['class4', 'class5']]    
+
+
 def test_create_ct(mm):
     # Prepare test
     mm.clean_slate()
@@ -547,6 +643,7 @@ def test_create_subclass(mm):
     MERGE (b:Class{label:"class2", short_label:"C2"})
     MERGE (c:Class{label:"class3", short_label:"C3"})
     MERGE (d:Class{label:"class4", short_label:"C4"})
+    MERGE (b)-[:HAS_CONTROLLED_TERM]->(t2:Term {`Codelist Code`: 'term2c', `Term Code`: 'term2t', `Order`:2})
     """
     mm.query(q)
 
@@ -561,15 +658,15 @@ def test_create_subclass(mm):
     assert res4 == [{'parent':'class1', 'child':'class3'},{'parent':'class2', 'child':'Apple'}, {'parent':'class4', 'child':'class2'}]
     
     #propagates terms to parent class
-    res5 = mm.propagate_terms_to_parent_class()
+    mm.propagate_terms_to_parent_class()
 
     q2 = '''
     MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
     WHERE c.label = 'class4'
-    RETURN [c.label, term.`Term Code`] as res
+    RETURN collect([c.label, term.`Term Code`]) as res
     '''
     res5 = mm.query(q2)[0]['res']
-    assert res5 == ['class4', 'term1t'] 
+    assert res5 == [['class4', 'term2t'], ['class4', 'term1t']]
 
 
 def test_create_relationship(mm):
@@ -835,9 +932,11 @@ def test_propagate_rels_to_child_class(mm):
     mm.clean_slate()
 
     q1 = '''
-    MERGE (a:Class{label:"A"})-[:SUBCLASS_OF]->(b:Class{label:"B"})-[:SUBCLASS_OF]->(c:Class{label:"C"})
-    MERGE (d:Class{label:"D"})
-    MERGE (b)<-[:FROM]-(:Relationship{relationship_type:"type1"})-[:TO]->(d)
+    MERGE (a:Class{label:"A", short_label:"A"})-[:SUBCLASS_OF]->(b:Class{label:"B", short_label:"B"})-[:SUBCLASS_OF]->(c:Class{label:"C", short_label:"C"})
+    MERGE (d:Class{label:"D", short_label:"D"})
+    MERGE (e:Class{label:"E", short_label:"E"})
+    MERGE (c)<-[:FROM]-(:Relationship{relationship_type:"type1"})-[:TO]->(d)
+    MERGE (c)<-[:FROM]-(:Relationship{relationship_type:"typeE"})-[:TO]->(e)
     '''
     mm.query(q1)
 

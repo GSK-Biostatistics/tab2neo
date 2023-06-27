@@ -1,6 +1,10 @@
 Change Log
 All notable changes to the tab2neo package will be documented in this file.
 
+[1.3.7.1]
+
+Added delete_subclass method to delete subclass and the propagated terms and rels
+
 [1.3.6.1]
 
 Fix get_subclass() to return value as required by cld_schema_api
