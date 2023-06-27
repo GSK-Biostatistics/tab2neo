@@ -303,6 +303,63 @@ class ModelManager(NeoInterface):
         else:
             return []
 
+    def delete_terms_of_parent_class(self, subclass_list: [[str, str]], identifier='label'):
+        if self.verbose:
+            logger.info("Deleting propgated terms of 'parent' classes where (child)-[:SUBCLASS_OF]->(parent) and the  subclass rel no longer exists")
+
+        match_rel = f'(:Class{{`{identifier}`:child}})-[:SUBCLASS_OF*1..50]->(source:Class)'
+
+        q=f"""
+        UNWIND $subclass_rel as subclass_rel
+        WITH subclass_rel[0] as parent, subclass_rel[1] as child
+        MATCH (:Class{{`{identifier}`:child}})-[:HAS_CONTROLLED_TERM]->(term:Term), {match_rel}, (source)-[has_term:HAS_CONTROLLED_TERM]->(term)
+        DETACH DELETE has_term 
+        """
+
+        params = {"subclass_rel": subclass_list}  
+        return self.query(q, params, return_type='neo4j.Result')
+
+    def delete_rels_of_child_class(self, subclass_list: [[str, str]], identifier='label'):
+        if self.verbose:
+            logger.info("Deleting propagated relationships from 'child' classes where (child)-[:SUBCLASS_OF]->(parent) and the subclass rel no longer exists")
+        
+        match_rel = '(source:Class)-[:SUBCLASS_OF*1..50]->(c)'
+
+        q = f"""
+        UNWIND $subclass_rel as subclass_rel
+        WITH subclass_rel[0] as parent, subclass_rel[1] as child
+        MATCH (c:Class{{`{identifier}`:parent}})<-[r1:TO|FROM]-(r:Relationship)-[r2:TO|FROM]-(target:Class), {match_rel}, (source)<-[:FROM]-(del_rel:Relationship{{`relationship_type`:r.relationship_type}})-[:TO]->(target)
+        DETACH DELETE del_rel
+        """
+
+        params = {"subclass_rel": subclass_list}  
+        return self.query(q, params, return_type='neo4j.Result')
+
+    def delete_subclasses(self, subclass_list: [[str, str]], identifier='label'):
+        """
+        Deletes the propagated terms and relationship and subclass relationships between specified classes.
+        :param rel_list: List of parent ad child classes to be deleted in the following format:
+                         [parent_class, child_class]
+                         For example: With identifier = 'label' and
+                         subclass_list = [['class1', 'class2'], ...]
+                         'SUBCLASS_OF'relationships between classes with labels = 'class1' and 'class2'
+                         would be deleted.
+        :param identifier: String class property to be used when identifying classes.
+        :return:
+        """
+
+        self.delete_terms_of_parent_class(subclass_list, identifier)
+        self.delete_rels_of_child_class(subclass_list, identifier)
+
+        q = f"""
+        UNWIND $subclass as subclass
+        WITH subclass[0] as parent, subclass[1] as child
+        MATCH (:Class{{`{identifier}`:parent}})<-[subclass_rel:SUBCLASS_OF]-(:Class{{`{identifier}`:child}})
+        DETACH DELETE subclass_rel
+        """
+        params = {"subclass": subclass_list}
+        return self.query(q, params, return_type='neo4j.Result')
+
     def delete_relationship(self, rel_list: [[str, str, str]], identifier='label'):
         """
         Deletes specified relationships between classes.
@@ -979,7 +1036,7 @@ class ModelManager(NeoInterface):
         MERGE (source)-[:HAS_CONTROLLED_TERM]->(term) 
         RETURN term     
         """)
-
+  
 
     def remove_unmapped_classes(self):
         if self.verbose:
