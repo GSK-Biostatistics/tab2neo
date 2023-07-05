@@ -55,6 +55,12 @@ class Action:
         self._applied_changes_node_id = None
         self.applied = None
 
+        assert (os.environ.get("CLD_API_HOST"))!="" or (os.environ.get('CLD_API_HOST')) is not None, 'Enviorment var CLD_API_HOST is not defined'
+        assert (os.getenv("GIT_BASE_URL"))!="" or (os.getenv('GIT_BASE_URL')) is not None, 'Enviorment var GIT_BASE_URL is not defined'
+        assert (os.environ.get("GIT_TOKEN"))!="" or (os.environ.get('GIT_TOKEN')) is not None, 'Enviorment var GIT_TOKEN is not defined'
+        assert (os.getenv("CLD_GIT_API_HOST"))!="" or (os.getenv('CLD_GIT_API_HOST')) is not None, 'Enviorment var CLD_GIT_API_HOST is not defined'
+        assert (os.environ.get("CLDGITAPI_ENCRYPTION_KEY"))!="" or (os.environ.get('CLDGITAPI_ENCRYPTION_KEY')) is not None, 'Enviorment var CLDGITAPI_ENCRYPTION_KEY is not defined'
+
     def __getitem__(self, item):
         return self.dct[item]
 
