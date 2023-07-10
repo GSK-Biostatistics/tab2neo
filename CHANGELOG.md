@@ -1,6 +1,10 @@
 Change Log
 All notable changes to the tab2neo package will be documented in this file.
 
+[1.3.8.0]
+
+Added a method in Model Manager to delete the derived schema from graph database. 
+
 [1.3.7.1]
 
 Added delete_subclass method to delete subclass and the propagated terms and rels
