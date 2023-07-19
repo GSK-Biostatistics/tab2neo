@@ -99,17 +99,6 @@ class TestDelete:
         assert result[0]['methodID'] == expected
 
 
-
-        
-
-        
-
-
-
-
-
-
-
 class TestRollback:
 
     def test_link_rollback(self, interface):
