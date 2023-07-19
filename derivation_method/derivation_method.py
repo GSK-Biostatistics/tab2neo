@@ -156,6 +156,31 @@ class DerivationMethod(Method):  # common variables
         else:
             return True
 
+    def delete_method(self, method_id='*'):
+        assert isinstance(method_id, str), \
+            f"method_id should be str or None, received {type(method_id)}. Provide id or '*' to delete all methods"
+        params = {'method_id': method_id}
+        wh = ("" if method_id == '*' else "WHERE m.id = $method_id")
+        actions = [
+            f"""
+            MATCH (m:Method)
+            {wh}
+            OPTIONAL MATCH path = (m)-[r:METHOD_ACTION|NEXT*1..10]->(x:`Method`)
+            OPTIONAL MATCH path2 = (x)-[r2]->(y)
+            //OPTIONAL MATCH (m)-[r*1..10]->(x:`Method`)-[r2]->(y)     
+            DETACH DELETE r2, x
+            """,
+            f"""
+            MATCH (m:Method)
+            {wh}
+            OPTIONAL MATCH (m)-[r]-()
+            DELETE r
+            DELETE m
+            """
+        ]
+        for q in actions:
+            self.query(q, params)
+
     def post_load_enrichment(self):
         new_method_node_ids = self.get_new_method_node_ids()  # result like [{'id(m)': 211325}]
         for qres in new_method_node_ids:
