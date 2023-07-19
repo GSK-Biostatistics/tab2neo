@@ -1,6 +1,10 @@
 Change Log
 All notable changes to the tab2neo package will be documented in this file.
 
+[1.3.10.1]
+
+Migrated delete_method() from cldbe MethoApplier to tab2neo DerivationMethod
+
 [1.3.9.0]
 
 Added support of parquet file format in data_loaders/file_data_loader.py

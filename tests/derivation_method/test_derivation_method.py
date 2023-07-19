@@ -65,6 +65,39 @@ class TestDelete:
         """)
         assert not result
 
+    def test_delete_method(self, interface):
+        interface.clean_slate()
+
+        with open(os.path.join(filepath, 'data', 'test_data_single.json')) as jsonfile:
+            dct = json.load(jsonfile)
+        interface.load_arrows_dict(dct)
+
+        with open(os.path.join(filepath, 'data', 'raw', 'derive_test_assign.json')) as jsonfile:
+            inline = json.load(jsonfile)
+        method = derivation_method_factory(data=inline, interface=interface, study=study)
+        df = pd.DataFrame
+        for action in method.actions:
+            df = action.apply(df)
+        
+        result = interface.query("""
+        MATCH (m:Method)
+        RETURN COLLECT (m.id) AS methodID
+        """)
+
+        expected = ['get_data', 'assign_class', 'derive_test_assign']
+
+        assert result[0]['methodID'] == expected
+
+        DerivationMethod.delete_method(interface, method_id='assign_class')
+        result = interface.query("""
+        MATCH (m:Method)
+        RETURN COLLECT (m.id) AS methodID
+        """)
+
+        expected = ['get_data', 'derive_test_assign']
+
+        assert result[0]['methodID'] == expected
+
 
 class TestRollback:
 
