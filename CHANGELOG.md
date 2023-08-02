@@ -1,6 +1,10 @@
 Change Log
 All notable changes to the tab2neo package will be documented in this file.
 
+[1.3.11.0]
+
+Added indexes in data_load
+
 [1.3.10.1]
 
 Migrated delete_method() from cldbe MethoApplier to tab2neo DerivationMethod

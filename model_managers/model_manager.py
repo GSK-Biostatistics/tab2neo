@@ -1246,6 +1246,13 @@ class ModelManager(NeoInterface):
         data_labels: labels of the nodes where loaded data is stored (mm with use OR btw labels to fetch data nodes)
         domain_property: property where the name of the table/domain can be found
         """
+
+        self.create_index("Class","label")
+        self.create_index("Class","short_label")
+        self.create_index("Relationship","relationship_type")
+        self.create_index("Term","Codelist Code")
+        self.create_index("Term","Term Code")
+
         q = f"""
         MATCH (data:`{data_label}`)<-[:HAS_DATA]-(dt:`{data_table_label}`)        
         WITH distinct dt, dt._domain_ as domain, keys(data) as ks
