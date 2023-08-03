@@ -1246,6 +1246,13 @@ class ModelManager(NeoInterface):
         data_labels: labels of the nodes where loaded data is stored (mm with use OR btw labels to fetch data nodes)
         domain_property: property where the name of the table/domain can be found
         """
+
+        self.create_index("Class","label")
+        self.create_index("Class","short_label")
+        self.create_index("Relationship","relationship_type")
+        self.create_index("Term","Codelist Code")
+        self.create_index("Term","Term Code")
+
         q = f"""
         MATCH (data:`{data_label}`)<-[:HAS_DATA]-(dt:`{data_table_label}`)        
         WITH distinct dt, dt._domain_ as domain, keys(data) as ks
@@ -1352,5 +1359,35 @@ class ModelManager(NeoInterface):
             ct,
             merge_on=['Codelist Code', 'Term Code']
         )
-    
+
+    def delete_from_graph(self):
+        actions = [
+            f"""
+            MATCH (m:Method)
+            OPTIONAL MATCH path = (m)-[r:METHOD_ACTION|NEXT*1..10]->(x:`Method`)
+            OPTIONAL MATCH path2 = (x)-[r2]->(y)
+            DETACH DELETE r2, x
+            """,
+            f"""
+            MATCH (m:Method)
+            OPTIONAL MATCH (m)-[r]-()
+            DELETE r
+            DELETE m
+            """,
+            f"""
+            MATCH (class:Class)
+            WHERE class.derived IS NOT NULL
+            OPTIONAL MATCH (class)-[r:HAS_CONTROLLED_TERM]-(term:Term)
+            OPTIONAL MATCH (class)-[r1:TO|FROM]-(rel:Relationship)-[r2:TO|FROM]-(class2:Class)
+            DELETE r, r1
+            DETACH DELETE term, class, rel
+            """,
+            f"""
+            MATCH (term1:Term)-[r:SAME_AS]->(term2:Term)
+            DELETE r
+            """
+        ]
+        for q in actions:
+            self.query(q)
+
     

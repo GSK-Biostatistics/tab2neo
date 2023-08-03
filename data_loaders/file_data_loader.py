@@ -97,6 +97,11 @@ class FileDataLoader(neointerface.NeoInterface):
             meta = {'column_names': list(df.columns)}
             if metadataonly:
                 df = pd.DataFrame(columns = df.columns)
+        elif ext in ["parquet"]:
+            df = pd.read_parquet(os.path.join(folder, filename))
+            meta = {'column_names': list(df.columns)}
+            if metadataonly:
+                df = pd.DataFrame(columns = df.columns)
         else:
             raise Exception(f"Unsupported file format - unrecognized filename extension: {ext}")
 

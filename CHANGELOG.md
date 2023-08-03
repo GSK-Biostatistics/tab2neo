@@ -1,6 +1,26 @@
 Change Log
 All notable changes to the tab2neo package will be documented in this file.
 
+[1.3.11.1]
+
+Bugfix:Changed the method name in json for test cases to run
+
+[1.3.11.0]
+
+Added indexes in data_load
+
+[1.3.10.1]
+
+Migrated delete_method() from cldbe MethoApplier to tab2neo DerivationMethod
+
+[1.3.9.0]
+
+Added support of parquet file format in data_loaders/file_data_loader.py
+
+[1.3.8.0]
+
+Added a method in Model Manager to delete the derived schema from graph database. 
+
 [1.3.7.1]
 
 Added delete_subclass method to delete subclass and the propagated terms and rels

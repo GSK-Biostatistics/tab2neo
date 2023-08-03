@@ -17,6 +17,18 @@ def test_generate_1match(qbr: QueryBuilder):
     assert res == "(`n1`:`Study Subject`)"
 
 
+def test_generate_1rel(qbr: QueryBuilder):
+    test_rel = {'from':'USUBJID', 'to':'AAGE', 'type':'Analysis Age', 'type_tag':'USUBJID_Analysis Age_AAGE'}
+    res = qbr.generate_1rel(rel=test_rel)
+    assert res == '(`USUBJID`)-[`USUBJID_Analysis Age_AAGE`:`Analysis Age`]->(`AAGE`)'
+
+
+def test_generate_all_rel_match(qbr: QueryBuilder):
+    rels = [{'from':'USUBJID', 'to':'AAGE', 'type':'Analysis Age', 'type_tag':'USUBJID_Analysis Age_AAGE', 'optional':'true'}, {'from':'SEX', 'to':'ASEX', 'type':'SAME_AS', 'type_tag':'Relationship_type'}]
+    res = qbr.generate_all_rel_match(match='', labels=['Analysis Age'], rels=rels)
+    assert res == ',\n(`SEX`)-[`Relationship_type`:`SAME_AS`]->(`ASEX`)\nOPTIONAL MATCH (`USUBJID`)-[`USUBJID_Analysis Age_AAGE`:`Analysis Age`]->(`AAGE`)'
+   
+
 class TestGenerateQueryBody:
 
     def test_rel(self, qbr: QueryBuilder):

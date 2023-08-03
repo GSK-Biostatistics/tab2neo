@@ -1000,3 +1000,25 @@ def test_remove_auxilary_term_labels(mm):
     assert not set(res.get('map').get('Term 2')) ^ {'Term', 'ExtraLabel1', 'ExtraLabel'}
     assert not set(res.get('map').get('Term 3')) ^ {'Class', 'Term'}
     assert not set(res.get('map').get('Term 4')) ^ {'Class', 'Term', 'ExtraLabel1'}
+
+
+def test_delete_derived_schema_from_graph(mm):
+    mm.clean_slate()
+
+    q = """
+     MERGE(a:Class {short_label: 'A', label: 'Aardvark', `data_type`: 'string'})
+    MERGE(b:Class {short_label: 'B', label: 'Baboon', `data_type`: 'string'})
+    MERGE(c:Class {short_label: 'C', label: 'Cat', `data_type`: 'string', derived: 'true'})
+    MERGE(e:Class {short_label: 'E', label: 'Elephant', `data_type`: 'string', derived: 'true'})
+    MERGE(a)<-[:SUBCLASS_OF]-(b)
+    MERGE(b)<-[:SUBCLASS_OF]-(c)
+    MERGE(c)<-[:SUBCLASS_OF]-(e)
+    MERGE(d:Class {short_label: 'D', label: 'Dog', `data_type`: 'string', derived: 'true'})<-[:FROM]-(:Relationship {relationship_type: 'rel_3'})-[:TO]->(a)
+    """
+    mm.query(q)
+
+    mm.delete_from_graph()
+
+    q1 = """MATCH (n) RETURN (n)"""
+    res = mm.query(q1)
+    assert len(res)==2
