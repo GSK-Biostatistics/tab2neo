@@ -1,6 +1,10 @@
 Change Log
 All notable changes to the tab2neo package will be documented in this file.
 
+[1.3.11.1]
+
+Bugfix:Changed the method name in json for test cases to run
+
 [1.3.11.0]
 
 Added indexes in data_load
