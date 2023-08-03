@@ -11,7 +11,7 @@
         "Method"
       ],
       "properties": {
-        "id": "derive_run_cypher_with_data"
+        "id": "derive_run_cypher_with_remove_col_prefixes"
       },
       "style": {}
     },
