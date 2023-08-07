@@ -44,6 +44,10 @@ class Action:
                            'Decoded Value', 'ID', 'Scored', 'NCI Preferred Term']}
 
     def __init__(self, action_dict, method=None, interface: NeoInterface = None, dont_fetch=False):
+        
+        assert os.environ.get("CLD_API_HOST", "").strip(), 'Environment var CLD_API_HOST is not defined'
+        assert os.environ.get("GIT_TOKEN", "").strip(), 'Environment var GIT_TOKEN is not defined'
+
         self.dct = action_dict
         self.action_node_id = action_dict.get("node_id")
         self.action_id = action_dict.get("id")
@@ -55,12 +59,7 @@ class Action:
         self._applied_changes_node_id = None
         self.applied = None
 
-        assert os.environ.get("CLD_API_HOST", "").strip(), 'Environment var CLD_API_HOST is not defined'
-        assert os.environ("GIT_TOKEN", "").strip(), 'Environment var GIT_TOKEN is not defined'
-        assert os.environ.get("GIT_BASE_URL", "").strip(), 'Environment var GIT_BASE_URL is not defined'
-        assert os.environ("CLD_GIT_API_HOST", "").strip(), 'Environment var CLD_GIT_API_HOST is not defined'
-        assert os.environ.get("CLDGITAPI_ENCRYPTION_KEY", "").strip(), 'Environment var CLDGITAPI_ENCRYPTION_KEY is not defined'
-
+       
     def __getitem__(self, item):
         return self.dct[item]
 
@@ -114,6 +113,9 @@ class Action:
 
     def apply(self, df=None):
         logger.info(f"Performing {str(self)}, {self.action_id}")
+
+        
+
 
     def rollback(self, detached_nodes_dct):
         return detached_nodes_dct
