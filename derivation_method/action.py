@@ -45,7 +45,6 @@ class Action:
 
     def __init__(self, action_dict, method=None, interface: NeoInterface = None, dont_fetch=False):
         
-        assert os.environ.get("CLD_API_HOST", "").strip(), 'Environment var CLD_API_HOST is not defined'
         assert os.environ.get("GIT_TOKEN", "").strip(), 'Environment var GIT_TOKEN is not defined'
 
         self.dct = action_dict
