@@ -318,7 +318,7 @@ def test_delete_propagated_terms_from_parent(mm):
     """
 
     res2 = mm.query(q2)[0]['res']
-    assert res2 == [['class4'], ['class2'], ['Apple']]
+    assert res2 == [['Apple']]
 
     mm.delete_terms_of_parent_class([['class2','Apple']]) 
 
@@ -373,17 +373,28 @@ def test_create_ct(mm):
 
     # Create ct with existing terms
     mm.create_ct({
-        'G': [{'Codelist Code': 'term1'}, {'Codelist Code': 'term2'}],
-        'S': [{'Codelist Code': 'term3'}]
+        'G': [{'Codelist Code': 'term1'}, {'Codelist Code': 'term2', 'propagated_from': 'term1'}],
+        'S': [{'Codelist Code': 'term3', 'propagated_from': 'term1'}]
     })
 
-    res = mm.get_class_ct_map(classes=['G', 'S', 'K'], ct_props=['Codelist Code', 'Order'])
+    res = mm.get_class_ct_map(classes=['G', 'S', 'K'], ct_props=['Codelist Code', 'Order', 'propagated_from'])
 
-    assert sorted(res.get('G'), key=lambda d: d['Codelist Code']) == [{'Order': 1, 'Codelist Code': 'term1'},
-                                                              {'Order': 2, 'Codelist Code': 'term2'}]
-    assert res.get('S') == [{'Order': 1, 'Codelist Code': 'term3'}]
+    assert sorted(res.get('G'), key=lambda d: d['Codelist Code']) == [{'Order': 1, 'Codelist Code': 'term1', 'propagated_from': None},
+                                                              {'Order': 2, 'Codelist Code': 'term2', 'propagated_from': 'term1'}]
+    assert res.get('S') == [{'Order': 1, 'Codelist Code': 'term3', 'propagated_from': 'term1'}]
 
-    # Ensure class labels are inherited by ct inheritance
+    #Create ct with property propagated_from
+    mm.create_ct({
+        'K': [{'Codelist Code': 'termK', 'propagated_from': 'term1'}],
+        'Class A': [{'Codelist Code': 'termA', 'propagated_from': 'term1'}],
+    })
+
+    res = mm.get_class_ct_map(classes=['K', 'Class A'], ct_props=['Codelist Code', 'Order', 'propagated_from'])
+
+    assert sorted(res.get('K'), key=lambda d: d['Codelist Code']) == [{'Order': 1, 'Codelist Code': 'termK', 'propagated_from': 'term1'}]
+
+
+    #Ensure class labels are inherited by ct inheritance
     q = """
     MATCH (c:Class)-[:HAS_CONTROLLED_TERM]-(t:Term)
     RETURN c.label as label, labels(t) as term_labels
@@ -418,7 +429,7 @@ def test_create_ct(mm):
 
     res = mm.get_class_ct_map(classes=['K'], ct_props=['Codelist Code', 'Order'])
     assert sorted(res.get('K'), key=lambda d: d['Codelist Code']) == [{'Order': None, 'Codelist Code': 'term5'},
-                                                              {'Order': None, 'Codelist Code': 'term6'}]
+                                                              {'Order': None, 'Codelist Code': 'term6'}, {'Codelist Code': 'termK', 'Order': 1}]
 
     q = """
     MATCH (t1:Term)-[:NEXT]->(t2:Term)
@@ -436,11 +447,11 @@ def test_create_ct(mm):
 
     # Short_label identifier
     mm.create_ct({
-        'A': [{'Codelist Code': 'term7'}]
+        'A': [{'Codelist Code': 'term7', 'propagated_from': 'term1'}]
     }, 'short_label', merge_on=['Codelist Code'])
 
-    res = mm.get_class_ct_map(classes=['A'], ct_props=['Codelist Code', 'Order'], identifier='short_label')
-    assert res.get('A') == [{'Order': 1, 'Codelist Code': 'term7'}]
+    res = mm.get_class_ct_map(classes=['A'], ct_props=['Codelist Code', 'Order', 'propagated_from'], identifier='short_label')
+    assert res.get('A') == [{'Order': 1, 'Codelist Code': 'term7', 'propagated_from': 'term1'}]
 
     # With on_merge
     mm.clean_slate()
@@ -642,6 +653,7 @@ def test_create_subclass(mm):
     MERGE (z:Class {label: "Apple"})-[:HAS_CONTROLLED_TERM]->(t1:Term {`Codelist Code`: 'term1c', `Term Code`: 'term1t', `Order`:2})
     MERGE (b:Class{label:"class2", short_label:"C2"})
     MERGE (c:Class{label:"class3", short_label:"C3"})
+    MERGE (s:Class{label:"class9", short_label:"C9"})-[:HAS_CONTROLLED_TERM]->(t3:Term {`Codelist Code`: 'term3c', `Term Code`: 'term3t', `Order`:3})
     MERGE (d:Class{label:"class4", short_label:"C4"})
     MERGE (b)-[:HAS_CONTROLLED_TERM]->(t2:Term {`Codelist Code`: 'term2c', `Term Code`: 'term2t', `Order`:2})
     """
@@ -668,6 +680,25 @@ def test_create_subclass(mm):
     res5 = mm.query(q2)[0]['res']
     assert res5 == [['class4', 'term2t'], ['class4', 'term1t']]
 
+    #To check propagated_from terms property
+
+    q3 = '''
+    MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
+    WHERE c.label = 'class4'
+    RETURN collect([c.label, term.`Term Code`, term.propagated_from]) as res
+    '''
+    res6 = mm.query(q3)[0]['res']
+    assert res6 == [["class4","term2t","class2"], ['class4', 'term1t', 'Apple']]
+
+    q4 = '''
+    MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
+    WHERE c.label = 'class9'
+    RETURN collect([c.label, term.`Term Code`, term.propagated_from]) as res
+    '''
+    res7 = mm.query(q4)[0]['res']
+    assert res7 == [["class9", "term3t", None]]
+    
+
 
 def test_create_relationship(mm):
     mm.clean_slate()
@@ -691,11 +722,8 @@ def test_create_relationship(mm):
     res4 = mm.create_relationship([['class3', 'class4']]) 
     assert res4 == [['class3', 'class4', 'class4']]
 
-    res5 = mm.create_relationship([['class1', 'class3', 'rel1','true', ''],['class1', 'class2', 'rel2']])
-    assert res5 == [['class1', 'class3', 'rel1','true', ''],['class1', 'class2', 'rel2']]
-
-    res6 = mm.create_relationship([['class1', 'class3', 'rel1', 'true', 'class4']])
-    assert res6 == [['class1', 'class3', 'rel1','true', 'class4']]
+    res5 = mm.create_relationship([['class1', 'class3', 'rel1','true'],['class1', 'class2', 'rel2']])
+    assert res5 == [['class1', 'class3', 'rel1','true'],['class1', 'class2', 'rel2']]
 
 
 def test_create_related_classes_from_list(mm):
@@ -948,10 +976,10 @@ def test_propagate_rels_to_child_class(mm):
     q2 = '''
     MATCH path = (a)<-[:FROM]-(r:Relationship{relationship_type:"type1"})-[:TO]->(d)
     WHERE a.label = 'A' AND d.label = 'D'
-    RETURN [a.label, d.label, r.relationship_type] as res
+    RETURN [a.label, d.label, r.relationship_type, r.relationship_propagated_from] as res
     '''
     res = mm.query(q2)[0]['res']
-    assert res == ['A', 'D', 'type1']    
+    assert res == ['A', 'D', 'type1', 'C']    
 
 
 def test_remove_unmapped_classes(mm):

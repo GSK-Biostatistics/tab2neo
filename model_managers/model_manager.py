@@ -240,7 +240,7 @@ class ModelManager(NeoInterface):
 
         if res:
             self.propagate_rels_to_child_class()
-            self.propagate_terms_to_parent_class()
+            #self.propagate_terms_to_parent_class()
             return res[0]['classes']
         else:
             return []
@@ -280,13 +280,13 @@ class ModelManager(NeoInterface):
         SET rel_node.`FROM.Class.label` = from.label
         SET rel_node.`TO.Class.label` = to.label
         RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type]) as rels", 
-        "WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type, rel[3] as optional, rel[4] as propagated_from
+        "WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type, rel[3] as optional
         {'MATCH' if match_classes else 'MERGE'} (from:Class {{`{identifier}`:from_identity}})
         {'MATCH' if match_classes else 'MERGE'} (to:Class {{`{identifier}`:to_identity}})   
-        MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type, relationship_optional:optional, relationship_propagated_from:propagated_from}})-[:TO]->(to)
+        MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type, relationship_optional:optional}})-[:TO]->(to)
         SET rel_node.`FROM.Class.label` = from.label
         SET rel_node.`TO.Class.label` = to.label
-        RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type, rel_node.relationship_optional, rel_node.relationship_propagated_from]) as rels
+        RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type, rel_node.relationship_optional]) as rels
         ",
         {{rel:rel}})
         YIELD value
@@ -752,7 +752,7 @@ class ModelManager(NeoInterface):
         assert not missing, f'Cannot create controlled terminology for nonexistent classes: {missing}'
 
         if merge_on:
-            ident_props = f'{{`{merge_on[0]}`: term_props["{merge_on[0]}"]'
+            ident_props = f'{{`{merge_on[0]}`: term_props["{merge_on[0]}"]}}'
             for prop in merge_on[1:]:
                 ident_props += f', `{prop}`: term_props["{prop}"]'
             ident_props += '}'
@@ -763,7 +763,7 @@ class ModelManager(NeoInterface):
         MATCH (class:Class {{{identifier}: class_label}})
         WITH class, class_label
         UNWIND $terminology[class_label] as term_props
-        CALL apoc.merge.node(['Term'], {f"{ident_props}, term_props, term_props" if ident_props else 'term_props, {}, {}'}) YIELD node
+        CALL apoc.merge.node(['Term'], {f"{ident_props}, term_props, propagated_from, term_props" if ident_props else 'term_props, {}, {}'}) YIELD node
         CALL apoc.create.addLabels([node], [class.label]) YIELD node as term
         MERGE (class)-[:HAS_CONTROLLED_TERM]->(term)
         """
@@ -1016,10 +1016,10 @@ class ModelManager(NeoInterface):
         WITH *,
         "
             WITH $source as source, $target as target
-            MERGE (source)<-[:`"+type(r1)+"`]-(:Relationship{{relationship_type:$type}})-[:`"+type(r2)+"`]->(target)
+            MERGE (source)<-[:`"+type(r1)+"`]-(:Relationship{{relationship_type:$type, relationship_propagated_from:$propagated_from}})-[:`"+type(r2)+"`]->(target)
             RETURN count(*)
         " as q, 
-        {{type: r.relationship_type, source: source , target: target}} as params
+        {{type: r.relationship_type, propagated_from: c.label, source: source , target: target}} as params
         CALL apoc.cypher.doIt(q, params) YIELD value
         RETURN value, q, params         
         """)  
@@ -1034,6 +1034,7 @@ class ModelManager(NeoInterface):
         self.query(f"""
         MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term), {match_rel}
         MERGE (source)-[:HAS_CONTROLLED_TERM]->(term) 
+        SET term.propagated_from = c.label
         RETURN term     
         """)
   
@@ -1246,6 +1247,13 @@ class ModelManager(NeoInterface):
         data_labels: labels of the nodes where loaded data is stored (mm with use OR btw labels to fetch data nodes)
         domain_property: property where the name of the table/domain can be found
         """
+
+        self.create_index("Class","label")
+        self.create_index("Class","short_label")
+        self.create_index("Relationship","relationship_type")
+        self.create_index("Term","Codelist Code")
+        self.create_index("Term","Term Code")
+
         q = f"""
         MATCH (data:`{data_label}`)<-[:HAS_DATA]-(dt:`{data_table_label}`)        
         WITH distinct dt, dt._domain_ as domain, keys(data) as ks
@@ -1352,5 +1360,35 @@ class ModelManager(NeoInterface):
             ct,
             merge_on=['Codelist Code', 'Term Code']
         )
-    
+
+    def delete_from_graph(self):
+        actions = [
+            f"""
+            MATCH (m:Method)
+            OPTIONAL MATCH path = (m)-[r:METHOD_ACTION|NEXT*1..10]->(x:`Method`)
+            OPTIONAL MATCH path2 = (x)-[r2]->(y)
+            DETACH DELETE r2, x
+            """,
+            f"""
+            MATCH (m:Method)
+            OPTIONAL MATCH (m)-[r]-()
+            DELETE r
+            DELETE m
+            """,
+            f"""
+            MATCH (class:Class)
+            WHERE class.derived IS NOT NULL
+            OPTIONAL MATCH (class)-[r:HAS_CONTROLLED_TERM]-(term:Term)
+            OPTIONAL MATCH (class)-[r1:TO|FROM]-(rel:Relationship)-[r2:TO|FROM]-(class2:Class)
+            DELETE r, r1
+            DETACH DELETE term, class, rel
+            """,
+            f"""
+            MATCH (term1:Term)-[r:SAME_AS]->(term2:Term)
+            DELETE r
+            """
+        ]
+        for q in actions:
+            self.query(q)
+
     
