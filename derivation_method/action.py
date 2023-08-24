@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 from abc import abstractmethod, ABC
 
 import pandas as pd
@@ -204,57 +205,110 @@ class GetData(Action):
         self.meta = res[0]
 
         if self.filter_dict is not None:
-            q = f"""
-                MATCH (action:Method)-[onr:ON]->(class:Class)
-                WHERE id(action) = $node_id //AND class.label in $source_classes
-                OPTIONAL MATCH (action)-[:ON_VALUE]->(term:Term)<-[:HAS_CONTROLLED_TERM]-(class)
-                WITH class, term, apoc.map.fromPairs(collect(
-                    [
-                        '{RDFSLABEL}'
-                            ,
-                        CASE WHEN size(keys(onr)) = 0 THEN
-                            term.`{RDFSLABEL}`
-                        ELSE
-                            //converting str to bool if req.
-                            apoc.map.fromPairs([key in keys(onr) |
-                                [key,
-                                    CASE WHEN key in ['min', 'max'] THEN
-                                        CASE WHEN apoc.meta.type(onr[key]) = 'STRING' THEN //convertion to Float/Integer
-                                            CASE WHEN apoc.text.regexGroups(onr[key], '^(\d+\.\d+)|(\d+e\-\d+)$') THEN
-                                                toFloat(onr[key])
-                                            ELSE
-                                                CASE WHEN apoc.text.regexGroups(onr[key], '^(\d+)|(\d+e\d+)$') THEN
-                                                    toInteger(onr[key])
+            if re.search(r'^[01234]\.', self.interface.get_dbms_details()[0]['version']):
+                q = f"""
+                    MATCH (action:Method)-[onr:ON]->(class:Class)
+                    WHERE id(action) = $node_id //AND class.label in $source_classes
+                    OPTIONAL MATCH (action)-[:ON_VALUE]->(term:Term)<-[:HAS_CONTROLLED_TERM]-(class)
+                    WITH class, term, apoc.map.fromPairs(collect(
+                        [
+                            '{RDFSLABEL}'
+                                ,
+                            CASE WHEN size(keys(onr)) = 0 THEN
+                                term.`{RDFSLABEL}`
+                            ELSE
+                                //converting str to bool if req.
+                                apoc.map.fromPairs([key in keys(onr) |
+                                    [key,
+                                        CASE WHEN key in ['min', 'max'] THEN
+                                            CASE WHEN apoc.meta.type(onr[key]) = 'STRING' THEN //convertion to Float/Integer
+                                                CASE WHEN apoc.text.regexGroups(onr[key], '^(\d+\.\d+)|(\d+e\-\d+)$') THEN
+                                                    toFloat(onr[key])
                                                 ELSE
-                                                    onr[key] //keeping string
+                                                    CASE WHEN apoc.text.regexGroups(onr[key], '^(\d+)|(\d+e\d+)$') THEN
+                                                        toInteger(onr[key])
+                                                    ELSE
+                                                        onr[key] //keeping string
+                                                    END
+                                                END
+                                            ELSE
+                                                onr[key]
+                                            END
+                                        ELSE
+                                            CASE WHEN key = 'not_in' THEN
+                                                term.`rdfs:label`
+                                                //term.`Term Code`
+                                            ELSE
+                                                CASE toLower(onr[key])
+                                                    WHEN 'true' THEN True
+                                                    WHEN 'false' THEN False
+                                                ELSE onr[key]
                                                 END
                                             END
-                                        ELSE
-                                            onr[key]
-                                        END
-                                    ELSE
-                                        CASE WHEN key = 'not_in' THEN
-                                            term.`rdfs:label`
-                                            //term.`Term Code`
-                                        ELSE
-                                            CASE toLower(onr[key])
-                                                WHEN 'true' THEN True
-                                                WHEN 'false' THEN False
-                                            ELSE onr[key]
+                                        END]
+                                ])
+                            END
+                        ]
+                    )) as mp
+                    WITH class.label as label, apoc.map.values(mp, ['{RDFSLABEL}']) as value
+                    WITH label, apoc.coll.flatten(collect(value)) as values
+                    WITH label, apoc.map.fromPairs(collect(['{RDFSLABEL}',
+                        CASE WHEN size(values) = 1 THEN values[0] ELSE values END])) as rdmap
+                    WITH apoc.map.fromPairs(collect([label, rdmap])) as where_map
+                    RETURN where_map
+                    """
+            else:
+                q=f"""
+                    MATCH (action:Method)-[onr:ON]->(class:Class)
+                    WHERE id(action) = $node_id //AND class.label in $source_classes
+                    OPTIONAL MATCH (action)-[:ON_VALUE]->(term:Term)<-[:HAS_CONTROLLED_TERM]-(class)
+                    WITH class, term, apoc.map.fromPairs(collect(
+                        [
+                            '{RDFSLABEL}'
+                                ,
+                            CASE WHEN size(keys(onr)) = 0 THEN
+                                term.`{RDFSLABEL}`
+                            ELSE
+                                //converting str to bool if req.
+                                apoc.map.fromPairs([key in keys(onr) |
+                                    [key,
+                                        CASE WHEN key in ['min', 'max'] THEN
+                                            CASE WHEN apoc.meta.cypher.type(onr[key]) = 'STRING' THEN //convertion to Float/Integer
+                                                CASE WHEN apoc.text.regexGroups(onr[key], '^(\d+\.\d+)|(\d+e\-\d+)$') THEN
+                                                    toFloat(onr[key])
+                                                ELSE
+                                                    CASE WHEN apoc.text.regexGroups(onr[key], '^(\d+)|(\d+e\d+)$') THEN
+                                                        toInteger(onr[key])
+                                                    ELSE
+                                                        onr[key] //keeping string
+                                                    END
+                                                END
+                                            ELSE
+                                                onr[key]
                                             END
-                                        END
-                                    END]
-                            ])
-                        END
-                    ]
-                )) as mp
-                WITH class.label as label, apoc.map.values(mp, ['{RDFSLABEL}']) as value
-                WITH label, apoc.coll.flatten(collect(value)) as values
-                WITH label, apoc.map.fromPairs(collect(['{RDFSLABEL}',
-                    CASE WHEN size(values) = 1 THEN values[0] ELSE values END])) as rdmap
-                WITH apoc.map.fromPairs(collect([label, rdmap])) as where_map
-                RETURN where_map
-                """
+                                        ELSE
+                                            CASE WHEN key = 'not_in' THEN
+                                                term.`rdfs:label`
+                                                //term.`Term Code`
+                                            ELSE
+                                                CASE toLower(onr[key])
+                                                    WHEN 'true' THEN True
+                                                    WHEN 'false' THEN False
+                                                ELSE onr[key]
+                                                END
+                                            END
+                                        END]
+                                ])
+                            END
+                        ]
+                    )) as mp
+                    WITH class.label as label, apoc.map.values(mp, ['{RDFSLABEL}']) as value
+                    WITH label, apoc.coll.flatten(collect(value)) as values
+                    WITH label, apoc.map.fromPairs(collect(['{RDFSLABEL}',
+                        CASE WHEN size(values) = 1 THEN values[0] ELSE values END])) as rdmap
+                    WITH apoc.map.fromPairs(collect([label, rdmap])) as where_map
+                    RETURN where_map"""
+
             params = {"node_id": self.filter_dict["node_id"],
                       "source_classes": self.meta["source_classes"]}
             res2 = interface.query(q, params)

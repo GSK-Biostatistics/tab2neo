@@ -517,7 +517,7 @@ class ApplyStatSuperMethod(SuperMethod):
                 WITH coll_n, term
                 UNWIND coll_n as n
                 MERGE (n)-[:Term]->(term)
-                RETURN collect(n)
+                RETURN collect(n) as n
                 }}
         RETURN term, term_created_status
         """
@@ -930,7 +930,7 @@ class ApplyStatSuperMethod(SuperMethod):
                     denominator: is_denominator,
                     required: is_required,
                     `all_ct`: should_all_ct
-                }
+                }, x_) YIELD rel
                 WITH [[method, rel, x_]] as coll
                 UNWIND coll as item
                 WITH item[0] as x, item[1] as r, item[2] as y
