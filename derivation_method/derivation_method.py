@@ -106,18 +106,11 @@ class DerivationMethod(Method):  # common variables
     @property
     def db_id(self):
         if self._db_id is None:
-            if re.search(r'^[01234]\.', self.interface.get_dbms_details()[0]['version']):
-                q = """
-                    MATCH (m:Method{id:$method_id})
-                    WHERE NOT EXISTS (m.parent_id) or (m.parent_id) = $study_id
-                    RETURN id(m)
-                    """
-            else:
-                q = """
-                    MATCH (m:Method{id:$method_id})
-                    WHERE m.parent_id IS NULL or (m.parent_id) = $study_id
-                    RETURN id(m)
-                    """        
+            q = """
+                MATCH (m:Method{id:$method_id})
+                WHERE m.parent_id IS NULL or (m.parent_id) = $study_id
+                RETURN id(m)
+                """        
             params = {'method_id': self.name, 'study_id': self.study}
             self._db_id = self.interface.query(q, params)[0]["id(m)"]
         return self._db_id
@@ -230,18 +223,11 @@ class DerivationMethod(Method):  # common variables
                     raise TypeError(f"get_data cannot be last or followed by get_data Method Action (index {i})")
             
     def get_new_method_node_ids(self):
-        if re.search(r'^[01234]\.', self.interface.get_dbms_details()[0]['version']):
-            q = """
-            MATCH (m:Method{id:$method_id})
-            WHERE NOT EXISTS (m.parent_id)
-            RETURN id(m)
-            """
-        else:
-            q = """
-            MATCH (m:Method{id:$method_id})
-            WHERE m.parent_id IS NULL
-            RETURN id(m)
-            """
+        q = """
+        MATCH (m:Method{id:$method_id})
+        WHERE m.parent_id IS NULL
+        RETURN id(m)
+        """
         params = {"method_id": self.name}
         return self.interface.query(q, params)
 
@@ -907,7 +893,7 @@ class DictDerivationMethod(DerivationMethod):
         logger.info(f'\tPredicting links actions for {self.name}')
 
         filepath = os.path.dirname(__file__)
-        filename = 'predict_links.cql' if re.search(r'^[01234]\.', self.interface.get_dbms_details()[0]['version']) else 'predict_links_neo4j5.x.cql'
+        filename = 'predict_links.cql'
         with open(os.path.join(filepath, filename)) as cypherfile:
             query = cypherfile.read()
         params = self.predict_output_classes
