@@ -1,6 +1,12 @@
 Change Log
 All notable changes to the tab2neo package will be documented in this file.
 
+[2.0.0.0]
+
+## Added
+
+- Support Neo4j version 5.x
+
 [1.3.11.1]
 
 Bugfix:Changed the method name in json for test cases to run
