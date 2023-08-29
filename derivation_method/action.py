@@ -44,8 +44,6 @@ class Action:
                            'Decoded Value', 'ID', 'Scored', 'NCI Preferred Term']}
 
     def __init__(self, action_dict, method=None, interface: NeoInterface = None, dont_fetch=False):
-        
-        assert os.environ.get("GIT_TOKEN", "").strip(), 'Environment var GIT_TOKEN is not defined'
 
         self.dct = action_dict
         self.action_node_id = action_dict.get("node_id")
