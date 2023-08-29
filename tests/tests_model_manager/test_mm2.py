@@ -314,11 +314,12 @@ def test_delete_propagated_terms_from_parent(mm):
     q2 = """
     MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
     WHERE term.`Term Code`='term1t'
+    WITH * ORDER BY c.label
     RETURN collect([c.label]) as res
     """
 
     res2 = mm.query(q2)[0]['res']
-    assert res2 == [['class4'], ['class2'], ['Apple']]
+    assert res2 == [['Apple'], ['class2'], ['class4']]
 
     mm.delete_terms_of_parent_class([['class2','Apple']]) 
 
@@ -663,10 +664,11 @@ def test_create_subclass(mm):
     q2 = '''
     MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
     WHERE c.label = 'class4'
+    WITH * ORDER BY c.label, term.`Term Code`
     RETURN collect([c.label, term.`Term Code`]) as res
     '''
     res5 = mm.query(q2)[0]['res']
-    assert res5 == [['class4', 'term2t'], ['class4', 'term1t']]
+    assert res5 == [['class4', 'term1t'], ['class4', 'term2t']]
 
 
 def test_create_relationship(mm):

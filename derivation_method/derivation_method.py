@@ -2,6 +2,7 @@ import json
 import logging
 import time
 import os
+import re
 from functools import reduce
 from operator import add
 from pathlib import Path
@@ -107,9 +108,9 @@ class DerivationMethod(Method):  # common variables
         if self._db_id is None:
             q = """
                 MATCH (m:Method{id:$method_id})
-                WHERE NOT EXISTS (m.parent_id) or (m.parent_id) = $study_id
+                WHERE m.parent_id IS NULL or (m.parent_id) = $study_id
                 RETURN id(m)
-                """
+                """        
             params = {'method_id': self.name, 'study_id': self.study}
             self._db_id = self.interface.query(q, params)[0]["id(m)"]
         return self._db_id
@@ -224,7 +225,7 @@ class DerivationMethod(Method):  # common variables
     def get_new_method_node_ids(self):
         q = """
         MATCH (m:Method{id:$method_id})
-        WHERE NOT EXISTS (m.parent_id)
+        WHERE m.parent_id IS NULL
         RETURN id(m)
         """
         params = {"method_id": self.name}
@@ -892,7 +893,8 @@ class DictDerivationMethod(DerivationMethod):
         logger.info(f'\tPredicting links actions for {self.name}')
 
         filepath = os.path.dirname(__file__)
-        with open(os.path.join(filepath, 'predict_links.cql')) as cypherfile:
+        filename = 'predict_links.cql'
+        with open(os.path.join(filepath, filename)) as cypherfile:
             query = cypherfile.read()
         params = self.predict_output_classes
 
