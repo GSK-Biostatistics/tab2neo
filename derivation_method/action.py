@@ -1738,7 +1738,7 @@ class Link(AppliesChanges):
                                            "action_id": self.action_id,
                                            "detached_nodes": list(
                                                set([value for d in detached_node_pairs for value in d.values()])),
-                                           "deleted_nan_nodes": nan_nodes})
+                                           "deleted_nan_nodes": list(set(nan_nodes))})
             else:
                 logger.warning(f"Expected relationships not found:"
                             f"type `{self.meta['relationship_type']}` "
