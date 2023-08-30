@@ -2,6 +2,8 @@ from collections import OrderedDict
 from model_managers import ModelManager
 import pandas as pd
 from logger.logger import logger
+import ast
+import re
 
 
 def get_tag_label(
@@ -311,11 +313,21 @@ class QueryBuilder():
                 leftdir = (check[-1] if check[-1] in ['<'] else '')
                 rightdir = (check[-1] if check[-1] in ['>'] else '')
                 inner_cond_list = []
+                matched_lst=[]
                 assert isinstance(content, dict)
                 for operator_, lst in content.items():
                     assert operator_ in ['include', 'exclude', 'include_matched', 'exclude_matched']
-                    lst_matched_str = "[" + ", ".join(['`' + item + '`' for item in lst]) + "]"
-                    lst_str = "(" + " OR ".join(['x:`' + item + '`' for item in lst]) + ")"
+                    for item in lst:
+                        if re.search(r"\b" + re.escape('uri') + r"\b", item):
+                            uri = ast.literal_eval("{"+item+"}")
+                            for lst, val in uri.items():
+                                for key, value in val.items():
+                                    matched_lst.append(lst)
+                                    inner_cond_list.append(f"x.{key} in {value}")
+                        else:
+                            matched_lst.append(item)
+                    lst_matched_str = "[" + ", ".join(['`' + item + '`' for item in matched_lst]) + "]"
+                    lst_str = "(" + " OR ".join(['x:`' + item + '`' for item in matched_lst]) + ")"
                     if operator_ == 'include_matched':
                         inner_cond_list.append(f"x in {lst_matched_str}")
                     elif operator_ == 'exclude_matched':
