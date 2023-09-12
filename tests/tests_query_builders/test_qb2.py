@@ -378,15 +378,14 @@ def test_where_rel_2(qbr):
 def test_where_rel_3(qbr):
     test_map = {
         'nobs': {
-            'EXISTS>': {'include': ["'Test' : {'uri': ['neo4j://graph.schema#Term/S980028/S91301']}"]},
-            'NOT EXISTS': {'exclude_matched': ['Ser', 'Pop', 'Asta']}
+            'EXISTS>': {'include': [{'Test' : {'uri': ['neo4j://graph.schema#Term/S980028/S91301']}}]},
+            'NOT EXISTS': {'exclude': [{'Ser': {'rdfs:label': ['Y']}}, 'Pop', 'Asta']}
         }
     }
     (Cypher_list, data_binding_dict) = qbr.list_where_rel_conditions_per_dict(mp=test_map)
     expected_cypher_list = [
-        "EXISTS {MATCH (`nobs`)-[]->(x) WHERE x.uri in ['neo4j://graph.schema#Term/S980028/S91301'] AND (x:`Test`)}",
-        'NOT EXISTS {MATCH (`nobs`)-[]-(x) WHERE NOT (x in [`Ser`, `Pop`, `Asta`])}'
-    ]
+        "EXISTS {MATCH (`nobs`)-[]->(x) WHERE (x.`uri` in ['neo4j://graph.schema#Term/S980028/S91301'] AND x:`Test`)}",
+        "NOT EXISTS {MATCH (`nobs`)-[]-(x) WHERE NOT ((x.`rdfs:label` in ['Y'] AND x:`Ser`) OR x:`Pop` OR x:`Asta`)}"]
     
     assert Cypher_list == expected_cypher_list
     assert data_binding_dict == {}
