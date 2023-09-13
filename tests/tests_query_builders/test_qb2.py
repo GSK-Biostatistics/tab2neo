@@ -389,6 +389,21 @@ def test_where_rel_3(qbr):
     
     assert Cypher_list == expected_cypher_list
     assert data_binding_dict == {}
+    
+    
+def test_where_rel_4(qbr):
+    test_map = {
+        'nobs': {            
+            'EXISTS': {'include': [{'Ser': {'rdfs:label': ['Y', 'U']}}, {'Pop': {'rdfs:label': ['Safety']}}, 'Asta']}
+        }
+    }
+    (Cypher_list, data_binding_dict) = qbr.list_where_rel_conditions_per_dict(mp=test_map)
+    expected_cypher_list = [        
+        "EXISTS {MATCH (`nobs`)-[]-(x) WHERE (x.`rdfs:label` in ['Y', 'U'] AND x:`Ser`) OR (x.`rdfs:label` in ['Safety'] AND x:`Pop`) OR x:`Asta`}"]
+    # print(Cypher_list)
+    # print(expected_cypher_list)
+    assert Cypher_list == expected_cypher_list
+    assert data_binding_dict == {}
 
 
 def test_generate_query_body(qbr: QueryBuilder):
