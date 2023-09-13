@@ -1,6 +1,12 @@
 Change Log
 All notable changes to the tab2neo package will be documented in this file.
 
+[2.0.1.0]
+
+## Added 
+
+- Extended list_where_rel_conditions_per_dict function in Query Builder
+  
 [2.0.0.0]
 
 ## Added
