@@ -343,6 +343,7 @@ class QueryBuilder():
                         if lst_str2=="":
                             inner_cond_list.append("("+ lst_str +")")
                         else:
+                            lst_str = lst_str if lst_str=="" else " OR "+lst_str
                             inner_cond_list.append(lst_str2+lst_str)
                     elif operator_ == 'exclude':
                         if lst_str2=="":
