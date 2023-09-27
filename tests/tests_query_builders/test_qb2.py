@@ -116,7 +116,8 @@ class TestGenerateQueryBody:
 
 def test_split_out_optional(qbr: QueryBuilder):
     # #Test case #1
-    labels = ['Subject', 'Sex', 'Exposure**', 'Exposure Unit**', 'Exposure Laterality**']
+    labels = ['Subject', 'Sex', 'Exposure', 'Exposure Unit', 'Exposure Laterality']
+    labels_opt = ['Exposure', 'Exposure Unit', 'Exposure Laterality']
     rels = [
         {'from': pair[0], 'to': pair[1], 'optional': i > 0}
         for i, pair in enumerate([
@@ -128,8 +129,8 @@ def test_split_out_optional(qbr: QueryBuilder):
     ]
     res = qbr.split_out_optional(
         labels=labels,
-        rels=rels,
-        oclass_marker='**')
+        labels_opt=labels_opt,
+        rels=rels)
     # print(res)
     expected_res = [
         (
@@ -163,8 +164,8 @@ def test_split_out_optional(qbr: QueryBuilder):
     ]
     res = qbr.split_out_optional(
         labels=labels,
-        rels=rels,
-        oclass_marker='**')
+        labels_opt=labels_opt,
+        rels=rels)
     expected_res = [
         (
             ['Subject', 'Sex'],
@@ -181,7 +182,8 @@ def test_split_out_optional(qbr: QueryBuilder):
     assert res == expected_res
 
     # #Test case #3
-    labels = ['Subject', 'Sex', 'Exposure**', 'Exposure Unit**', 'Visit**', 'Vitals**', 'Vitals Unit**']
+    labels = ['Subject', 'Sex', 'Exposure', 'Exposure Unit', 'Visit', 'Vitals', 'Vitals Unit']
+    labels_opt = ['Exposure', 'Exposure Unit', 'Visit', 'Vitals', 'Vitals Unit']
     rels = [
         {'from': pair[0], 'to': pair[1], 'optional': i > 0}
         for i, pair in enumerate([
@@ -196,8 +198,8 @@ def test_split_out_optional(qbr: QueryBuilder):
     ]
     res = qbr.split_out_optional(
         labels=labels,
-        rels=rels,
-        oclass_marker='**')
+        labels_opt=labels_opt,
+        rels=rels)
     expected_res = [
         (
             ['Subject', 'Sex'],

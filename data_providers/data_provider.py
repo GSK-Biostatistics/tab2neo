@@ -13,6 +13,7 @@ class DataProvider(NeoInterface):
     for various purposes - such as to feed the User Interface.
     """
     OCLASS_MARKER = '**'
+    ECLASS_MARKER = '!!'
 
     def __init__(self, *args, **kwargs):
         self.qb = QueryBuilder()
@@ -121,10 +122,19 @@ class DataProvider(NeoInterface):
         labels = self.qb.enrich_labels_from_rels(labels=labels, rels=rels, oclass_marker=self.OCLASS_MARKER)
         # #creating a list of labels without an optional match sign (**)
         labels_clean = []
+        labels_opt = []
+        # #and list of labels to be excluded from WITH and RETURN statements
+        labels_excl = []
         for label in labels:
             assert isinstance(label, str)
             if label.endswith(self.OCLASS_MARKER):
-                labels_clean.append(label[:-len(self.OCLASS_MARKER)])
+                lbl = label[:-len(self.OCLASS_MARKER)]
+                labels_clean.append(lbl)
+                labels_opt.append(lbl)
+            elif label.endswith(self.ECLASS_MARKER): #Note: labels cannot be both optional and excluded
+                lbl = (label[:-len(self.ECLASS_MARKER)])
+                labels_clean.append(lbl)
+                labels_excl.append(lbl)
             else:
                 labels_clean.append(label)
         # #empty where_map if None
@@ -136,9 +146,9 @@ class DataProvider(NeoInterface):
 
         if not rels:
             if infer_rels:
-                rels = self.mm.infer_rels(labels=labels, oclass_marker=self.OCLASS_MARKER)
+                rels = self.mm.infer_rels(labels=labels_clean, labels_opt=labels_opt)
             else:
-                rels = []
+                rels = [] 
         # #filling the rel.type with the default relationship type (HAS_ ...)
         rels = self.mm.gen_default_reltypes_list(rels)
         # #checking that the requested Class and Relationship nodes exist in the schema
@@ -157,7 +167,7 @@ class DataProvider(NeoInterface):
             params = {}
         # #if any labels are marked for optional match - separately generating a query for each MATCH statement
         for i, (_labels, _rels) in enumerate(
-                self.qb.split_out_optional(labels=labels, rels=rels, oclass_marker=self.OCLASS_MARKER)):
+                self.qb.split_out_optional(labels=labels_clean, labels_opt=labels_opt, rels=rels)):
             # schema check for each subquery:
             if not allow_unrelated_subgraphs:
                 assert self.qb.check_connectedness(labels=_labels, rels=_rels), \
@@ -192,7 +202,12 @@ class DataProvider(NeoInterface):
         if use_shortlabel:
             translated = self.mm.translate_to_shortlabel(labels_clean, rels, labels_to_pack, {},
                                                          use_rel_labels=use_rel_labels)
-            labels_clean = [dct['short_label'] for dct in translated[0]]
+            for dct in translated[0]:
+                ind = labels_clean.index(dct['label'])
+                labels_clean[ind] = dct['short_label']
+                if dct['label'] in labels_excl:
+                    ind2 = labels_excl.index(dct['label'])
+                    labels_excl[ind2] = dct['short_label']
             rels = translated[1]
             labels_to_pack = translated[2]
 
@@ -206,14 +221,13 @@ class DataProvider(NeoInterface):
         )
 
         q_with = "\n" + self.qb.generate_with(
-            labels=labels_clean,
+            labels=[l for l in labels_clean if l not in labels_excl],
             labels_to_pack=labels_to_pack,
             only_props=only_props,
             return_nodeid=return_nodeid
-        )
-
+        )    
         q_return = "\n" + self.qb.generate_return(
-            labels=labels_clean,
+            labels=[l for l in labels_clean if l not in labels_excl],
             labels_to_pack=labels_to_pack,
             return_nodeid=return_nodeid,
             return_propname=return_propname,

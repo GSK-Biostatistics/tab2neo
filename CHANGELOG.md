@@ -1,6 +1,12 @@
 Change Log
 All notable changes to the tab2neo package will be documented in this file.
 
+[2.0.2.0]
+
+## Added
+
+- Excluded the labels marked with !! from the WITH and RETURN parts of the query generated for get_data_generic()
+
 [2.0.1.0]
 
 ## Added 
