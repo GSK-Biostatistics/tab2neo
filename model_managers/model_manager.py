@@ -228,11 +228,20 @@ class ModelManager(NeoInterface):
 
         q= f"""
         UNWIND $class_list as class_
-        WITH class_[0] as class_label, class_[1] as subclass_label
+        CALL apoc.do.when(size(rel)<=2,
+        "WITH class_[0] as class_label, class_[1] as subclass_label
         {'MATCH' if match_classes else 'MERGE'} (c1:Class {{`{identifier}`:class_label}})
         {'MATCH' if match_classes else 'MERGE'} (c2:Class {{`{identifier}`:subclass_label}})   
         MERGE (c1)<-[:SUBCLASS_OF]-(c2)
-        RETURN collect([c1.`{identifier}`, c2.`{identifier}`]) as classes
+        RETURN collect([c1.`{identifier}`, c2.`{identifier}`]) as classes",
+        "WITH class_[0] as class_label, class_[1] as subclass_label, class_[2] as cond
+        {'MATCH' if match_classes else 'MERGE'} (c1:Class {{`{identifier}`:class_label}})
+        {'MATCH' if match_classes else 'MERGE'} (c2:Class {{`{identifier}`:subclass_label}})   
+        MERGE (c1)<-[sub:SUBCLASS_OF{{condition: apoc.convert.toJson(cond)}}]-(c2)
+        RETURN collect([c1.`{identifier}`, c2.`{identifier}`, sub.`condition`]) as classes",
+        {{classes:classes}})
+        YIELD value
+        RETURN collect(value.classes) as classes
         """
         res = self.query(q, {
             "class_list": [sc for sc in subclass_list]

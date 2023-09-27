@@ -654,6 +654,9 @@ def test_create_subclass(mm):
     res3 = mm.create_subclass([['class1', 'MISSING CLASS']])
     assert res3 == []
 
+    res6 = mm.create_subclass([['class1', 'class3', ]])
+    assert res6 == []
+
     #returns list of classes and subclasses - [['parent_class', 'child_class']...]
     res4 = mm.get_subclasses_where()
     assert res4 == [{'parent':'class1', 'child':'class3'},{'parent':'class2', 'child':'Apple'}, {'parent':'class4', 'child':'class2'}]
