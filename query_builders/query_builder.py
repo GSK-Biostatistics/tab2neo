@@ -453,7 +453,7 @@ class QueryBuilder():
                 logger.debug(f'Returning labels {labels}')
             return labels
 
-    def split_out_optional(self, labels: list, rels: list, oclass_marker: str) -> list:
+    def split_out_optional(self, labels: list, rels: list, labels_opt: list = None) -> list:
         """
         Separate labels and relationships into mandatory (0) and optional (1). Each label is returned with all the
         relationships that it is involved in.
@@ -477,7 +477,8 @@ class QueryBuilder():
         The first tuple is for mandatory labels and their rels, the second is for optional labels and their rels.
         tuple[0] is a list of labels, tuple[1] is a list of relationships.
         """
-
+        if not labels_opt:
+            labels_opt = []
         if self.verbose:
             logger.debug(f'Splitting out optional labels and rels')
             logger.debug(f'Labels {labels}')
@@ -486,8 +487,8 @@ class QueryBuilder():
         df_l_rels = pd.DataFrame(
             [
                 {
-                    'label': label[:-len(oclass_marker)] if label.endswith(oclass_marker) else label,
-                    'optional': label.endswith(oclass_marker),
+                    'label': label,
+                    'optional': (label in labels_opt),
                 } for label in labels
             ]
         )

@@ -543,11 +543,13 @@ class ModelManager(NeoInterface):
         res = self.query(q, params)
         return [x['rel'] for x in res]
 
-    def infer_rels(self, labels: list, oclass_marker: str = "**", impute_relationship_type: bool = True):
+    def infer_rels(self, labels: list, labels_opt: list = None, impute_relationship_type: bool = True):
         """
         Infers most appropriate relationship type (if exists) between each pair of $labels
         for generating cypher query according to the schema
         """
+        if not labels_opt:
+            labels_opt = []  
         q = f"""
         MATCH (a:Class), (b:Class)
         WHERE a.label in $labels and b.label in $labels 
@@ -606,16 +608,15 @@ class ModelManager(NeoInterface):
         ORDER BY rel['from'], rel['to'], rel['type']        
         RETURN rel
         """
-        olabels = [label for label in labels if label.endswith(oclass_marker)]
         params = {
-            'labels': [(label[:-(len(oclass_marker))] if label in olabels else label) for label in labels],
+            'labels': labels,
             'impute_relationship_type': impute_relationship_type
         }
         res = self.query(q, params)
         rels = []
         for r in res:
             dct = r['rel']
-            if dct.get('from') in olabels or dct.get('to') in olabels:
+            if dct.get('from') in labels_opt or dct.get('to') in labels_opt:
                 dct['optional'] = True
             rels.append(dct)
         return rels
