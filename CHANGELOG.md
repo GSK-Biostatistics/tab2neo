@@ -1,5 +1,10 @@
 Change Log
 All notable changes to the tab2neo package will be documented in this file.
+[2.0.3.0]
+
+## Added
+
+- Enabled provision of conditions on SUBCLASS via ModelManager
 
 [2.0.2.0]
 
