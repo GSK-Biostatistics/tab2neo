@@ -102,6 +102,31 @@ def test_get_data_generic_shortlabel_inferrels(dp):
     assert params == {'par_1': 'VISIT 1'}
 
 
+def test_get_data_generic_excllabel(dp):
+    dp.clean_slate()
+    # loading metadata (Class/Property from json created in arrows.app)
+    with open(os.path.join(filepath, 'data', 'test_get_data_generic1.json')) as jsonfile:
+        dct = json.load(jsonfile)
+    dp.load_arrows_dict(dct)
+
+    df, q, params = dp.get_data_generic(
+        labels=[f'Visit{dp.ECLASS_MARKER}', 'Visit Category'],
+        infer_rels=True,
+        where_map={'Visit': {'rdfs:label': 'VISIT 1'}},        
+        return_q_and_dict=True,
+        return_propname=False,
+        return_nodeid=False,
+        use_shortlabel=True
+    )
+    df = df[sorted(df.columns)]
+    expected_cols = ['VISITCAT']    
+    expected_df = pd.DataFrame([{'VISITCAT': 'SCHEDULED'}])
+    print(df)
+    assert df.equals(expected_df)    
+    assert q.startswith(
+        "MATCH (`VISIT`:`Visit`),\n(`VISITCAT`:`Visit Category`),\n(`VISIT`)-[`VISIT_HAS CATEGORY_VISITCAT`:`HAS CATEGORY`]->(`VISITCAT`)\nWHERE `VISIT`.`rdfs:label` = $par_1")
+    assert params == {'par_1': 'VISIT 1'}
+
 def test_get_data(dp):
     # Preparing data : create some `Class` nodes, and some "CLASS_RELATES_TO" relationships between them
     dp.clean_slate()

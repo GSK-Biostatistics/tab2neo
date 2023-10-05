@@ -2,6 +2,8 @@ from collections import OrderedDict
 from model_managers import ModelManager
 import pandas as pd
 from logger.logger import logger
+import ast
+import re
 
 
 def get_tag_label(
@@ -311,19 +313,43 @@ class QueryBuilder():
                 leftdir = (check[-1] if check[-1] in ['<'] else '')
                 rightdir = (check[-1] if check[-1] in ['>'] else '')
                 inner_cond_list = []
+                list_cond=[]
+                matched_lst=[]
+                lst_matched_str=''
+                lst_str=''
                 assert isinstance(content, dict)
                 for operator_, lst in content.items():
                     assert operator_ in ['include', 'exclude', 'include_matched', 'exclude_matched']
-                    lst_matched_str = "[" + ", ".join(['`' + item + '`' for item in lst]) + "]"
-                    lst_str = "(" + " OR ".join(['x:`' + item + '`' for item in lst]) + ")"
+                    for item in lst:
+                        if(operator_=='include_matched' or operator_=='exclude_matched')   :
+                            assert isinstance(item, str), f"Only string values are allowed for {operator_} operator"
+                        if type(item) is dict:
+                            for lst, val in item.items():
+                                list2=[]
+                                for key, value in val.items():
+                                    list2.append(f"x.`{key}` in {value}")
+                                list2.append(lst)
+                                list_cond.append("("+list2[0]+ " AND " +'x:`'+list2[1]+'`'+")")
+                        else:
+                            matched_lst.append(item)
+                    lst_matched_str = "[" + ", ".join(['`' + item + '`' for item in matched_lst]) + "]"
+                    lst_str = " OR ".join(['x:`' + item + '`' for item in matched_lst])
+                    lst_str2 = " OR ".join([item for item in list_cond])
                     if operator_ == 'include_matched':
                         inner_cond_list.append(f"x in {lst_matched_str}")
                     elif operator_ == 'exclude_matched':
                         inner_cond_list.append(f"NOT (x in {lst_matched_str})")
                     elif operator_ == 'include':
-                        inner_cond_list.append(lst_str)
+                        if lst_str2=="":
+                            inner_cond_list.append("("+ lst_str +")")
+                        else:
+                            lst_str = lst_str if lst_str=="" else " OR "+lst_str
+                            inner_cond_list.append(lst_str2+lst_str)
                     elif operator_ == 'exclude':
-                        inner_cond_list.append(f"NOT {lst_str}")
+                        if lst_str2=="":
+                            inner_cond_list.append(f"NOT ({lst_str})")
+                        else:
+                            inner_cond_list.append(f"NOT ({lst_str2} OR {lst_str})")
                 inner_cond = f"WHERE {' AND '.join(inner_cond_list)}"
                 cypher_list.append(f"{check_} {{MATCH (`{label}`){leftdir}-[]-{rightdir}(x) {inner_cond}}}")
         return cypher_list, {}
@@ -427,7 +453,7 @@ class QueryBuilder():
                 logger.debug(f'Returning labels {labels}')
             return labels
 
-    def split_out_optional(self, labels: list, rels: list, oclass_marker: str) -> list:
+    def split_out_optional(self, labels: list, rels: list, labels_opt: list = None) -> list:
         """
         Separate labels and relationships into mandatory (0) and optional (1). Each label is returned with all the
         relationships that it is involved in.
@@ -451,7 +477,8 @@ class QueryBuilder():
         The first tuple is for mandatory labels and their rels, the second is for optional labels and their rels.
         tuple[0] is a list of labels, tuple[1] is a list of relationships.
         """
-
+        if not labels_opt:
+            labels_opt = []
         if self.verbose:
             logger.debug(f'Splitting out optional labels and rels')
             logger.debug(f'Labels {labels}')
@@ -460,8 +487,8 @@ class QueryBuilder():
         df_l_rels = pd.DataFrame(
             [
                 {
-                    'label': label[:-len(oclass_marker)] if label.endswith(oclass_marker) else label,
-                    'optional': label.endswith(oclass_marker),
+                    'label': label,
+                    'optional': (label in labels_opt),
                 } for label in labels
             ]
         )

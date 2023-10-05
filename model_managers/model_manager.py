@@ -228,11 +228,21 @@ class ModelManager(NeoInterface):
 
         q= f"""
         UNWIND $class_list as class_
-        WITH class_[0] as class_label, class_[1] as subclass_label
+        CALL apoc.do.when(size(class_)<=2,
+        "WITH class_[0] as class_label, class_[1] as subclass_label
         {'MATCH' if match_classes else 'MERGE'} (c1:Class {{`{identifier}`:class_label}})
         {'MATCH' if match_classes else 'MERGE'} (c2:Class {{`{identifier}`:subclass_label}})   
-        MERGE (c1)<-[:SUBCLASS_OF]-(c2)
-        RETURN collect([c1.`{identifier}`, c2.`{identifier}`]) as classes
+        MERGE (c1)<-[sub:SUBCLASS_OF]-(c2)
+        RETURN collect([c1.`{identifier}`, c2.`{identifier}`]) as classes",
+        "WITH class_[0] as class_label, class_[1] as subclass_label, class_[2] as cond
+        {'MATCH' if match_classes else 'MERGE'} (c1:Class {{`{identifier}`:class_label}})
+        {'MATCH' if match_classes else 'MERGE'} (c2:Class {{`{identifier}`:subclass_label}}) 
+        MERGE (c1)<-[sub:SUBCLASS_OF]-(c2)
+        SET sub.`conditions`= apoc.convert.toJson(cond)
+        RETURN collect([c1.`{identifier}`, c2.`{identifier}`, sub.`conditions`]) as classes",
+        {{class_:class_}})
+        YIELD value
+        RETURN collect(value.classes) as classes
         """
         res = self.query(q, {
             "class_list": [sc for sc in subclass_list]
@@ -241,7 +251,8 @@ class ModelManager(NeoInterface):
         if res:
             self.propagate_rels_to_child_class()
             self.propagate_terms_to_parent_class()
-            return res[0]['classes']
+            result = [np.array(i).flatten().tolist() for i in res[0].get('classes')]
+            return result
         else:
             return []
     
@@ -435,9 +446,10 @@ class ModelManager(NeoInterface):
 
     def get_subclasses_where(self, where_clause=None, identifier='label') -> [{}]:
         
-        q=f"""MATCH (c1:Class)<-[:SUBCLASS_OF]-(c2:Class)
+        q=f"""MATCH (c1:Class)<-[s:SUBCLASS_OF]-(c2:Class)
             {where_clause if where_clause else ""}
-            RETURN {{parent: c1.`{identifier}`, child: c2.`{identifier}`}} as classes"""
+            RETURN {{parent: c1.`{identifier}`, child: c2.`{identifier}`, conditions:s.`conditions`}} as classes
+            """
 
         res = self.query(q)
 
@@ -534,11 +546,13 @@ class ModelManager(NeoInterface):
         res = self.query(q, params)
         return [x['rel'] for x in res]
 
-    def infer_rels(self, labels: list, oclass_marker: str = "**", impute_relationship_type: bool = True):
+    def infer_rels(self, labels: list, labels_opt: list = None, impute_relationship_type: bool = True):
         """
         Infers most appropriate relationship type (if exists) between each pair of $labels
         for generating cypher query according to the schema
         """
+        if not labels_opt:
+            labels_opt = []  
         q = f"""
         MATCH (a:Class), (b:Class)
         WHERE a.label in $labels and b.label in $labels 
@@ -597,16 +611,15 @@ class ModelManager(NeoInterface):
         ORDER BY rel['from'], rel['to'], rel['type']        
         RETURN rel
         """
-        olabels = [label for label in labels if label.endswith(oclass_marker)]
         params = {
-            'labels': [(label[:-(len(oclass_marker))] if label in olabels else label) for label in labels],
+            'labels': labels,
             'impute_relationship_type': impute_relationship_type
         }
         res = self.query(q, params)
         rels = []
         for r in res:
             dct = r['rel']
-            if dct.get('from') in olabels or dct.get('to') in olabels:
+            if dct.get('from') in labels_opt or dct.get('to') in labels_opt:
                 dct['optional'] = True
             rels.append(dct)
         return rels

@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import re
 from abc import abstractmethod, ABC
 
 import pandas as pd
@@ -204,7 +205,8 @@ class GetData(Action):
         self.meta = res[0]
 
         if self.filter_dict is not None:
-            q = f"""
+           
+            q=f"""
                 MATCH (action:Method)-[onr:ON]->(class:Class)
                 WHERE id(action) = $node_id //AND class.label in $source_classes
                 OPTIONAL MATCH (action)-[:ON_VALUE]->(term:Term)<-[:HAS_CONTROLLED_TERM]-(class)
@@ -219,7 +221,7 @@ class GetData(Action):
                             apoc.map.fromPairs([key in keys(onr) |
                                 [key,
                                     CASE WHEN key in ['min', 'max'] THEN
-                                        CASE WHEN apoc.meta.type(onr[key]) = 'STRING' THEN //convertion to Float/Integer
+                                        CASE WHEN apoc.meta.cypher.type(onr[key]) = 'STRING' THEN //convertion to Float/Integer
                                             CASE WHEN apoc.text.regexGroups(onr[key], '^(\d+\.\d+)|(\d+e\-\d+)$') THEN
                                                 toFloat(onr[key])
                                             ELSE
@@ -253,8 +255,8 @@ class GetData(Action):
                 WITH label, apoc.map.fromPairs(collect(['{RDFSLABEL}',
                     CASE WHEN size(values) = 1 THEN values[0] ELSE values END])) as rdmap
                 WITH apoc.map.fromPairs(collect([label, rdmap])) as where_map
-                RETURN where_map
-                """
+                RETURN where_map"""
+
             params = {"node_id": self.filter_dict["node_id"],
                       "source_classes": self.meta["source_classes"]}
             res2 = interface.query(q, params)
@@ -1736,7 +1738,7 @@ class Link(AppliesChanges):
                                            "action_id": self.action_id,
                                            "detached_nodes": list(
                                                set([value for d in detached_node_pairs for value in d.values()])),
-                                           "deleted_nan_nodes": nan_nodes})
+                                           "deleted_nan_nodes": list(set(nan_nodes))})
             else:
                 logger.warning(f"Expected relationships not found:"
                             f"type `{self.meta['relationship_type']}` "

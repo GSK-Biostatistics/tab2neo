@@ -1,6 +1,6 @@
 WITH $ASSIGN_CLASSES as ASSIGN_CLASSES, $`CLASSES AFTER RUNSCRIPT` as `CLASSES AFTER RUNSCRIPT`, $`NEW RUNSCRIPT CLASSES` as `NEW RUNSCRIPT CLASSES`, $`PREDICTED CLASSES` as `PREDICTED CLASSES`
 MATCH (C_PRIMARY:Class) WHERE C_PRIMARY.short_label in `PREDICTED CLASSES`
-MATCH (c_schema:Class)<-[x:TO|FROM]-(rs)-[y:FROM|TO]->(C_PRIMARY) where C_PRIMARY.derived='true' and not exists(c_schema.is_stat) and not((c_schema)<-[:HAS_DATASET]-() and not substring(c_schema.short_label,0,4)='SUPP') and not 'ObservationClass' in labels(c_schema)
+MATCH (c_schema:Class)<-[x:TO|FROM]-(rs)-[y:FROM|TO]->(C_PRIMARY) where C_PRIMARY.derived='true' and (c_schema.is_stat) IS NULL and not((c_schema)<-[:HAS_DATASET]-() and not substring(c_schema.short_label,0,4)='SUPP') and not 'ObservationClass' in labels(c_schema)
 with C_PRIMARY, ASSIGN_CLASSES, `CLASSES AFTER RUNSCRIPT`, `NEW RUNSCRIPT CLASSES`, `PREDICTED CLASSES`, apoc.coll.insert(apoc.coll.sort(collect(distinct(c_schema.short_label))),0,C_PRIMARY.short_label) as POSSIBLE_SCHEMA_LINKS
 WITH C_PRIMARY, ASSIGN_CLASSES, `CLASSES AFTER RUNSCRIPT`, `NEW RUNSCRIPT CLASSES`, `PREDICTED CLASSES`, POSSIBLE_SCHEMA_LINKS
 
