@@ -240,7 +240,7 @@ class ModelManager(NeoInterface):
 
         if res:
             self.propagate_rels_to_child_class()
-            #self.propagate_terms_to_parent_class()
+            self.propagate_terms_to_parent_class()
             return res[0]['classes']
         else:
             return []
@@ -460,7 +460,7 @@ class ModelManager(NeoInterface):
         q = f"""
         MATCH (from_class:Class)<-[:FROM]-(rel:Relationship)-[:TO]->(to_class:Class)
         {where_clause if where_clause else ""}
-        RETURN {{from: from_class.`{return_prop}`, to: to_class.`{return_prop}`, type: rel.relationship_type, optional: rel.relationship_optional}} as rel   
+        RETURN {{from: from_class.`{return_prop}`, to: to_class.`{return_prop}`, type: rel.relationship_type, optional: rel.relationship_optional, propagated_from: rel.relationship_propagated_from}} as rel   
         """
         res = self.query(q)
         return [x['rel'] for x in res]
@@ -752,7 +752,7 @@ class ModelManager(NeoInterface):
         assert not missing, f'Cannot create controlled terminology for nonexistent classes: {missing}'
 
         if merge_on:
-            ident_props = f'{{`{merge_on[0]}`: term_props["{merge_on[0]}"]}}'
+            ident_props = f'{{`{merge_on[0]}`: term_props["{merge_on[0]}"]'
             for prop in merge_on[1:]:
                 ident_props += f', `{prop}`: term_props["{prop}"]'
             ident_props += '}'
@@ -763,10 +763,12 @@ class ModelManager(NeoInterface):
         MATCH (class:Class {{{identifier}: class_label}})
         WITH class, class_label
         UNWIND $terminology[class_label] as term_props
-        CALL apoc.merge.node(['Term'], {f"{ident_props}, term_props, propagated_from, term_props" if ident_props else 'term_props, {}, {}'}) YIELD node
+        CALL apoc.merge.node(['Term'], {f"{ident_props}, term_props, term_props" if ident_props else 'term_props, {}, {}'}) YIELD node
         CALL apoc.create.addLabels([node], [class.label]) YIELD node as term
         MERGE (class)-[:HAS_CONTROLLED_TERM]->(term)
+        SET term.propagated_from = ""
         """
+
         res1 = self.query(q1, {'terminology': controlled_terminology}, return_type='neo4j.Result')
 
         if order_terms:
@@ -920,7 +922,7 @@ class ModelManager(NeoInterface):
 
         q = f"""
         MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
-        {'WHERE c.derived = "true"' if derived_only else ''}
+        WHERE {'c.derived = "true" AND ' if derived_only else ''} term.propagated_from IS NULL OR term.propagated_from = ""
         RETURN c.`{class_prop}` as `{class_prop}`, {term_return}
         """
         return self.query(q)

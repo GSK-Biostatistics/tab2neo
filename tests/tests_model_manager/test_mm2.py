@@ -189,19 +189,19 @@ def test_get_rels_where(mm: ModelManager):
     # Test without where clause (all rels)
     res1 = mm.get_rels_where()
     expected_res = [
-        {'from': 'Person', 'to': 'Name of Treatment', 'type': 'HAS', 'optional':None},
-        {'from': 'Subject', 'to': 'Exposure Name of Treatment', 'type': None, 'optional':None}
+        {'from': 'Person', 'to': 'Name of Treatment', 'type': 'HAS', 'optional':None, 'propagated_from': None},
+        {'from': 'Subject', 'to': 'Exposure Name of Treatment', 'type': None, 'optional':None, 'propagated_from': None}
     ]
     assert compare_recordsets(res1,expected_res)
 
     # Test with where clause
     res2 = mm.get_rels_where('WHERE from_class.label = "Person"')
-    expected_res = [{'from': 'Person', 'to': 'Name of Treatment', 'type': 'HAS', 'optional': None}]
+    expected_res = [{'from': 'Person', 'to': 'Name of Treatment', 'type': 'HAS', 'optional': None, 'propagated_from': None}]
     assert compare_recordsets(res2, expected_res)
 
     # Test with custom return prop
     res3 = mm.get_rels_where('WHERE from_class.short_label = "PERSON"', 'short_label')
-    expected_res = [{'from': 'PERSON', 'to': '--TRT', 'type': 'HAS', 'optional': None}]
+    expected_res = [{'from': 'PERSON', 'to': '--TRT', 'type': 'HAS', 'optional': None, 'propagated_from': None}]
     assert compare_recordsets(res3, expected_res)
 
 
@@ -318,7 +318,7 @@ def test_delete_propagated_terms_from_parent(mm):
     """
 
     res2 = mm.query(q2)[0]['res']
-    assert res2 == [['Apple']]
+    assert res2 == [['class4'], ['class2'], ['Apple']]
 
     mm.delete_terms_of_parent_class([['class2','Apple']]) 
 
@@ -373,25 +373,25 @@ def test_create_ct(mm):
 
     # Create ct with existing terms
     mm.create_ct({
-        'G': [{'Codelist Code': 'term1'}, {'Codelist Code': 'term2', 'propagated_from': 'term1'}],
-        'S': [{'Codelist Code': 'term3', 'propagated_from': 'term1'}]
+        'G': [{'Codelist Code': 'term1'}, {'Codelist Code': 'term2'}],
+        'S': [{'Codelist Code': 'term3'}]
     })
 
-    res = mm.get_class_ct_map(classes=['G', 'S', 'K'], ct_props=['Codelist Code', 'Order', 'propagated_from'])
+    res = mm.get_class_ct_map(classes=['G', 'S', 'K'], ct_props=['Codelist Code', 'Order'])
 
-    assert sorted(res.get('G'), key=lambda d: d['Codelist Code']) == [{'Order': 1, 'Codelist Code': 'term1', 'propagated_from': None},
-                                                              {'Order': 2, 'Codelist Code': 'term2', 'propagated_from': 'term1'}]
-    assert res.get('S') == [{'Order': 1, 'Codelist Code': 'term3', 'propagated_from': 'term1'}]
+    assert sorted(res.get('G'), key=lambda d: d['Codelist Code']) == [{'Order': 1, 'Codelist Code': 'term1'},
+                                                                        {'Order': 2, 'Codelist Code': 'term2'}]
+    assert res.get('S') == [{'Order': 1, 'Codelist Code': 'term3'}]
 
-    #Create ct with property propagated_from
+    #Create ct with property 
     mm.create_ct({
-        'K': [{'Codelist Code': 'termK', 'propagated_from': 'term1'}],
-        'Class A': [{'Codelist Code': 'termA', 'propagated_from': 'term1'}],
+        'K': [{'Codelist Code': 'termK'}],
+        'Class A': [{'Codelist Code': 'termA'}],
     })
 
-    res = mm.get_class_ct_map(classes=['K', 'Class A'], ct_props=['Codelist Code', 'Order', 'propagated_from'])
+    res = mm.get_class_ct_map(classes=['K', 'Class A'], ct_props=['Codelist Code', 'Order'])
 
-    assert sorted(res.get('K'), key=lambda d: d['Codelist Code']) == [{'Order': 1, 'Codelist Code': 'termK', 'propagated_from': 'term1'}]
+    assert sorted(res.get('K'), key=lambda d: d['Codelist Code']) == [{'Order': 1, 'Codelist Code': 'termK'}]
 
 
     #Ensure class labels are inherited by ct inheritance
@@ -447,11 +447,11 @@ def test_create_ct(mm):
 
     # Short_label identifier
     mm.create_ct({
-        'A': [{'Codelist Code': 'term7', 'propagated_from': 'term1'}]
+        'A': [{'Codelist Code': 'term7'}]
     }, 'short_label', merge_on=['Codelist Code'])
 
-    res = mm.get_class_ct_map(classes=['A'], ct_props=['Codelist Code', 'Order', 'propagated_from'], identifier='short_label')
-    assert res.get('A') == [{'Order': 1, 'Codelist Code': 'term7', 'propagated_from': 'term1'}]
+    res = mm.get_class_ct_map(classes=['A'], ct_props=['Codelist Code', 'Order'], identifier='short_label')
+    assert res.get('A') == [{'Order': 2, 'Codelist Code': 'term7'}, {'Order': 1, 'Codelist Code': 'termA'}]
 
     # With on_merge
     mm.clean_slate()
@@ -478,7 +478,6 @@ def test_create_ct(mm):
         {'label': 'Banana', 'Codelist Code': 'term2c', 'Term Code': 'term2t', 'rdfs:label': None, 'Order': 1},
         {'label': 'Apple', 'Codelist Code': 'term3c', 'Term Code': 'term3t', 'rdfs:label': None, 'Order': 1},
     ]
-
 
 def test_create_same_as_ct(mm):
     mm.clean_slate()
@@ -644,6 +643,19 @@ def test_get_all_ct(mm):
     with pytest.raises(AssertionError):
         mm.get_all_ct(['short_label'], class_prop='short_label')
 
+    mm.clean_slate()
+
+    q = """
+    MERGE (a:Class {label: 'Avocado', short_label: 'A'})
+    MERGE (a)-[:HAS_CONTROLLED_TERM]->(:Term {`Codelist Code`: 'term1c', `Term Code`: 'term1t', `propagated_from`: 'A'})
+    MERGE (b:Class {label: 'Banana', short_label: 'B'})
+    MERGE (b)-[:HAS_CONTROLLED_TERM]->(:Term {`Codelist Code`: 'term2c', `Term Code`: 'term2t', `propagated_from`: ''})
+    """
+    mm.query(q)
+
+    res = res = mm.get_all_ct(term_props=['Codelist Code', 'Term Code', 'rdfs:label', 'propagated_from'], class_prop='short_label',
+                        derived_only=False)
+    assert res == [{'short_label': 'B', 'Codelist Code': 'term2c', 'Term Code': 'term2t', 'rdfs:label': None, 'propagated_from': ''}]
 
 def test_create_subclass(mm):
     mm.clean_slate()
@@ -688,7 +700,7 @@ def test_create_subclass(mm):
     RETURN collect([c.label, term.`Term Code`, term.propagated_from]) as res
     '''
     res6 = mm.query(q3)[0]['res']
-    assert res6 == [["class4","term2t","class2"], ['class4', 'term1t', 'Apple']]
+    assert res6 == [["class4","term2t","class2"], ['class4', 'term1t', 'class2']]
 
     q4 = '''
     MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
