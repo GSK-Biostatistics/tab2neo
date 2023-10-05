@@ -652,14 +652,11 @@ def test_create_subclass(mm):
     assert res1 == [['class1', 'class3'],['class2', 'Apple'], ['class4', 'class2']]
 
     res3 = mm.create_subclass([['class1', 'MISSING CLASS']])
-    assert res3 == []
-
-    res6 = mm.create_subclass([['class1', 'class3', ]])
-    assert res6 == []
+    assert res3 == [[]]
 
     #returns list of classes and subclasses - [['parent_class', 'child_class']...]
     res4 = mm.get_subclasses_where()
-    assert res4 == [{'parent':'class1', 'child':'class3'},{'parent':'class2', 'child':'Apple'}, {'parent':'class4', 'child':'class2'}]
+    assert res4 == [{'parent':'class1', 'child':'class3', 'conditions':None},{'parent':'class2', 'child':'Apple', 'conditions':None}, {'parent':'class4', 'child':'class2', 'conditions':None}]
     
     #propagates terms to parent class
     mm.propagate_terms_to_parent_class()
@@ -672,6 +669,15 @@ def test_create_subclass(mm):
     '''
     res5 = mm.query(q2)[0]['res']
     assert res5 == [['class4', 'term1t'], ['class4', 'term2t']]
+
+    cond  =  [{
+            'EXISTS>': {'include': [{'Test' : {'uri': ['neo4j://graph.schema#Term/S980028/S91301']}}]},
+            'NOT EXISTS': {'exclude': [{'Ser': {'rdfs:label': ['Y']}}, 'Pop', 'Asta']}
+        }]
+
+    res6 = mm.create_subclass([['class1', 'class3', cond]])
+    assert res6 == [['class1', 'class3', '[{"EXISTS>":{"include":[{"Test":{"uri":["neo4j://graph.schema#Term/S980028/S91301"]}}]},"NOT EXISTS":{"exclude":[{"Ser":{"rdfs:label":["Y"]}},"Pop","Asta"]}}]']]
+
 
 
 def test_create_relationship(mm):
