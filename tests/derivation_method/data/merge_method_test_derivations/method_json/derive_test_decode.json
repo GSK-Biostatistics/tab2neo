@@ -150,6 +150,7 @@
         "Method"
       ],
       "properties": {
+        "remove_unmapped_rows":"true",
         "type": "decode",
         "id": "decode1"
       },
