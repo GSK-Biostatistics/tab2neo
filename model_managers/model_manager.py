@@ -283,14 +283,14 @@ class ModelManager(NeoInterface):
 
         q = f"""
         UNWIND $rels as rel
-        CALL apoc.do.when(size(rel)<=3,
-        "WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type
+        CALL apoc.do.when(size(rel)<=4,
+        "WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type, rel[3] as propagated_from
         {'MATCH' if match_classes else 'MERGE'} (from:Class {{`{identifier}`:from_identity}})
         {'MATCH' if match_classes else 'MERGE'} (to:Class {{`{identifier}`:to_identity}})   
-        MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type}})-[:TO]->(to)
+        MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type, relationship_propagated_from:propagated_from}})-[:TO]->(to)
         SET rel_node.`FROM.Class.label` = from.label
         SET rel_node.`TO.Class.label` = to.label
-        RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type]) as rels", 
+        RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type, rel_node.relationship_propagated_from]) as rels", 
         "WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type, rel[3] as optional, rel[4] as propagated_from
         {'MATCH' if match_classes else 'MERGE'} (from:Class {{`{identifier}`:from_identity}})
         {'MATCH' if match_classes else 'MERGE'} (to:Class {{`{identifier}`:to_identity}})   
