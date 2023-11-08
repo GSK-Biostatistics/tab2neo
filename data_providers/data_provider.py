@@ -4,6 +4,7 @@ from neointerface import NeoInterface
 from logger.logger import logger
 from model_managers import ModelManager
 from query_builders.query_builder import QueryBuilder
+import ast
 
 
 class DataProvider(NeoInterface):
@@ -85,6 +86,43 @@ class DataProvider(NeoInterface):
             check_schema=False,
             limit=None,
             return_q_and_dict=True)
+
+
+    def get_data_virtual(self,
+                     labels: list,
+                     rels: list = None,
+                     where_map=None,
+                     where_rel_map=None,
+                     return_nodeid=True,
+                     return_termorder=False,
+                     return_class_uris=False):
+        classes=[]
+        where_cond={}
+        for label in labels:
+            q=f'''MATCH (c:Class{{label:'{label}'}})-[scr:SUBCLASS_OF]->(parent)
+                  Where NOT scr.conditions is NULL
+                  Return [parent.label, scr.conditions]  as class'''
+            res = self.query(q)[0].get('class')
+            classes.append(res[0])
+            where_cond[label]=ast.literal_eval(res[1])[0]
+
+        return self.get_data_generic(
+            labels=classes,
+            rels=None,
+            infer_rels=True,
+            where_map=None,
+            where_rel_map=where_cond,
+            allow_unrelated_subgraphs=False,
+            use_shortlabel=True,
+            return_nodeid=True,
+            return_propname=False,
+            return_termorder=False,
+            return_class_uris=False,
+            only_props=["rdfs:label"],
+            check_schema=False,
+            limit=None,
+            return_q_and_dict=True)
+
 
     def get_data_generic(
             self,
