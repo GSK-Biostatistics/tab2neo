@@ -254,7 +254,7 @@ def test_delete_relationship(mm):
         dct = json.load(jsonfile)
     mm.load_arrows_dict(dct)
 
-    mm.delete_relationship([['Person', 'Name of Treatment',"", 'HAS']])
+    mm.delete_relationship([['Person', 'Name of Treatment', 'HAS']])
 
     res = mm.get_rels_btw2('Person', 'Name of Treatment')
     expected_res = [
@@ -703,26 +703,26 @@ def test_create_relationship(mm):
     """
     mm.query(q)
 
-    res1 = mm.create_relationship([['class1', 'class3', '', 'rel1']])
-    assert res1 == [['class1', 'class3', '', 'rel1']]
+    res1 = mm.create_relationship([['class1', 'class3', 'rel1','']])
+    assert res1 == [['class1', 'class3', 'rel1','']]
 
     res2 = mm.get_rels_btw2("class1", "class3")
     assert res2 == [{'from': 'class1', 'to': 'class3', 'type': 'rel1'}]
 
-    res3 = mm.create_relationship([['class1', 'MISSING CLASS', '','rel1']])
+    res3 = mm.create_relationship([['class1', 'MISSING CLASS','rel1','']])
     assert res3 == [[]]
 
-    res4 = mm.create_relationship([['class3', 'class4', ""]]) 
-    assert res4 == [['class3', 'class4', '','class4']]
+    res4 = mm.create_relationship([['class3', 'class4']]) 
+    assert res4 == [['class3', 'class4','class4','']]
 
-    res5 = mm.create_relationship([['class1', 'class3', '','rel1','true'],['class1', 'class2', 'class3','rel2']])
-    assert res5 == [['class1', 'class3', '','rel1','true'],['class1', 'class2', 'class3', 'rel2']]
+    res5 = mm.create_relationship([['class1', 'class3','rel1','','true'],['class1', 'class2', 'class3','rel2']])
+    assert res5 == [['class1', 'class3','rel1','','true'],['class1', 'class2', 'class3', 'rel2']]
 
 
 def test_create_related_classes_from_list(mm):
     mm.clean_slate()
 
-    rel_list = [["A", "B", "", "type1"], ["B", "C", "", "type2"], ["D", "E", "","type3"]]
+    rel_list = [["A", "B", "type1", ""], ["B", "C", "type2", ""], ["D", "E","type3", ""]]
     res1 = mm.create_related_classes_from_list(rel_list=rel_list)
     assert res1 == ["A", "B", "C", "D", "E"]
 
@@ -738,7 +738,7 @@ def test_create_related_classes_from_list(mm):
     res4 = mm.get_rels_btw2("C", "D")
     assert res4 == []
 
-    res5 = mm.create_related_classes_from_list(rel_list=[["F", "G", "","type4"], ["G", "H", "","type5"]],
+    res5 = mm.create_related_classes_from_list(rel_list=[["F", "G","type4", ""], ["G", "H","type5", ""]],
                                                identifier='short_label')
     assert res5 == ['F', 'G', 'H']
 
