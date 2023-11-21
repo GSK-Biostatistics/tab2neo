@@ -189,19 +189,19 @@ def test_get_rels_where(mm: ModelManager):
     # Test without where clause (all rels)
     res1 = mm.get_rels_where()
     expected_res = [
-        {'from': 'Person', 'to': 'Name of Treatment', 'propagated_from': None, 'type': 'HAS', 'optional':None},
-        {'from': 'Subject', 'to': 'Exposure Name of Treatment', 'propagated_from': None, 'type': None, 'optional':None}
+        {'from': 'Person', 'to': 'Name of Treatment', 'type': 'HAS', 'propagated_from': None, 'optional':None},
+        {'from': 'Subject', 'to': 'Exposure Name of Treatment', 'type': None, 'propagated_from': None, 'optional':None}
     ]
     assert compare_recordsets(res1,expected_res)
 
     # Test with where clause
     res2 = mm.get_rels_where('WHERE from_class.label = "Person"')
-    expected_res = [{'from': 'Person', 'to': 'Name of Treatment', 'propagated_from': None,'type': 'HAS', 'optional': None}]
+    expected_res = [{'from': 'Person', 'to': 'Name of Treatment','type': 'HAS', 'propagated_from': None, 'optional': None}]
     assert compare_recordsets(res2, expected_res)
 
     # Test with custom return prop
     res3 = mm.get_rels_where('WHERE from_class.short_label = "PERSON"', 'short_label')
-    expected_res = [{'from': 'PERSON', 'to': '--TRT', 'propagated_from': None,'type': 'HAS', 'optional': None}]
+    expected_res = [{'from': 'PERSON', 'to': '--TRT','type': 'HAS', 'propagated_from': None, 'optional': None}]
     assert compare_recordsets(res3, expected_res)
 
 

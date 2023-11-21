@@ -472,7 +472,7 @@ class ModelManager(NeoInterface):
         q = f"""
         MATCH (from_class:Class)<-[:FROM]-(rel:Relationship)-[:TO]->(to_class:Class)
         {where_clause if where_clause else ""}
-        RETURN {{from: from_class.`{return_prop}`, to: to_class.`{return_prop}`, propagated_from: rel.relationship_propagated_from, type: rel.relationship_type, optional: rel.relationship_optional}} as rel   
+        RETURN {{from: from_class.`{return_prop}`, to: to_class.`{return_prop}`, type: rel.relationship_type, propagated_from: rel.relationship_propagated_from,optional: rel.relationship_optional}} as rel   
         """
         res = self.query(q)
         return [x['rel'] for x in res]
