@@ -91,35 +91,63 @@ class DataProvider(NeoInterface):
     def get_data_virtual(self,
                      labels: list,
                      rels: list = None,
+                     infer_rels=True,
                      where_map=None,
                      where_rel_map=None,
                      return_nodeid=True,
                      return_termorder=False,
+                     allow_unrelated_subgraphs=False,
+                     use_shortlabel=True,
+                     return_propname=False,
+                     only_props=["rdfs:label"],
+                     check_schema=False,
                      return_class_uris=False):
         classes=[]
-        where_cond={}
-        for label in labels:
-            q=f'''MATCH (c:Class{{label:'{label}'}})-[scr:SUBCLASS_OF]->(parent)
+        updated_rels=[]
+        updated_where_map={}
+        updated_where_rel_map={}
+        if labels is not None and len(labels)>0:
+            for label in labels:
+                res = self.get_subclass_parent(label)
+                classes.append(res[0]['class']) if len(res)>0 else classes.append(label)
+            
+        if rels is not None and len(rels)>0:
+            for rel in rels:
+                rel["from"]= res[0]['class'] if len(self.get_subclass_parent(rel.get("from")))>0 else rel["from"]
+                rel["to"]= res[0]['class'] if len(self.get_subclass_parent(rel.get("to")))>0 else rel["to"]
+                updated_rels.append(rel)
+
+        if where_map is not None and len(where_map)>0:
+           for wmap in where_map:
+               if len(self.get_subclass_parent(wmap))>0:
+                    res=self.get_subclass_parent(wmap)
+                    updated_where_map[res[0]['class']] = updated_where_map.pop(wmap)
+
+        if where_rel_map is not None and len(where_rel_map)>0:
+            for w_rel_map in where_rel_map:
+                updated_where_rel_map=where_rel_map
+                q=f'''MATCH (c:Class{{label:'{w_rel_map}'}})-[scr:SUBCLASS_OF]->(parent)
                   Where NOT scr.conditions is NULL
                   Return [parent.label, scr.conditions]  as class'''
-            res = self.query(q)[0].get('class')
-            classes.append(res[0])
-            where_cond[label]=ast.literal_eval(res[1])[0]
+                res = self.query(q)
+                if len(res)>0:
+                    updated_where_rel_map[res[0]['class'][0]] = updated_where_rel_map.pop(w_rel_map)
+                    updated_where_rel_map[res[0]['class'][0]]=ast.literal_eval(res[0]['class'][1])[0]
 
         return self.get_data_generic(
             labels=classes,
-            rels=None,
-            infer_rels=True,
-            where_map=None,
-            where_rel_map=where_cond,
-            allow_unrelated_subgraphs=False,
-            use_shortlabel=True,
-            return_nodeid=True,
-            return_propname=False,
-            return_termorder=False,
-            return_class_uris=False,
-            only_props=["rdfs:label"],
-            check_schema=False,
+            rels=rels,
+            infer_rels=infer_rels,
+            where_map=where_map,
+            where_rel_map=updated_where_rel_map,
+            allow_unrelated_subgraphs=allow_unrelated_subgraphs,
+            use_shortlabel=use_shortlabel,
+            return_nodeid=return_nodeid,
+            return_propname=return_propname,
+            return_termorder=return_termorder,
+            return_class_uris=return_class_uris,
+            only_props=only_props,
+            check_schema=check_schema,
             limit=None,
             return_q_and_dict=True)
 
@@ -303,3 +331,9 @@ class DataProvider(NeoInterface):
             return res, q, params
         else:
             return res
+
+    def get_subclass_parent(self, label: str):
+        q=f'''MATCH (c:Class{{label:'{label}'}})-[scr:SUBCLASS_OF]->(parent)
+              Return parent.label as class'''
+        res = self.query(q)
+        return res

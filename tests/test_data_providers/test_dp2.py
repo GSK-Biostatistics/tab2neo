@@ -239,5 +239,5 @@ def test_get_data_virtual(dp, mm):
         }]
     res6 = mm.create_subclass([['class1', 'class3', cond]])
 
-    res = dp.get_data_virtual(labels=['class3'])
+    res = dp.get_data_virtual(labels=['class3', "class4"], rels=[], where_rel_map={"class3":{"Where c.label is NOT NULL"}, "class4":{"where xyx"}})
     assert res
