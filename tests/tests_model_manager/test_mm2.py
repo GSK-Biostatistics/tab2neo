@@ -715,8 +715,11 @@ def test_create_relationship(mm):
     res4 = mm.create_relationship([['class3', 'class4']]) 
     assert res4 == [['class3', 'class4','class4','']]
 
-    res5 = mm.create_relationship([['class1', 'class3','rel1','','true'],['class1', 'class2', 'class3','rel2']])
-    assert res5 == [['class1', 'class3','rel1','','true'],['class1', 'class2', 'class3', 'rel2']]
+    res5 = mm.create_relationship([['class1', 'class3','rel1','','true'],['class1', 'class2','rel2', 'class3']])
+    assert res5 == [['class1', 'class3','rel1','','true'],['class1', 'class2', 'rel2', 'class3']]
+
+    res6 = mm.create_relationship([['class3', 'class4', 'rel1']]) 
+    assert res6 == [['class3', 'class4','rel1', '']]
 
 
 def test_create_related_classes_from_list(mm):

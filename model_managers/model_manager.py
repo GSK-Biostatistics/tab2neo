@@ -305,7 +305,7 @@ class ModelManager(NeoInterface):
             """
 
         res = self.query(q, {
-            "rels": [(r if len(r)>=4 else r + [self.gen_default_reltype(to_label=r[1])] + [""]) for r in rel_list]
+            "rels": [(r if len(r)>=4 else (r + [""]if len(r)==3 else r + [self.gen_default_reltype(to_label=r[1])]+ [""])) for r in rel_list]
         })
 
         if res:
