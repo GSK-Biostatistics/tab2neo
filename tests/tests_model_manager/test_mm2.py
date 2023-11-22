@@ -644,8 +644,8 @@ def test_get_all_ct(mm):
 
     res = mm.get_all_ct(term_props=['Codelist Code', 'Term Code', 'rdfs:label', 'propagated_from'], class_prop='short_label',
                         derived_only=False)
-    assert res == [{'short_label': 'USUBJID', 'Codelist Code': 'Codelist2', 'Term Code': 'Termcode2', 'rdfs:label': 'Term2', 'propagated_from': None}, {'short_label': 'USUBJID', 'Codelist Code': 'Codelist3', 'Term Code': 'Termcode3', 'rdfs:label': 'Term3', 'propagated_from': None}, {'short_label': 'EXTRT', 'Codelist Code': 'Codelist1', 'Term Code': 'Termcode1', 'rdfs:label': 'Term1', 'propagated_from': None}, {'short_label': 'B', 'Codelist Code': 'term2c', 'Term Code': 'term2t', 'rdfs:label': None, 'propagated_from': ''}]
-
+    expected_list=[{'short_label': 'USUBJID', 'Codelist Code': 'Codelist2', 'Term Code': 'Termcode2', 'rdfs:label': 'Term2', 'propagated_from': None}, {'short_label': 'USUBJID', 'Codelist Code': 'Codelist3', 'Term Code': 'Termcode3', 'rdfs:label': 'Term3', 'propagated_from': None}, {'short_label': 'EXTRT', 'Codelist Code': 'Codelist1', 'Term Code': 'Termcode1', 'rdfs:label': 'Term1', 'propagated_from': None}, {'short_label': 'B', 'Codelist Code': 'term2c', 'Term Code': 'term2t', 'rdfs:label': None, 'propagated_from': ''}]
+    assert compare_recordsets(res, expected_list)
 
 
 def test_create_subclass(mm):
