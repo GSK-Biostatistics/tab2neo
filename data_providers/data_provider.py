@@ -104,8 +104,6 @@ class DataProvider(NeoInterface):
                      return_class_uris=False):
         classes=[]
         updated_rels=[]
-        updated_where_map={}
-        updated_where_rel_map={}
         if labels is not None and len(labels)>0:
             for label in labels:
                 res = self.get_subclass_parent(label)
@@ -118,28 +116,27 @@ class DataProvider(NeoInterface):
                 updated_rels.append(rel)
 
         if where_map is not None and len(where_map)>0:
-           for wmap in where_map:
+           for wmap in where_map.copy():
                if len(self.get_subclass_parent(wmap))>0:
                     res=self.get_subclass_parent(wmap)
-                    updated_where_map[res[0]['class']] = updated_where_map.pop(wmap)
+                    where_map[res[0]['class']] = where_map.pop(wmap)
 
         if where_rel_map is not None and len(where_rel_map)>0:
-            for w_rel_map in where_rel_map:
-                updated_where_rel_map=where_rel_map
+            for w_rel_map in where_rel_map.copy():
                 q=f'''MATCH (c:Class{{label:'{w_rel_map}'}})-[scr:SUBCLASS_OF]->(parent)
                   Where NOT scr.conditions is NULL
                   Return [parent.label, scr.conditions]  as class'''
                 res = self.query(q)
                 if len(res)>0:
-                    updated_where_rel_map[res[0]['class'][0]] = updated_where_rel_map.pop(w_rel_map)
-                    updated_where_rel_map[res[0]['class'][0]]=ast.literal_eval(res[0]['class'][1])[0]
+                    where_rel_map[res[0]['class'][0]] = where_rel_map.pop(w_rel_map)
+                    where_rel_map[res[0]['class'][0]] = (ast.literal_eval(res[0]['class'][1])[0])
 
         return self.get_data_generic(
             labels=classes,
             rels=rels,
             infer_rels=infer_rels,
             where_map=where_map,
-            where_rel_map=updated_where_rel_map,
+            where_rel_map=where_rel_map,
             allow_unrelated_subgraphs=allow_unrelated_subgraphs,
             use_shortlabel=use_shortlabel,
             return_nodeid=return_nodeid,
