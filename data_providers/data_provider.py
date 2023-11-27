@@ -103,9 +103,12 @@ class DataProvider(NeoInterface):
                      check_schema=False,
                      return_class_uris=False):
         classes=[]
+        label_dict={}
         updated_rels=[]
         if labels is not None and len(labels)>0:
             for label in labels:
+                label_dict[label] = None
+            for label in label_dict:  
                 res = self.get_subclass_parent(label)
                 classes.append(res[0]['class']) if len(res)>0 else classes.append(label)
             
@@ -331,6 +334,7 @@ class DataProvider(NeoInterface):
 
     def get_subclass_parent(self, label: str):
         q=f'''MATCH (c:Class{{label:'{label}'}})-[scr:SUBCLASS_OF]->(parent)
+              Where NOT scr.conditions is NULL
               Return parent.label as class'''
         res = self.query(q)
         return res
