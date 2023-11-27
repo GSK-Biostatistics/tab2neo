@@ -287,17 +287,17 @@ class ModelManager(NeoInterface):
             "WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type
             {'MATCH' if match_classes else 'MERGE'} (from:Class {{`{identifier}`:from_identity}})
             {'MATCH' if match_classes else 'MERGE'} (to:Class {{`{identifier}`:to_identity}})   
-            MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type, relationship_propagated_from:''}})-[:TO]->(to)
+            MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type}})-[:TO]->(to)
             SET rel_node.`FROM.Class.label` = from.label
             SET rel_node.`TO.Class.label` = to.label
-            RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type, rel_node.relationship_propagated_from]) as rels", 
+            RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type]) as rels", 
             "WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type, rel[3] as optional
             {'MATCH' if match_classes else 'MERGE'} (from:Class {{`{identifier}`:from_identity}})
             {'MATCH' if match_classes else 'MERGE'} (to:Class {{`{identifier}`:to_identity}})   
-            MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type, relationship_propagated_from:'', relationship_optional:optional}})-[:TO]->(to)
+            MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type, relationship_optional:optional}})-[:TO]->(to)
             SET rel_node.`FROM.Class.label` = from.label
             SET rel_node.`TO.Class.label` = to.label
-            RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type, rel_node.relationship_optional, rel_node.relationship_propagated_from]) as rels
+            RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type, rel_node.relationship_optional]) as rels
             ",
             {{rel:rel}})
             YIELD value

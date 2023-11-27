@@ -669,7 +669,7 @@ def test_create_subclass(mm):
 
     #returns list of classes and subclasses - [['parent_class', 'child_class']...]
     res4 = mm.get_subclasses_where()
-    assert res4 == [{'parent':'class1', 'child':'class3', 'conditions':None},{'parent':'class2', 'child':'Apple', 'conditions':None}, {'parent':'class4', 'child':'class2', 'conditions':None}]
+    assert compare_recordsets(res4, [{'parent':'class1', 'child':'class3', 'conditions':None},{'parent':'class2', 'child':'Apple', 'conditions':None}, {'parent':'class4', 'child':'class2', 'conditions':None}])
     
     #propagates terms to parent class
     mm.propagate_terms_to_parent_class()
@@ -704,7 +704,7 @@ def test_create_relationship(mm):
     mm.query(q)
 
     res1 = mm.create_relationship([['class1', 'class3', 'rel1']])
-    assert res1 == [['class1', 'class3', 'rel1','']]
+    assert res1 == [['class1', 'class3', 'rel1']]
 
     res2 = mm.get_rels_btw2("class1", "class3")
     assert res2 == [{'from': 'class1', 'to': 'class3', 'type': 'rel1'}]
@@ -713,13 +713,13 @@ def test_create_relationship(mm):
     assert res3 == [[]]
 
     res4 = mm.create_relationship([['class3', 'class4']]) 
-    assert res4 == [['class3', 'class4','class4','']]
+    assert res4 == [['class3', 'class4','class4']]
 
     res5 = mm.create_relationship([['class1', 'class3','rel1','true'],['class1', 'class2','rel2']])
-    assert res5 == [['class1', 'class3','rel1','true',''],['class1', 'class2', 'rel2', '']]
+    assert res5 == [['class1', 'class3','rel1','true'],['class1', 'class2', 'rel2']]
 
     res6 = mm.create_relationship([['class3', 'class4', 'rel1']]) 
-    assert res6 == [['class3', 'class4','rel1', '']]
+    assert res6 == [['class3', 'class4','rel1']]
 
 
 def test_create_related_classes_from_list(mm):
