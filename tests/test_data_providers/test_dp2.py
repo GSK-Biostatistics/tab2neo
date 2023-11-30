@@ -231,16 +231,17 @@ def test_get_data_virtual(dp, mm):
     MERGE (c:Class{label:"class3", short_label:"C3"})
     MERGE (d:Class{label:"class4", short_label:"C4"})
     MERGE (a)<-[:FROM]-(:Relationship{relationship_type:"type1"})-[:TO]->(b)
-    MERGE (z)<-[:FROM]-(:Relationship{relationship_type:"type2"})-[:TO]->(d)
+    MERGE (b)<-[:FROM]-(:Relationship{relationship_type:"type2"})-[:TO]->(c)
+    MERGE (c)<-[:FROM]-(:Relationship{relationship_type:"type3"})-[:TO]->(z)
+    MERGE (z)<-[:FROM]-(:Relationship{relationship_type:"type4"})-[:TO]->(d)
     MERGE (b)-[:HAS_CONTROLLED_TERM]->(t2:Term {`Codelist Code`: 'term2c', `Term Code`: 'term2t', `Order`:2})
     """
     dp.query(q)
     cond  =  [{
-            'EXISTS>': {'include': [{'Test' : {'uri': ['neo4j://graph.schema#Term/S980028/S91301']}}]},
-            'NOT EXISTS': {'exclude': [{'Ser': {'rdfs:label': ['Y']}}, 'Pop', 'Asta']}
+            'EXISTS>': {'include': [{'class3' : {'uri': ['neo4j://graph.schema#Term/S980028/S91301']}}]}
         }]
 
     mm.create_subclass([['class1', 'class3', cond]])
 
-    res = dp.get_data_virtual(labels=['class3', "class4"], infer_rels=True, where_rel_map={"class3":{"c.label is NOT NULL"}, "class4":{"xyx"}})
+    res = dp.get_data_virtual(labels=['class3', "class4"], rels=[{'from':'class3', 'to':'Apple', 'type':'type3'}], where_rel_map={"class4":{'EXISTS': {'include': ['Ser', 'Pop', 'Asta']}}, "class3":{}})
     assert res

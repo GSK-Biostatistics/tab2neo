@@ -96,7 +96,7 @@ class DataProvider(NeoInterface):
                      where_rel_map=None,
                      return_nodeid=True,
                      return_termorder=False,
-                     allow_unrelated_subgraphs=False,
+                     allow_unrelated_subgraphs=True,
                      use_shortlabel=True,
                      return_propname=False,
                      only_props=["rdfs:label"],
@@ -114,8 +114,8 @@ class DataProvider(NeoInterface):
             
         if rels is not None and len(rels)>0:
             for rel in rels:
-                rel["from"]= res[0]['class'] if len(self.get_subclass_parent(rel.get("from")))>0 else rel["from"]
-                rel["to"]= res[0]['class'] if len(self.get_subclass_parent(rel.get("to")))>0 else rel["to"]
+                rel["from"]= self.get_subclass_parent(rel.get("from"))[0]['class'] if len(self.get_subclass_parent(rel.get("from")))>0 else rel["from"]
+                rel["to"]= self.get_subclass_parent(rel.get("from"))[0]['class'] if len(self.get_subclass_parent(rel.get("to")))>0 else rel["to"]
                 updated_rels.append(rel)
 
         if where_map is not None and len(where_map)>0:
