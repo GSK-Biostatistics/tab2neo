@@ -5,6 +5,7 @@ import pandas as pd
 filepath = os.path.dirname(__file__)
 import pytest
 from data_providers import data_provider
+from model_managers.model_manager import ModelManager
 
 
 # Provide a DataProvider object (which contains a database connection)
@@ -14,6 +15,10 @@ def dp():
     dp = data_provider.DataProvider(verbose=False)
     yield dp
 
+@pytest.fixture(scope="module")
+def mm():
+    mm = ModelManager(verbose=False, debug=True)
+    yield mm
 
 def test_get_data_generic1(dp):
     dp.clean_slate()
@@ -215,3 +220,28 @@ def test_get_data_generic_only_props(dp):
     assert "VISIT.rdfs:label" in df.columns
     assert "VISIT.another_prop" not in df.columns
     assert "VISIT.another_prop2" not in df.columns
+
+def test_get_data_virtual(dp, mm):
+    dp.clean_slate()
+
+    q = """
+    MERGE (a:Class{label:"class1", short_label:"C1"})
+    MERGE (z:Class {label: "Apple"})-[:HAS_CONTROLLED_TERM]->(t1:Term {`Codelist Code`: 'term1c', `Term Code`: 'term1t', `Order`:2})
+    MERGE (b:Class{label:"class2", short_label:"C2"})
+    MERGE (c:Class{label:"class3", short_label:"C3"})
+    MERGE (d:Class{label:"class4", short_label:"C4"})
+    MERGE (a)<-[:FROM]-(:Relationship{relationship_type:"type1"})-[:TO]->(b)
+    MERGE (b)<-[:FROM]-(:Relationship{relationship_type:"type2"})-[:TO]->(c)
+    MERGE (c)<-[:FROM]-(:Relationship{relationship_type:"type3"})-[:TO]->(z)
+    MERGE (z)<-[:FROM]-(:Relationship{relationship_type:"type4"})-[:TO]->(d)
+    MERGE (b)-[:HAS_CONTROLLED_TERM]->(t2:Term {`Codelist Code`: 'term2c', `Term Code`: 'term2t', `Order`:2})
+    """
+    dp.query(q)
+    cond  =  [{
+            'EXISTS>': {'include': [{'class3' : {'uri': ['neo4j://graph.schema#Term/S980028/S91301']}}]}
+        }]
+
+    mm.create_subclass([['class1', 'class3', cond]])
+
+    res = dp.get_data_virtual(labels=['class3', "class4"], rels=[{'from':'class3', 'to':'Apple', 'type':'type3'}], where_rel_map={"class4":{'EXISTS': {'include': ['Ser', 'Pop', 'Asta']}}, "class3":{}})
+    assert res
