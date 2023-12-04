@@ -282,27 +282,27 @@ class ModelManager(NeoInterface):
         """
 
         q = f"""
-        UNWIND $rels as rel
-        CALL apoc.do.when(size(rel)<=3,
-        "WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type
-        {'MATCH' if match_classes else 'MERGE'} (from:Class {{`{identifier}`:from_identity}})
-        {'MATCH' if match_classes else 'MERGE'} (to:Class {{`{identifier}`:to_identity}})   
-        MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type}})-[:TO]->(to)
-        SET rel_node.`FROM.Class.label` = from.label
-        SET rel_node.`TO.Class.label` = to.label
-        RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type]) as rels", 
-        "WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type, rel[3] as optional
-        {'MATCH' if match_classes else 'MERGE'} (from:Class {{`{identifier}`:from_identity}})
-        {'MATCH' if match_classes else 'MERGE'} (to:Class {{`{identifier}`:to_identity}})   
-        MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type, relationship_optional:optional}})-[:TO]->(to)
-        SET rel_node.`FROM.Class.label` = from.label
-        SET rel_node.`TO.Class.label` = to.label
-        RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type, rel_node.relationship_optional]) as rels
-        ",
-        {{rel:rel}})
-        YIELD value
-        RETURN collect(value.rels) as rels
-        """
+            UNWIND $rels as rel
+            CALL apoc.do.when(size(rel)<=3,
+            "WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type
+            {'MATCH' if match_classes else 'MERGE'} (from:Class {{`{identifier}`:from_identity}})
+            {'MATCH' if match_classes else 'MERGE'} (to:Class {{`{identifier}`:to_identity}})   
+            MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type}})-[:TO]->(to)
+            SET rel_node.`FROM.Class.label` = from.label
+            SET rel_node.`TO.Class.label` = to.label
+            RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type]) as rels", 
+            "WITH rel[0] as from_identity, rel[1] as to_identity, rel[2] as rel_type, rel[3] as optional
+            {'MATCH' if match_classes else 'MERGE'} (from:Class {{`{identifier}`:from_identity}})
+            {'MATCH' if match_classes else 'MERGE'} (to:Class {{`{identifier}`:to_identity}})   
+            MERGE (from)<-[:FROM]-(rel_node:Relationship{{relationship_type:rel_type, relationship_optional:optional}})-[:TO]->(to)
+            SET rel_node.`FROM.Class.label` = from.label
+            SET rel_node.`TO.Class.label` = to.label
+            RETURN collect([from.`{identifier}`, to.`{identifier}`, rel_node.relationship_type, rel_node.relationship_optional]) as rels
+            ",
+            {{rel:rel}})
+            YIELD value
+            RETURN collect(value.rels) as rels
+            """
 
         res = self.query(q, {
             "rels": [(r if len(r)>=3 else r + [self.gen_default_reltype(to_label=r[1])]) for r in rel_list]
@@ -388,6 +388,7 @@ class ModelManager(NeoInterface):
         UNWIND $rels as rel
         WITH rel[0] as from, rel[1] as to, rel[2] as type
         MATCH (:Class{{`{identifier}`:from}})<-[:FROM]-(rel:Relationship {{relationship_type:type}})-[:TO]->(:Class{{`{identifier}`:to}})
+        WHERE rel.relationship_propagated_from is NULL
         DETACH DELETE rel
         """
         params = {"rels": rel_list}
@@ -472,7 +473,7 @@ class ModelManager(NeoInterface):
         q = f"""
         MATCH (from_class:Class)<-[:FROM]-(rel:Relationship)-[:TO]->(to_class:Class)
         {where_clause if where_clause else ""}
-        RETURN {{from: from_class.`{return_prop}`, to: to_class.`{return_prop}`, type: rel.relationship_type, optional: rel.relationship_optional}} as rel   
+        RETURN {{from: from_class.`{return_prop}`, to: to_class.`{return_prop}`, type: rel.relationship_type, optional: rel.relationship_optional, propagated_from: rel.relationship_propagated_from}} as rel   
         """
         res = self.query(q)
         return [x['rel'] for x in res]
@@ -779,6 +780,7 @@ class ModelManager(NeoInterface):
         CALL apoc.merge.node(['Term'], {f"{ident_props}, term_props, term_props" if ident_props else 'term_props, {}, {}'}) YIELD node
         CALL apoc.create.addLabels([node], [class.label]) YIELD node as term
         MERGE (class)-[:HAS_CONTROLLED_TERM]->(term)
+        SET term.propagated_from = ""
         """
         res1 = self.query(q1, {'terminology': controlled_terminology}, return_type='neo4j.Result')
 
@@ -860,7 +862,7 @@ class ModelManager(NeoInterface):
         q = f"""
         UNWIND $classes as class
         MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
-        WHERE c.`{identifier}` = class
+        WHERE c.`{identifier}` = class AND (term.propagated_from IS NULL OR term.propagated_from = "")
         WITH c, collect(apoc.map.fromPairs([{prop_collection}])) as terms
         RETURN apoc.map.setKey({{}}, c.`{identifier}`, terms) as ct
         """
@@ -903,7 +905,7 @@ class ModelManager(NeoInterface):
         WHERE c.`{identifier}` = class_label
         UNWIND $terminology[class_label] as term_props
         MATCH (c)-[:HAS_CONTROLLED_TERM]-(t:Term)
-        WHERE {where_clause}
+        WHERE {where_clause} AND t.propagated_from is NULL
         DETACH DELETE t
         """
 
@@ -933,7 +935,7 @@ class ModelManager(NeoInterface):
 
         q = f"""
         MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term)
-        {'WHERE c.derived = "true"' if derived_only else ''}
+        WHERE {'c.derived = "true" AND' if derived_only else ''} (term.propagated_from IS NULL OR term.propagated_from = "")
         RETURN c.`{class_prop}` as `{class_prop}`, {term_return}
         """
         return self.query(q)
@@ -1029,10 +1031,10 @@ class ModelManager(NeoInterface):
         WITH *,
         "
             WITH $source as source, $target as target
-            MERGE (source)<-[:`"+type(r1)+"`]-(:Relationship{{relationship_type:$type}})-[:`"+type(r2)+"`]->(target)
+            MERGE (source)<-[:`"+type(r1)+"`]-(:Relationship{{relationship_type:$type, relationship_propagated_from:$propagated_from}})-[:`"+type(r2)+"`]->(target)
             RETURN count(*)
         " as q, 
-        {{type: r.relationship_type, source: source , target: target}} as params
+        {{type: r.relationship_type, propagated_from: c.label, source: source , target: target}} as params
         CALL apoc.cypher.doIt(q, params) YIELD value
         RETURN value, q, params         
         """)  
@@ -1047,6 +1049,7 @@ class ModelManager(NeoInterface):
         self.query(f"""
         MATCH (c:Class)-[:HAS_CONTROLLED_TERM]->(term:Term), {match_rel}
         MERGE (source)-[:HAS_CONTROLLED_TERM]->(term) 
+        SET term.propagated_from = c.label
         RETURN term     
         """)
   
