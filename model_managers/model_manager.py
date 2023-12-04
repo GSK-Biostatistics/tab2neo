@@ -388,6 +388,7 @@ class ModelManager(NeoInterface):
         UNWIND $rels as rel
         WITH rel[0] as from, rel[1] as to, rel[2] as type
         MATCH (:Class{{`{identifier}`:from}})<-[:FROM]-(rel:Relationship {{relationship_type:type}})-[:TO]->(:Class{{`{identifier}`:to}})
+        WHERE rel.relationship_propagated_from is NULL
         DETACH DELETE rel
         """
         params = {"rels": rel_list}
@@ -904,7 +905,7 @@ class ModelManager(NeoInterface):
         WHERE c.`{identifier}` = class_label
         UNWIND $terminology[class_label] as term_props
         MATCH (c)-[:HAS_CONTROLLED_TERM]-(t:Term)
-        WHERE {where_clause}
+        WHERE {where_clause} AND t.propagated_from is NULL
         DETACH DELETE t
         """
 
